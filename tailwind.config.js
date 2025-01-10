@@ -8,7 +8,9 @@ module.exports = {
       "green": "#5B9279",
       "dark-green": "#38594A",
       "md-dark-font": "#607A6E",
-      "full-dark-font": "#38594A"
+      "full-dark-font": "#38594A",
+      "separator": "#DAE2DF",
+      "white": "#fff"
     },
     extend: {
       padding: {
