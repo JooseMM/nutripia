@@ -15,7 +15,7 @@ import { ButtonComponent } from './shared/button/button.component';
 })
 export class AppComponent {
   title = 'nutripia-app';
-  protected isMenuOpen = false;
+  protected isMenuOpen = true;
   protected isMobile = window.innerWidth < 1000;
 
   protected toggleMenu() {

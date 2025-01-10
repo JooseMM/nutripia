@@ -1,36 +1,36 @@
-<nav class="flex flex-row relative justify-between px-mobile-padding py-3 items-center w-full
-     | lg:py-6">
-  <a class="flex flex-row w-28" routerLink="/inicio" ariaCurrentWhenActive="page">
-    <img src="assets/logo.svg" class="w-full h-full" />
+<nav class="flex flex-row relative px-mobile-padding py-3 items-center w-full
+     | lg:py-6 lg: justify-between">
+  <a class="flex flex-row w-24" routerLink="/inicio" ariaCurrentWhenActive="page">
+    <img src="assets/logo.png" class="w-full h-full" />
   </a>
   <ul
     [class.hidden]="!isMenuOpen"
-    class="absolute text-md-dark-font text-xl font-normal flex flex-col space-y-8 py-10 right-[5vw] top-full border border-solid border-green rounded-xl items-center
-          | lg:flex lg:flex-row lg:space-y-0 lg:py-0 lg:static lg:border-none lg:text-base lg:justify-between
+    class="absolute bg-white text-light-grayish-green text-xl font-normal flex flex-col space-y-12 py-10 px-[10vw] right-[5vw] top-full border border-solid border-green rounded-xl items-center
+        | lg:flex lg:flex-row lg:space-y-0 lg:py-0 lg:static lg:border-none lg:text-base lg:justify-between lg:w-8/12
           ">
     <li>
-      <ul class=" | lg:flex lg:flex-row lg:space-x-10">
+      <ul class="flex flex-col space-y-8 items-center | lg:space-y-0 lg:flex lg:flex-row lg:space-x-10">
         <li>
-          <a routerLink="/inicio"  routerLinkActive="active" ariaCurrentWhenActive="page">Inicio</a>
+          <a class="lg:hover:text-deep-dark-green" routerLink="/inicio"  routerLinkActive="active" ariaCurrentWhenActive="page">Inicio</a>
         </li>
         <li>
-          <a routerLink="/beneficios" routerLinkActive="active" ariaCurrentWhenActive="page">Beneficio</a>
+          <a class="lg:hover:text-deep-dark-green" routerLink="/beneficios" routerLinkActive="active" ariaCurrentWhenActive="page">Beneficio</a>
         </li>
         <li>
-          <a routerLink="/planes" routerLinkActive="active" ariaCurrentWhenActive="page">Planes</a>
+          <a class="lg:hover:text-deep-dark-green" routerLink="/planes" routerLinkActive="active" ariaCurrentWhenActive="page">Planes</a>
         </li>
         <li>
-          <a routerLink="/agenda" routerLinkActive="active" ariaCurrentWhenActive="page">Agendar</a>
+          <a class="lg:hover:text-deep-dark-green" routerLink="/agenda" routerLinkActive="active" ariaCurrentWhenActive="page">Agendar</a>
         </li>
       </ul>
     </li>
     <li>
-      <ul class="space-y-8 pt-4 | lg:pt-0 lg:px-10 lg:space-y-0 lg:space-x-10 lg:text-nowrap lg:items-center lg:flex lg:flex-row">
+      <ul class="flex space-y-8 flex-col items-center | lg:pt-0 lg:px-10 lg:space-y-0 lg:space-x-10 lg:text-nowrap lg:items-center lg:flex lg:flex-row">
         <li>
-          <a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page">Iniciar Sesion</a>
+          <a class="lg:hover:text-deep-dark-green" routerLink="/login">Iniciar Sesion</a>
         </li>
         <li class="text-white">
-          <nt-button [isPrimaryStyle]="false" label="Subscribirse" href="/subscripcion" />
+          <nt-button [isPrimaryStyle]="false" label="Registrarse" href="/subscripcion" />
         </li>
       </ul>
     </li>

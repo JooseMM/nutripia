@@ -3,11 +3,8 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-}
 @layer components {
   .active {
     color: #38594A;
-    font-weight: 450;
   }
 }
