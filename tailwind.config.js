@@ -7,8 +7,14 @@ module.exports = {
     colors: {
       "green": "#5B9279",
       "dark-green": "#38594A",
+      "md-dark-font": "#607A6E",
+      "full-dark-font": "#38594A"
     },
-    extend: {},
+    extend: {
+      padding: {
+        'mobile-padding': '5vw'
+      }
+    },
   },
   plugins: [],
 }

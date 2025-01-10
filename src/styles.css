@@ -8,3 +8,9 @@ body {
   font-optical-sizing: auto;
   font-style: normal;
 }
+@layer components {
+  .active {
+    color: #38594A;
+    font-weight: 450;
+  }
+}

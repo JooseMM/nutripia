@@ -1,7 +1,6 @@
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { HomePage } from './pages/home/home.component';
-import { SchedulePage } from './pages/schedule/schedule.page';
 
 @Component({
   selector: 'app-root',
@@ -15,4 +14,9 @@ import { SchedulePage } from './pages/schedule/schedule.page';
 })
 export class AppComponent {
   title = 'nutripia-app';
+  protected isMenuOpen = false;
+
+  protected toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 }

@@ -1,15 +1,31 @@
-<nav class="flex flex-row relative justify-between px-5 py-3 items-center">
+<nav class="flex flex-row relative justify-between px-mobile-padding py-3 items-center">
   <a class="flex flex-row w-28" routerLink="/inicio" ariaCurrentWhenActive="page">
     <img src="assets/logo.svg" class="w-full h-full" />
   </a>
-  <ul class="absolute right-6 top-full">
+  <ul [class.hidden]="!isMenuOpen" class="absolute text-md-dark-font text-xl font-normal flex flex-col space-y-8 py-10 right-[5vw] top-full border border-solid border-green rounded-xl w-64 items-center ">
     <li>
-      <a routerLink="/inicio" routerLinkActive="active" ariaCurrentWhenActive="page">Inicio</a>
+      <a routerLink="/inicio" (click)="toggleMenu()" routerLinkActive="active" ariaCurrentWhenActive="page">Inicio</a>
     </li>
     <li>
-      <a routerLink="/agenda" routerLinkActive="active" ariaCurrentWhenActive="page">Agenda</a>
+      <a routerLink="/beneficios" (click)="toggleMenu()"  routerLinkActive="active" ariaCurrentWhenActive="page">Beneficio</a>
     </li>
+    <li>
+      <a routerLink="/planes" (click)="toggleMenu()"  routerLinkActive="active" ariaCurrentWhenActive="page">Planes</a>
+    </li>
+    <li>
+      <a routerLink="/agenda" (click)="toggleMenu()"  routerLinkActive="active" ariaCurrentWhenActive="page">Agendar</a>
+    </li>
+    <ul class="space-y-8 pt-4">
+      <li>
+        <a routerLink="/login" (click)="toggleMenu()"  routerLinkActive="active" ariaCurrentWhenActive="page">Iniciar Sesion</a>
+      </li>
+      <li>
+        <a routerLink="/subscripcion" (click)="toggleMenu()" routerLinkActive="active" ariaCurrentWhenActive="page">Subscribirse</a>
+      </li>
+    </ul>
   </ul>
-  <img src="assets/hamburguer-menu.svg" width="42" alt="hamburguer menu">
+  <button (click)="toggleMenu()">
+    <img src="assets/hamburguer-menu.svg" width="42" alt="hamburguer menu">
+  </button>
 </nav>
 <router-outlet />
