@@ -13,6 +13,10 @@ module.exports = {
       "separator": "#DAE2DF",
       "white": "#fff"
     },
+    fontFamily: {
+      "body": ['"Open Sans"', '"Montserrat", serif' ],
+      "header": ['"Open Sans"' ]
+    },
     extend: {
       padding: {
         'mobile-padding': '5vw'
