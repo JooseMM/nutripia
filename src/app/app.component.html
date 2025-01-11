@@ -1,12 +1,12 @@
 <!-- Navbar -->
-<nav class="flex flex-row relative px-mobile-padding py-3 items-center w-full | lg:items-end lg:py-6 lg:justify-between border border-solid border-b-separator">
-  <a class="w-38 h-full flex justify-end" routerLink="/inicio" ariaCurrentWhenActive="page">
+<nav class="flex flex-row relative px-mobile-padding py-3 items-center w-full | lg:pt-1 lg:pb-4 lg:items-end lg:justify-between border border-solid border-b-separator">
+  <a class="w-[200px] flex justify-end" routerLink="/inicio" ariaCurrentWhenActive="page">
     <img src="assets/logo.svg" class="w-full h-full" />
   </a>
   <ul
     [class.hidden]="!isMenuOpen"
-    class="absolute bg-white font-body text-light-grayish-green text-xl font-normal flex flex-col space-y-12 py-10 px-[10vw] right-[5vw] top-full border border-solid border-green rounded-xl items-center
-        | lg:flex lg:flex-row lg:space-y-0 lg:py-0 lg:static lg:border-none lg:text-base lg:justify-between lg:w-4/5 lg:items-baseline
+    class="absolute bg-white font-body text-light-grayish-green text-xl font-normal flex flex-col space-y-12 py-10 right-[5vw] top-full border border-solid border-green rounded-xl items-center
+        | lg:flex lg:flex-row lg:space-y-0 lg:py-0 lg:static lg:border-none lg:text-base lg:justify-between lg:w-3/5 lg:items-center
           ">
     <li>
       <ul class="flex flex-col space-y-8 items-center | lg:space-y-0 lg:flex lg:flex-row lg:space-x-10">
@@ -25,7 +25,7 @@
       </ul>
     </li>
     <li>
-      <ul class="flex space-y-8 flex-col items-center | lg:py-0 lg:pt-0 lg:px-10 lg:space-y-0 lg:space-x-10 lg:text-nowrap lg:items-baseline lg:flex lg:flex-row">
+      <ul class="flex space-y-8 flex-col items-center | lg:py-0 lg:pt-0 lg:px-10 lg:space-y-0 lg:space-x-10 lg:text-nowrap lg:items-center lg:flex lg:flex-row">
         <li>
           <a class="lg:hover:text-deep-dark-green" routerLink="/login">Iniciar Sesion</a>
         </li>

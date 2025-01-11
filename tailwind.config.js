@@ -11,10 +11,12 @@ module.exports = {
       "light-green": "#78A591",
       "light-grayish-green": "#607A6E",
       "separator": "#DAE2DF",
-      "white": "#fff"
+      "yellow": "#F5A623",
+      "dark-yellow": "#996816",
+      "white": "#FFF"
     },
     fontFamily: {
-      "body": ['"Open Sans"', '"Montserrat", serif' ],
+      "body": ['"Montserrat", serif' ],
       "header": ['"Open Sans"' ]
     },
     extend: {
