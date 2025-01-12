@@ -1,11 +1,11 @@
 <!-- Navbar -->
-<nav class="flex flex-row relative px-mobile-padding py-3 items-center w-full | lg:pt-1 lg:pb-4 lg:px-desktop-padding lg:items-end lg:justify-between border-b border-solid border-b-separator">
-  <a class="w-[200px] flex justify-end" routerLink="/inicio" ariaCurrentWhenActive="page">
-    <img src="assets/logo.svg" class="w-full h-full" />
+<nav class="flex flex-row relative px-mobile-padding py-3 items-center justify-between border-b border-lavender-gray  w-full | lg:pt-1 lg:pb-4 lg:px-desktop-padding lg:items-end lg:justify-between ">
+  <a class="flex justify-end" routerLink="/inicio" ariaCurrentWhenActive="page">
+    <img src="assets/icons/nutripia-logo.png" class="w-full h-full" />
   </a>
   <ul
     [class.hidden]="!isMenuOpen"
-    class="absolute bg-white font-serif text-light-grayish-green text-xl font-normal flex flex-col space-y-12 py-10 right-[5vw] top-full border border-solid border-green rounded-xl items-center
+      class="absolute px-[10vw] bg-white font-serif text-lighter-charcoal text-xl font-normal flex flex-col space-y-12 py-12 right-[5vw] top-full border border-solid border-green rounded-xl items-center
         | lg:flex lg:flex-row lg:space-y-0 lg:py-0 lg:static lg:border-none lg:text-base lg:justify-between lg:w-3/5 lg:items-center
           ">
     <li>
@@ -36,7 +36,7 @@
     </li>
   </ul>
   <button class="block lg:hidden" (click)="toggleMenu()">
-    <img src="assets/hamburguer-menu.svg" width="42" alt="hamburguer menu">
+    <img src="assets/icons/hamburguer-menu.svg" width="42" alt="hamburguer menu">
   </button>
 </nav>
 <!-- router view -->

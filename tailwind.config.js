@@ -6,13 +6,16 @@ module.exports = {
   theme: {
     colors: {
       "pewter": "#6B7973", // box font
-      "lavander-gray":"#8878A5", // primary color
+      "primary-purple":"#8878A5", // primary color
       "lavender-blush": "#EEEBF2", // background
       "lavender-purple": "#A093B7", // might be useful ??
       "lavender-gray": "#DDDAE2", // line separator
       "white-lavender": "#F3F2F6", // box background
       "dark-slate-grape": "#5F5373",
       "charcoal":"#313131", // font color
+      "lighter-charcoal": "#737373",
+      "white": "#FFF"
+
     },
     fontFamily: {
       "serif": ['"Open Sans"']

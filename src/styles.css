@@ -5,6 +5,6 @@
 
 @layer components {
   .active {
-    color: #38594A;
+    @apply text-charcoal;
   }
 }
