@@ -5,7 +5,11 @@
   "projects": {
     "nutripia-app": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": ""
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "nt",

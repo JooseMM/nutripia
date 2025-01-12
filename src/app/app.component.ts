@@ -11,7 +11,6 @@ import { ButtonComponent } from './shared/button/button.component';
     ButtonComponent
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'nutripia-app';
