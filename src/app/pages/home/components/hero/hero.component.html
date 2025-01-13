@@ -1,17 +1,20 @@
-<div class="flex justify-center border-b border-b-separator | lg:items-center lg:justify-start lg:flex-row lg:px-desktop-padding">
+<div class="flex px-mobile-padding pt-4 pb-14 justify-center border-lavender-gray border-b flex-col items-center | lg:py-0 lg:items-center lg:justify-start lg:flex-row lg:px-desktop-padding">
   <!-- hero description section -->
-  <div class="flex flex-col | lg:text-left lg:items-start lg:space-y-4 lg:max-w-xl">
-    <h1 class="font-serif text-charcoal text-6xl font-light">Tu guia hacia una mejor <b class="font-semibold">nutricion</b> y <b class="font-semibold">bienestar</b></h1>
-    <p class="text-charcoal font-light | lg:text-[18px] lg:tracking-wide lg:max-w-[420px]">
+  <div class="flex flex-col order-2 items-center mt-4 | lg:order-1 lg:text-left lg:items-start lg:space-y-4 lg:max-w-xl">
+    <h1 class="font-serif text-3xl text-center max-w-[20ch] text-charcoal font-light | lg:text-left lg:text-6xl">
+      Tu guia hacia una mejor <b class="font-semibold">nutricion</b> y <b class="font-semibold">bienestar</b>
+    </h1>
+    <p class="font-serif text-charcoal text-center font-light max-w-[40ch] mt-2 mb-4 | lg:text-left lg:text-[18px] lg:tracking-wide">
       Lorem ipsum dolor sit amet,
       consectetur adipiscing elit.
       Sed do eiusmod tempor incididunt
       ut labore et dolore magna aliqua.
     </p>
-    <nt-button [isPrimaryStyle]="true" label="Reserva tu cita"  href="/subscripcion"/>
+    <nt-button [isPrimary]="true" label="Reserva tu cita" href="/subscripcion"/>
   </div>
   <!-- hero img section -->
-  <div class="flex flex-1 justify-center mt-10">
-    <img src="assets/hero-image.svg" class="w-[600px]" alt="hero image"/>
+  <div class="flex order-1 | lg:justify-center lg:flex-1 lg:order-2 lg:mt-10 ">
+    <img src="assets/images/mobile-hero-image.svg" class="lg:hidden block w-full h-auto" alt="hero image"/>
+    <img src="assets/images/desktop-hero-image.svg" class="hidden lg:block w-full h-auto" alt="hero image"/>
   </div>
 </div>

@@ -1,12 +1,12 @@
 <!-- Navbar -->
-<nav class="flex flex-row relative px-mobile-padding py-3 items-center justify-between border-b border-lavender-gray  w-full | lg:pt-1 lg:pb-4 lg:px-desktop-padding lg:items-end lg:justify-between ">
+<nav class="flex flex-row relative px-mobile-padding py-3 items-center justify-between  w-full | lg:py-5 lg:border-b lg:border-lavender-gray lg:px-desktop-padding lg:justify-between ">
   <a class="flex justify-end" routerLink="/inicio" ariaCurrentWhenActive="page">
     <img src="assets/icons/nutripia-logo.png" class="w-full h-full" />
   </a>
   <ul
     [class.hidden]="!isMenuOpen"
       class="absolute px-[10vw] bg-white font-serif text-lighter-charcoal text-xl font-normal flex flex-col space-y-12 py-12 right-[5vw] top-full border border-solid border-green rounded-xl items-center
-        | lg:flex lg:flex-row lg:space-y-0 lg:py-0 lg:static lg:border-none lg:text-base lg:justify-between lg:w-3/5 lg:items-center
+        | lg:flex lg:flex-row lg:px-0 lg:space-y-0 lg:py-0 lg:static lg:border-none lg:text-base lg:justify-between lg:w-9/12 lg:items-center
           ">
     <li>
       <ul class="flex flex-col space-y-8 items-center | lg:space-y-0 lg:flex lg:flex-row lg:space-x-10">
@@ -29,8 +29,8 @@
           <li>
             <a class="lg:hover:text-charcoal" routerLink="/login">Iniciar Sesion</a>
         </li>
-        <li class="text-white">
-          <nt-button [isPrimaryStyle]="false" label="Registrarse" href="/subscripcion" />
+        <li>
+          <nt-button [isPrimary]="true" label="Registrate" href="/subscripcion" />
         </li>
       </ul>
     </li>
