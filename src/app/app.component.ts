@@ -4,12 +4,7 @@ import { ButtonComponent } from './shared/button/button.component';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterOutlet,
-    RouterLink,
-    RouterLinkActive,
-    ButtonComponent
-  ],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, ButtonComponent],
   templateUrl: './app.component.html',
 })
 export class AppComponent {

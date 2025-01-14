@@ -7,6 +7,4 @@ import { AboutComponent } from './components/about/about.component';
   imports: [HeroComponent, AboutComponent],
   templateUrl: './home.component.html',
 })
-export class HomePage {
-
-}
+export class HomePage {}

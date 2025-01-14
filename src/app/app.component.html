@@ -1,42 +1,81 @@
 <!-- Navbar -->
-<nav class="flex flex-row relative px-mobile-padding py-4 items-center justify-between border-b border-lavender-gray w-full | lg:py-5  lg:px-desktop-padding lg:justify-between ">
+<nav
+  class="flex flex-row relative px-mobile-padding py-4 items-center justify-between border-b border-lavender-gray w-full | lg:py-5 lg:px-desktop-padding lg:justify-between"
+>
   <a class="flex justify-end" routerLink="/inicio" ariaCurrentWhenActive="page">
     <img src="assets/icons/nutripia-logo.png" class="w-full h-full" />
   </a>
   <ul
     [class.hidden]="!isMenuOpen"
-      class="absolute px-[10vw] bg-white font-serif text-lighter-charcoal text-xl font-normal flex flex-col space-y-12 py-12 right-[5vw] top-full border border-solid border-green rounded-xl items-center
-        | lg:flex lg:flex-row lg:px-0 lg:space-y-0 lg:py-0 lg:static lg:border-none lg:text-base lg:justify-between lg:w-9/12 lg:items-center
-          ">
+    class="absolute px-[10vw] bg-white font-serif text-lighter-charcoal text-xl font-normal flex flex-col space-y-12 py-12 right-[5vw] top-full border border-solid border-green rounded-xl items-center | lg:flex lg:flex-row lg:px-0 lg:space-y-0 lg:py-0 lg:static lg:border-none lg:text-base lg:justify-between lg:w-9/12 lg:items-center"
+  >
     <li>
-      <ul class="flex flex-col space-y-8 items-center | lg:space-y-0 lg:flex lg:flex-row lg:space-x-10">
+      <ul
+        class="flex flex-col space-y-8 items-center | lg:space-y-0 lg:flex lg:flex-row lg:space-x-10"
+      >
         <li>
-            <a class="lg:hover:text-charcoal" routerLink="/inicio"  routerLinkActive="active" ariaCurrentWhenActive="page">Inicio</a>
-          </li>
-          <li>
-            <a class="lg:hover:text-charcoal" routerLink="/beneficios" routerLinkActive="active" ariaCurrentWhenActive="page">Beneficio</a>
-          </li>
-          <li>
-            <a class="lg:hover:text-charcoal" routerLink="/planes" routerLinkActive="active" ariaCurrentWhenActive="page">Planes</a>
-          </li>
-          <li>
-            <a class="lg:hover:text-charcoal" routerLink="/agenda" routerLinkActive="active" ariaCurrentWhenActive="page">Agendar</a>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <ul class="flex space-y-8 flex-col items-center | lg:py-0 lg:pt-0 lg:px-10 lg:space-y-0 lg:space-x-10 lg:text-nowrap lg:items-center lg:flex lg:flex-row">
-          <li>
-            <a class="lg:hover:text-charcoal" routerLink="/login">Iniciar Sesion</a>
+          <a
+            class="lg:hover:text-charcoal"
+            routerLink="/inicio"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            >Inicio</a
+          >
         </li>
         <li>
-          <nt-button [isPrimary]="true" label="Registrate" href="/subscripcion" />
+          <a
+            class="lg:hover:text-charcoal"
+            routerLink="/beneficios"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            >Beneficio</a
+          >
+        </li>
+        <li>
+          <a
+            class="lg:hover:text-charcoal"
+            routerLink="/planes"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            >Planes</a
+          >
+        </li>
+        <li>
+          <a
+            class="lg:hover:text-charcoal"
+            routerLink="/agenda"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            >Agendar</a
+          >
+        </li>
+      </ul>
+    </li>
+    <li>
+      <ul
+        class="flex space-y-8 flex-col items-center | lg:py-0 lg:pt-0 lg:px-10 lg:space-y-0 lg:space-x-10 lg:text-nowrap lg:items-center lg:flex lg:flex-row"
+      >
+        <li>
+          <a class="lg:hover:text-charcoal" routerLink="/login"
+            >Iniciar Sesion</a
+          >
+        </li>
+        <li>
+          <nt-button
+            [isPrimary]="true"
+            label="Registrate"
+            href="/subscripcion"
+          />
         </li>
       </ul>
     </li>
   </ul>
   <button class="block lg:hidden" (click)="toggleMenu()">
-    <img src="assets/icons/hamburguer-menu.svg" width="42" alt="hamburguer menu">
+    <img
+      src="assets/icons/hamburguer-menu.svg"
+      width="42"
+      alt="hamburguer menu"
+    />
   </button>
 </nav>
 <!-- router view -->

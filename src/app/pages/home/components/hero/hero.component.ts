@@ -5,8 +5,5 @@ import { ButtonComponent } from '../../../../shared/button/button.component';
   selector: 'nt-hero',
   imports: [ButtonComponent],
   templateUrl: './hero.component.html',
-  styleUrl: './hero.component.css'
 })
-export class HeroComponent {
-
-}
+export class HeroComponent {}
