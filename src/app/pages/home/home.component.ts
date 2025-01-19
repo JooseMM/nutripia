@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { HeroComponent } from './components/hero/hero.component';
-import { AboutComponent } from './components/about/about.component';
+import { HeroComponent } from './sections/hero/hero.component';
+import { AboutComponent } from './sections/about/about.component';
+import { WhyUsComponent } from './sections/why-us/why-us.component';
 
 @Component({
   selector: 'nt-home',
-  imports: [HeroComponent, AboutComponent],
+  imports: [HeroComponent, WhyUsComponent, AboutComponent],
   templateUrl: './home.component.html',
 })
 export class HomePage {}
