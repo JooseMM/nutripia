@@ -1,5 +1,15 @@
-<div>
+<div
+  class="flex flex-col space-y-4 w-60 rounded-xl"
+  [ngClass]="isPreferred() ? 'bg-primary-purple' : 'bg-white'"
+>
+  <span class="text-xl">{{ pricePlanName() }}</span>
+  <span>{{ months() }} meses</span>
   <div>
-
-    </div>
+    <h3>{{ months() * price() }}</h3>
+    @if (months() > 1) {
+      <span>${{ price() }} cada mes</span>
+    } @else {
+      <span>unica consulta</span>
+    }
+  </div>
 </div>
