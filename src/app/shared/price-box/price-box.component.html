@@ -1,15 +1,24 @@
 <div
-  class="flex flex-col space-y-4 w-60 rounded-xl"
-  [ngClass]="isPreferred() ? 'bg-primary-purple' : 'bg-white'"
+  class="flex flex-col items-center text-center space-y-4 w-60 rounded-xl"
+  [ngClass]="
+    pricingPlanId() === 1
+      ? 'bg-primary-purple text-white'
+      : 'bg-white text-charcoal'
+  "
 >
-  <span class="text-xl">{{ pricePlanName() }}</span>
-  <span>{{ months() }} meses</span>
   <div>
-    <h3>{{ months() * price() }}</h3>
-    @if (months() > 1) {
-      <span>${{ price() }} cada mes</span>
-    } @else {
-      <span>unica consulta</span>
-    }
+    <span class="text-2xl font-semibold">{{
+      currentPricingPlan.description
+    }}</span>
+    <h3 class="text-4xl font-bold">
+      {{ currentPricingPlan.price * currentPricingPlan.months }}
+    </h3>
+    <span>{{
+      currentPricingPlan.months > 1
+        ? "$" + currentPricingPlan.price + " cada mes"
+        : "unica consulta"
+    }}</span>
   </div>
+
+  <div></div>
 </div>
