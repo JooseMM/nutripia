@@ -12,6 +12,6 @@ export class SubtitleComponent implements OnInit {
   customClasses = '';
 
   ngOnInit(): void {
-    this.customClasses = `flex space-x-6 items-center ${this.class}`;
+    this.customClasses = `flex space-x-6 items-center ${this.class()}`;
   }
 }
