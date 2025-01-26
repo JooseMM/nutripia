@@ -1,22 +1,28 @@
 <div
-  class="flex flex-col items-center text-center space-y-4 w-60 rounded-xl"
+  class="flex border flex-col py-6 items-center text-center space-y-6 w-60 rounded-xl"
   [ngClass]="
     pricingPlanId() === 1
-      ? 'bg-primary-purple text-white'
-      : 'bg-white text-charcoal'
+      ? 'bg-primary-purple border-charcoal text-white'
+      : 'bg-white text-charcoal border-primary-purple'
   "
 >
   <div>
-    <span class="text-2xl font-semibold">{{
+    <span class="text-2xl font-medium tracking-wider opacity-85">{{
       currentPricingPlan.description
     }}</span>
-    <h3 class="text-4xl font-bold">
+    <h3
+      [ngClass]="
+        pricingPlanId() === 1
+          ? priceBaseStyleHeader
+          : priceBaseStyleHeader + ' text-primary-purple'
+      "
+    >
       {{
         currentPricingPlan.price * currentPricingPlan.months
           | currency: "CLP" : "symbol-narrow"
       }}
     </h3>
-    <span>{{
+    <span class="opacity-85 tracking-wider">{{
       currentPricingPlan.months > 1
         ? (currentPricingPlan.price | currency: "CLP" : "symbol-narrow") +
           " cada mes"
@@ -76,8 +82,9 @@
     <!-- -->
   </div>
   <nt-button
-    [isPrimary]="pricingPlanId() !== 1 ? false : true"
+    [isPrimary]="pricingPlanId() !== 1 ? true : false"
     [rounded]="false"
+    optClasses="w-48"
     label="Empieza ya"
     href="/"
   />

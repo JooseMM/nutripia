@@ -16,6 +16,7 @@ export class PriceBoxComponent implements OnInit {
     environment.pricingPlanOptionsArray[0];
   /* we set the value of currentPricePlan base on the input of pricePlanId
    * and use the minimun plan as the default plan in the app */
+  priceBaseStyleHeader = 'text-4xl font-bold';
   ngOnInit(): void {
     if (this.pricingPlanId() > 0)
       this.currentPricingPlan =

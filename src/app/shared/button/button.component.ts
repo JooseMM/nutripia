@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, input, InputSignal, OnInit } from '@angular/core';
 
 @Component({
   selector: 'nt-button',
@@ -7,14 +7,20 @@ import { Component, input } from '@angular/core';
   templateUrl: './button.component.html',
   styleUrl: './button.component.css',
 })
-export class ButtonComponent {
+export class ButtonComponent implements OnInit {
   isPrimary = input.required<boolean>();
   rounded = input<boolean>(true);
+  optClasses = input<string>();
   label = input.required<string>();
   href = input.required<string>();
   routerLinkActive = input<string>('active');
+  baseStyles = '';
+  primary = '';
+  alternative = '';
 
-  baseStyles = `font-bold text-white ${this.rounded() ? 'rounded-[1000px]' : ''} cursor-pointer font-serif tracking-wide text-lg flex items-center border border-solid text-md`;
-  primary = `${this.baseStyles} px-8 py-3 border border-solid border-dark-slate-grape bg-primary-purple border-dark-slate-grape | lg:hover:bg-white lg:hover:text-charcoal transition`;
-  alternative = `${this.baseStyles} border border-solid border-dark-slate-grape bg-yellow border-dark-yellow`;
+  ngOnInit(): void {
+    this.baseStyles = `font-bold ${this.rounded() ? 'rounded-full' : 'rounded-md'} px-8 py-3 cursor-pointer text-center font-serif tracking-wide text-lg flex justify-center border border-solid text-md ${this.optClasses()}`;
+    this.primary = `${this.baseStyles} text-white border border-solid border-dark-slate-grape bg-primary-purple border-dark-slate-grape | lg:hover:bg-white lg:hover:text-charcoal transition`;
+    this.alternative = `${this.baseStyles} text-charcoal border border-solid border-dark-slate-grape bg-white border-dark-yellow`;
+  }
 }
