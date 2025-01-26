@@ -11,14 +11,74 @@
       currentPricingPlan.description
     }}</span>
     <h3 class="text-4xl font-bold">
-      {{ currentPricingPlan.price * currentPricingPlan.months }}
+      {{
+        currentPricingPlan.price * currentPricingPlan.months
+          | currency: "CLP" : "symbol-narrow"
+      }}
     </h3>
     <span>{{
       currentPricingPlan.months > 1
-        ? "$" + currentPricingPlan.price + " cada mes"
+        ? (currentPricingPlan.price | currency: "CLP" : "symbol-narrow") +
+          " cada mes"
         : "unica consulta"
     }}</span>
   </div>
 
-  <div></div>
+  <div class="flex flex-col space-y-2">
+    <!-- Asesoria -->
+    <div class="flex space-x-2">
+      <img
+        [src]="
+          pricingPlanId() > 0
+            ? 'assets/icons/check-icon.svg'
+            : 'assets/icons/uncheck-icon.svg'
+        "
+        alt="icono de incluido o no incluido"
+      />
+      <span>Seguimiento</span>
+    </div>
+    <!-- Diagnostico -->
+    <div class="flex space-x-2">
+      <img
+        src="assets/icons/check-icon.svg"
+        alt="icono de incluido o no incluido"
+      />
+      <span>Diagnostico</span>
+    </div>
+    <!-- plan nutricional -->
+    <div class="flex space-x-2">
+      <img
+        src="assets/icons/check-icon.svg"
+        alt="icono de incluido o no incluido"
+      />
+      <span>Plan Nutricional</span>
+    </div>
+    <!-- Personalizacion  -->
+    <div class="flex space-x-2">
+      <img
+        [src]="
+          pricingPlanId() > 0
+            ? 'assets/icons/check-icon.svg'
+            : 'assets/icons/uncheck-icon.svg'
+        "
+        alt="icono de incluido o no incluido"
+      />
+      <span>Personalizacion</span>
+    </div>
+    <!-- Antopometria -->
+    <div class="flex space-x-2">
+      <img
+        src="assets/icons/check-icon.svg"
+        alt="icono de incluido o no incluido"
+      />
+      <span>Antopometria</span>
+    </div>
+    <!-- -->
+  </div>
+  <nt-button
+    [isPrimary]="pricingPlanId() !== 1 ? false : true"
+    [rounded]="false"
+    label="Empieza ya"
+    href="/"
+  />
 </div>

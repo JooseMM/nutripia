@@ -1,8 +1,11 @@
+import PricingPlanOptions from 'src/models/IPricingPlanOption';
+
 export const environment = {
   pricingPlanOptionsArray: [
     {
       description: 'Unica consulta',
       price: 20000,
+      months: 1,
       benefits: [
         { name: 'Seguimiento', include: false },
         { name: 'Diagnostico', include: true },
@@ -14,6 +17,7 @@ export const environment = {
     {
       description: '3 meses',
       price: 30000,
+      months: 3,
       benefits: [
         { name: 'Seguimiento', include: false },
         { name: 'Diagnostico', include: true },
@@ -25,6 +29,7 @@ export const environment = {
     {
       description: '6 meses',
       price: 25000,
+      months: 6,
       benefits: [
         { name: 'Seguimiento', include: false },
         { name: 'Diagnostico', include: true },
