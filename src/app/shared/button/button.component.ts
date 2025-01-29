@@ -19,8 +19,8 @@ export class ButtonComponent implements OnInit {
   alternative = '';
 
   ngOnInit(): void {
-    this.baseStyles = `font-bold ${this.rounded() ? 'rounded-full' : 'rounded-md'} px-8 py-3 cursor-pointer text-center font-serif tracking-wide text-lg flex justify-center border border-solid text-md ${this.optClasses()}`;
-    this.primary = `${this.baseStyles} text-white border border-solid border-dark-slate-grape bg-primary-purple border-dark-slate-grape | lg:hover:bg-white lg:hover:text-charcoal transition`;
-    this.alternative = `${this.baseStyles} text-charcoal border border-solid border-dark-slate-grape bg-white border-dark-yellow`;
+    this.baseStyles = `font-bold ${this.rounded() ? 'rounded-full' : 'rounded-md'} px-8 py-3 cursor-pointer text-center font-serif tracking-wide text-lg flex justify-center border border-solid text-md transition ${this.optClasses()}`;
+    this.primary = `${this.baseStyles} text-white border border-solid border-dark-slate-grape bg-primary-purple border-dark-slate-grape | lg:hover:bg-white lg:hover:text-charcoal `;
+    this.alternative = `${this.baseStyles} text-charcoal border border-solid border-dark-slate-grape bg-white border-dark-yellow | lg:hover:border-white lg:hover:bg-primary-purple lg:hover:text-white`;
   }
 }
