@@ -6,7 +6,7 @@ module.exports = {
       pewter: "#6B7973", // box font
       "primary-purple": "#8878A5", // primary color
       "lavender-blush": "#EEEBF2", // background
-      "lavender-purple": "#A093B7", // might be useful ??
+      "lavender-purple": "#B8AEC9", // might be useful ??
       "lavender-gray": "#DDDAE2", // line separator
       "white-lavender": "#F3F2F6", // box background
       "dark-slate-grape": "#5F5373",

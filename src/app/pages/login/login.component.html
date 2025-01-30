@@ -1,1 +1,47 @@
-<p>login works!</p>
+<section
+  class="flex text-primary-purple flex-col px-mobile-padding items-center h-dvh"
+>
+  <form
+    class="flex flex-col w-full max-w-80 border border-pewter space-y-4"
+    [formGroup]="reactiveForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <div class="flex flex-col text-left space-y-2">
+      <label class="font-medium" for="email">Correo Electronico</label>
+      <input
+        class="px-4 py-2 border border-lavender-purple rounded-lg"
+        for="email"
+        type="text"
+        placeholder="Ejem: pia@nutricionista.com"
+        formControlName="email"
+        [class.border-white]="
+          this.reactiveForm.get('email')!.invalid &&
+          this.reactiveForm.get('email')!.touched
+        "
+      />
+      @if (
+        this.reactiveForm.get("email")!.invalid &&
+        this.reactiveForm.get("email")!.touched
+      ) {
+        <span>Formato de email no valido</span>
+      }
+    </div>
+    <div class="flex flex-col text-left space-y-2">
+      <label for="password">Contraseña</label>
+      <input
+        class="px-4 py-2 border border-lavender-purple rounded-lg"
+        for="email"
+        type="text"
+        placeholder="Escribe tu contraseña aca"
+        formControlName="email"
+      />
+    </div>
+    <a href="/">¿Olvidaste tu contraseña?</a>
+    <nt-button
+      [isPrimary]="true"
+      label="Iniciar Sesion"
+      href="/"
+      class="w-fit mx-auto"
+    />
+  </form>
+</section>
