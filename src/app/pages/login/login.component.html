@@ -1,47 +1,54 @@
 <section
-  class="flex text-primary-purple flex-col px-mobile-padding items-center h-dvh"
+  class="flex text-primary-purple flex-col px-mobile-padding items-center h-dvh py-4"
 >
   <form
-    class="flex flex-col w-full max-w-80 border border-pewter space-y-4"
+    class="flex flex-col w-full max-w-80"
     [formGroup]="reactiveForm"
     (ngSubmit)="onSubmit()"
   >
-    <div class="flex flex-col text-left space-y-2">
-      <label class="font-medium" for="email">Correo Electronico</label>
+    <div class="flex flex-col text-left">
+      <label class="font-medium mb-2 ml-4" for="email"
+        >Correo Electronico</label
+      >
       <input
         class="px-4 py-2 border border-lavender-purple rounded-lg"
         for="email"
         type="text"
         placeholder="Ejem: pia@nutricionista.com"
         formControlName="email"
-        [class.border-white]="
+        [class.border-red]="
           this.reactiveForm.get('email')!.invalid &&
           this.reactiveForm.get('email')!.touched
         "
       />
-      @if (
-        this.reactiveForm.get("email")!.invalid &&
-        this.reactiveForm.get("email")!.touched
-      ) {
-        <span>Formato de email no valido</span>
+      @if (isEmailValid()) {
+        <span class="text-red">Formato de email no valido</span>
       }
     </div>
-    <div class="flex flex-col text-left space-y-2">
-      <label for="password">Contraseña</label>
+    <div class="flex flex-col text-left mt-3">
+      <label class="font-medium mb-2 ml-4" for="password">Contraseña</label>
       <input
         class="px-4 py-2 border border-lavender-purple rounded-lg"
         for="email"
         type="text"
         placeholder="Escribe tu contraseña aca"
-        formControlName="email"
+        formControlName="password"
+        [class.border-red]="
+          this.reactiveForm.get('password')!.invalid &&
+          this.reactiveForm.get('password')!.touched
+        "
       />
+      @if (isForbidden() && isFormEdited()) {
+        <span class="text-red">Contraseña incorrecta</span>
+      }
     </div>
     <a href="/">¿Olvidaste tu contraseña?</a>
     <nt-button
       [isPrimary]="true"
       label="Iniciar Sesion"
-      href="/"
-      class="w-fit mx-auto"
+      class="w-fit mx-auto mt-4"
+      type="submit"
+      [disable]="!isFormEdited()"
     />
   </form>
 </section>

@@ -10,9 +10,11 @@ import { Component, input, InputSignal, OnInit } from '@angular/core';
 export class ButtonComponent implements OnInit {
   isPrimary = input.required<boolean>();
   rounded = input<boolean>(true);
+  type = input<string>('');
+  disable = input<boolean>(false);
   optClasses = input<string>();
   label = input.required<string>();
-  href = input.required<string>();
+  href = input<string>('');
   routerLinkActive = input<string>('active');
   baseStyles = '';
   primary = '';

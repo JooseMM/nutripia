@@ -1,3 +1,14 @@
-<a [ngClass]="isPrimary() ? primary : alternative" [href]="href()">
-  {{ label() }}
-</a>
+@if (href() !== "") {
+  <a [ngClass]="isPrimary() ? primary : alternative" [href]="href()">
+    {{ label() }}
+  </a>
+} @else {
+  <button
+    [ngClass]="isPrimary() ? primary : alternative"
+    [type]="type()"
+    [disabled]="disable()"
+    [class.opacity-60]="disable()"
+  >
+    {{ label() }}
+  </button>
+}

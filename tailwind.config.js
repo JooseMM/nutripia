@@ -14,6 +14,7 @@ module.exports = {
       "soft-charcoal": "#474747",
       "lighter-charcoal": "#737373",
       white: "#FFF",
+      red: "#EF6868",
     },
     fontFamily: {
       serif: ['"Open Sans"'],

@@ -4,10 +4,17 @@ import { ButtonComponent } from './shared/button/button.component';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeEsCl from '@angular/common/locales/es-CL';
+import { LogoComponent } from './shared/logo/logo.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, ButtonComponent],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    ButtonComponent,
+    LogoComponent,
+  ],
   templateUrl: './app.component.html',
   providers: [{ provide: LOCALE_ID, useValue: 'es-CL' }],
 })
