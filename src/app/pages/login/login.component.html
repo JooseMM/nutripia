@@ -25,7 +25,7 @@
         >Correo Electronico</label
       >
       <input
-        class="px-4 py-2 border border-lavender-purple rounded-lg"
+        class="px-4 py-2 border border-lavender-purple rounded-lg lg:focus:border-primary-purple"
         for="email"
         type="text"
         placeholder="Ejem: pia@nutricionista.com"
@@ -39,7 +39,7 @@
     <div class="flex flex-col text-left mt-3 w-full max-w-72">
       <label class="font-medium mb-2 ml-4" for="password">Contraseña</label>
       <input
-        class="px-4 py-2 border border-lavender-purple rounded-lg"
+        class="px-4 py-2 border border-lavender-purple rounded-lg focus:border-primary-purple"
         for="email"
         type="password"
         placeholder="Escribe tu contraseña aca"
@@ -61,7 +61,7 @@
       class="w-[193px] h-[55px] mx-auto mt-3 |"
       type="submit"
       [isLoading]="apiConnectionState().isLoading"
-      [isDisable]="!isFormEdited() || !isFormValid()"
+      [isDisable]="!isFormValid() || !isFormEdited()"
     />
   </form>
 </section>

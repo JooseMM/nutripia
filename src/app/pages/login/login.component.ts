@@ -44,7 +44,6 @@ export class LoginComponent {
   protected apiConnectionState: Signal<ApiConnectionState> = computed(() =>
     this.authService.getApiConnectionState(),
   );
-
   onSubmit() {
     const credentials = {
       password: this.reactiveForm.get('password')!.value,
