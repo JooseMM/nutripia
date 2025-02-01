@@ -1,3 +1,4 @@
+<!-- using href to determine if it's a button or an anchor tag -->
 @if (href() !== "") {
   <a [ngClass]="isPrimary() ? primary : alternative" [href]="href()">
     {{ label() }}
@@ -10,11 +11,8 @@
     [type]="type()"
     [disabled]="isDisable() || isLoading()"
     [class.opacity-60]="isDisable()"
-    [class.lg:hover:bg-primary-purple]="isDisable() && isPrimary()"
-    [class.lg:hover:text-white]="isDisable() && isPrimary()"
-    [class.lg:hover:bg-charcoal]="isDisable() && !isPrimary()"
-    [class.lg:hover:text-charcoal]="isDisable() && !isPrimary()"
   >
+    <!-- waiting for the api response -->
     @if (isLoading()) {
       <img
         src="assets/icons/loading-spinner.svg"

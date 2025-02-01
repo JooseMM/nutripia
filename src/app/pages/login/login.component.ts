@@ -15,10 +15,17 @@ import { ButtonComponent } from '../../shared/button/button.component';
 import { AuthenticationService } from './services/authentication.service';
 import AuthenticatorState from 'src/models/IAuthenticationState';
 import ApiConnectionState from 'src/models/IApiCallState';
+import { LogoComponent } from '../../shared/logo/logo.component';
+import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative-icon.component';
 
 @Component({
   selector: 'nt-login',
-  imports: [ReactiveFormsModule, ButtonComponent],
+  imports: [
+    ReactiveFormsModule,
+    ButtonComponent,
+    LogoComponent,
+    DecorativeIconComponent,
+  ],
   templateUrl: './login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

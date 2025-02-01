@@ -1,12 +1,26 @@
 <section
-  class="flex text-primary-purple flex-col px-mobile-padding items-center h-dvh py-4"
+  class="flex flex-col text-primary-purple px-mobile-padding items-center h-dvh py-8 | lg:px-0 lg:h-[800px] lg:items-start lg:flex-row lg:py-0"
 >
+  <div
+    class="hidden | lg:flex flex-col space-y-8 items-center h-full w-[65%] mt-52"
+  >
+    <nt-logo class="lg:text-6xl" />
+    <div class="flex space-x-8">
+      <nt-decorative-icon type="fish" color="#D6D6D6" />
+      <nt-decorative-icon type="chicken" color="#D6D6D6" />
+      <nt-decorative-icon type="banana" color="#D6D6D6" />
+      <nt-decorative-icon type="apple" color="#D6D6D6" />
+      <nt-decorative-icon type="brocoli" color="#D6D6D6" />
+      <nt-decorative-icon type="banana" color="#D6D6D6" />
+      <nt-decorative-icon type="fish" color="#D6D6D6" />
+    </div>
+  </div>
   <form
-    class="flex flex-col w-full max-w-80"
+    class="flex flex-col w-full max-w-80 | lg:w-[35%] lg:max-w-none lg:px-4 lg:items-center lg:py-10 lg:h-full lg:border-l lg:border-l-lavender-gray"
     [formGroup]="reactiveForm"
     (ngSubmit)="onSubmit()"
   >
-    <div class="flex flex-col text-left">
+    <div class="flex flex-col text-left w-full max-w-72">
       <label class="font-medium mb-2 ml-4" for="email"
         >Correo Electronico</label
       >
@@ -22,7 +36,7 @@
         <span class="text-red">Formato de email no valido</span>
       }
     </div>
-    <div class="flex flex-col text-left mt-3">
+    <div class="flex flex-col text-left mt-3 w-full max-w-72">
       <label class="font-medium mb-2 ml-4" for="password">Contraseña</label>
       <input
         class="px-4 py-2 border border-lavender-purple rounded-lg"

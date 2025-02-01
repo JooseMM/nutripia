@@ -14,9 +14,9 @@ export class ButtonComponent implements OnInit {
   routerLinkActive = input<string>('active');
   label = input.required<string>();
   type = input<string>('');
-  isLoading = input<boolean>(false);
+  isLoading = input<boolean>(false); // is waiting for the api response
   isDisable = input<boolean>(false);
-  class = input<string>();
+  class = input<string>(); //optional classes pass as an attribute in html
   baseStyles = '';
   primary = '';
   alternative = '';

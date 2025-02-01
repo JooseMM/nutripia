@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { finalize, map, Observable, tap } from 'rxjs';
+import { finalize, map, tap } from 'rxjs';
 import { API_URL } from 'src/app/constants/app-constants';
 import ApiResponse from 'src/models/IApiResponse';
 import { ApiResponseAdapter } from '../adapter/ApiResponseAdapter';
