@@ -44,10 +44,10 @@
         type="password"
         placeholder="Escribe tu contraseña aca"
         formControlName="password"
-        [class.border-red]="isPasswordInvalid()"
+        [class.border-red]="isPasswordInvalid() || isForbidden()"
       />
       @if (isForbidden()) {
-        <span class="text-red">Credenciales incorrecta</span>
+        <span class="text-red">Usuario o contraseña incorrecta</span>
       }
       @if (isPasswordInvalid()) {
         <span class="text-red">La contraseña no puede estar vacia</span>

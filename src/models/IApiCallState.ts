@@ -1,4 +1,4 @@
 export default interface ApiConnectionState {
   isLoading: boolean;
-  serverConnectionSuccess: boolean;
+  connectionFinish: boolean;
 }

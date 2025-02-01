@@ -1,6 +1,6 @@
-export default interface AuthenticatorState {
-  name: string;
-  token: string;
+export default interface AuthenticationState {
   email: string;
-  isEmailConfirmed: boolean;
+  firstName: string;
+  isEmailVerified: boolean;
+  role: 'admin_user' | 'client_user' | '';
 }

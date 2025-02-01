@@ -13,7 +13,7 @@ import {
 } from '@angular/forms';
 import { ButtonComponent } from '../../shared/button/button.component';
 import { AuthenticationService } from './services/authentication.service';
-import AuthenticatorState from 'src/models/IAuthenticationState';
+import AuthenticationState from 'src/models/IAuthenticationState';
 import ApiConnectionState from 'src/models/IApiCallState';
 import { LogoComponent } from '../../shared/logo/logo.component';
 import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative-icon.component';
@@ -37,7 +37,7 @@ export class LoginComponent {
   //injects the service
   private authService = inject(AuthenticationService);
   // listen to changes in the auth state
-  protected authState: Signal<AuthenticatorState> = computed(() =>
+  protected authState: Signal<AuthenticationState> = computed(() =>
     this.authService.getAuthenticationState(),
   );
   // listen to changes in the api connection state
@@ -57,9 +57,9 @@ export class LoginComponent {
 
   isForbidden(): boolean {
     return (
-      this.apiConnectionState().serverConnectionSuccess &&
+      this.apiConnectionState().connectionFinish &&
       this.isFormEdited() &&
-      this.authState().token == ''
+      this.authState().firstName === ''
     );
   }
   isFormEdited(): boolean {
