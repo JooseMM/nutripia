@@ -13,6 +13,8 @@ import {
 } from '@angular/forms';
 import { ButtonComponent } from '../../shared/button/button.component';
 import { AuthenticationService } from './services/authentication.service';
+import AuthenticatorState from 'src/models/IAuthenticationState';
+import ApiConnectionState from 'src/models/IApiCallState';
 
 @Component({
   selector: 'nt-login',
@@ -28,10 +30,13 @@ export class LoginComponent {
   //injects the service
   private authService = inject(AuthenticationService);
   // listen to changes in the auth state
-  protected isForbidden: Signal<boolean | undefined> = computed(() => {
-    const state = this.authService.getState();
-    return state.serverConnectionSuccess && state.token === '';
-  });
+  protected authState: Signal<AuthenticatorState> = computed(() =>
+    this.authService.getAuthenticationState(),
+  );
+  // listen to changes in the api connection state
+  protected apiConnectionState: Signal<ApiConnectionState> = computed(() =>
+    this.authService.getApiConnectionState(),
+  );
 
   onSubmit() {
     const credentials = {
@@ -44,6 +49,13 @@ export class LoginComponent {
     // pass the state to the isForbidden variable
   }
 
+  isForbidden(): boolean {
+    return (
+      this.apiConnectionState().serverConnectionSuccess &&
+      this.isFormEdited() &&
+      this.authState().token == ''
+    );
+  }
   isFormEdited(): boolean {
     return (
       this.reactiveForm.get('email')!.touched &&
@@ -51,7 +63,20 @@ export class LoginComponent {
     );
   }
 
-  isEmailValid(): boolean {
+  isFormValid(): boolean {
+    return (
+      this.reactiveForm.get('email')!.valid &&
+      this.reactiveForm.get('password')!.valid
+    );
+  }
+
+  isPasswordInvalid(): boolean {
+    return (
+      this.reactiveForm.get('password')!.invalid &&
+      this.reactiveForm.get('password')!.touched
+    );
+  }
+  isEmailInvalid(): boolean {
     return (
       this.reactiveForm.get('email')!.invalid &&
       this.reactiveForm.get('email')!.touched

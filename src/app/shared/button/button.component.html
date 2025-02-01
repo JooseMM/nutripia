@@ -3,12 +3,25 @@
     {{ label() }}
   </a>
 } @else {
+  <!-- the [class.lg:hover:*] are there to disable hover effects
+       when the button is disable in all themes -->
   <button
     [ngClass]="isPrimary() ? primary : alternative"
     [type]="type()"
-    [disabled]="disable()"
-    [class.opacity-60]="disable()"
+    [disabled]="isDisable() || isLoading()"
+    [class.opacity-60]="isDisable()"
+    [class.lg:hover:bg-primary-purple]="isDisable() && isPrimary()"
+    [class.lg:hover:text-white]="isDisable() && isPrimary()"
+    [class.lg:hover:bg-charcoal]="isDisable() && !isPrimary()"
+    [class.lg:hover:text-charcoal]="isDisable() && !isPrimary()"
   >
-    {{ label() }}
+    @if (isLoading()) {
+      <img
+        src="assets/icons/loading-spinner.svg"
+        class="animate-spin m-auto w-7 h-7"
+      />
+    } @else {
+      {{ label() }}
+    }
   </button>
 }
