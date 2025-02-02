@@ -17,6 +17,7 @@ import AuthenticationState from 'src/models/IAuthenticationState';
 import ApiConnectionState from 'src/models/IApiCallState';
 import { LogoComponent } from '../../shared/logo/logo.component';
 import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative-icon.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'nt-login',
@@ -44,13 +45,17 @@ export class LoginComponent {
   protected apiConnectionState: Signal<ApiConnectionState> = computed(() =>
     this.authService.getApiConnectionState(),
   );
+  router = inject(Router);
+
   onSubmit() {
     const credentials = {
       password: this.reactiveForm.get('password')!.value,
       email: this.reactiveForm.get('email')!.value,
     };
+
+    //this.router.navigate(['/']);
+
     // call the service to update its state
-    console.log(credentials);
     this.authService.login(credentials);
     // pass the state to the isForbidden variable
   }
