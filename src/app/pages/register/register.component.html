@@ -25,6 +25,7 @@
       controlName="fullName"
       [isInputValid]="!isInputInvalid('fullName')"
       class="w-full max-w-72 mt-3"
+      validationErrorOutput="Formato de nombre completo invalido, solo se permiten letras y espacios"
     />
     <nt-custom-input
       label="Correo Electronico"
@@ -32,6 +33,7 @@
       [control]="getFormControlName('email')"
       controlName="email"
       [isInputValid]="!isInputInvalid('email')"
+      validationErrorOutput="Formato de correo electronico invalido"
       class="w-full max-w-72 mt-3"
     />
     <nt-custom-input
@@ -40,6 +42,7 @@
       [control]="getFormControlName('password')"
       controlName="password"
       [isInputValid]="!isInputInvalid('password')"
+      validationErrorOutput="Nueva contraseña invalida debe contener: "
       class="w-full max-w-72 mt-3"
     />
     <nt-custom-input
@@ -48,6 +51,7 @@
       [control]="getFormControlName('confirmedPassword')"
       controlName="confirmedPassword"
       [isInputValid]="!isInputInvalid('confirmedPassword')"
+      validationErrorOutput="Contraseña y confirmacion de contraseña no son iguales"
       class="w-full max-w-72 mt-3"
     />
     <nt-custom-input
@@ -56,6 +60,7 @@
       [control]="getFormControlName('age')"
       controlName="age"
       [isInputValid]="!isInputInvalid('age')"
+      validationErrorOutput="Edad invalida solo se permiten valores de 1 a 99"
       class="w-full max-w-72 mt-3"
     />
     <nt-custom-input
@@ -64,6 +69,7 @@
       [control]="getFormControlName('phoneNumber')"
       controlName="phoneNumber"
       [isInputValid]="!isInputInvalid('phoneNumber')"
+      validationErrorOutput="Formato de numero telefonico chileno invalido"
       class="w-full max-w-72 mt-3"
     />
     <nt-custom-input
@@ -72,6 +78,7 @@
       [control]="getFormControlName('previousDiagnostics')"
       controlName="previousDiagnostics"
       [isInputValid]="!isInputInvalid('previousDiagnostics')"
+      validationErrorOutput="Formato invalido, solo se permiten letras, espacios, puntos, comas y guiones"
       class="w-full max-w-72 mt-3"
     />
     <!-- the width and height is fixed to to avoid having layout shift while calling the backend -->

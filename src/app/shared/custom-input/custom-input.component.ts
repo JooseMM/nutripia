@@ -1,10 +1,9 @@
-import { LowerCasePipe, SlicePipe, UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'nt-custom-input',
-  imports: [ReactiveFormsModule, SlicePipe, UpperCasePipe, LowerCasePipe],
+  imports: [ReactiveFormsModule],
   templateUrl: './custom-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -14,4 +13,5 @@ export class CustomInputComponent {
   control = input.required<FormControl>();
   controlName = input.required<string>();
   isInputValid = input.required<boolean>();
+  validationErrorOutput = input.required<string>();
 }

@@ -13,9 +13,6 @@
     [class.border-red]="!isInputValid()"
   />
   @if (!isInputValid()) {
-    <span class="text-red ml-2"
-      >{{ label() | slice: 0 : 1 | uppercase
-      }}{{ label() | slice: 1 | lowercase }} invalido/a</span
-    >
+    <span class="text-red ml-2"> {{ validationErrorOutput() }}</span>
   }
 </div>
