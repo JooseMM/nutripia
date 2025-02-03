@@ -9,8 +9,8 @@
   <button
     [ngClass]="isPrimary() ? primary : alternative"
     [type]="type()"
-    [disabled]="isDisable() || isLoading()"
-    [class.opacity-60]="isDisable()"
+    [disabled]="isDisabled() || isLoading()"
+    [class.opacity-60]="isDisabled()"
   >
     <!-- waiting for the api response -->
     @if (isLoading()) {

@@ -15,7 +15,7 @@ export class ButtonComponent implements OnInit {
   label = input.required<string>();
   type = input<string>('');
   isLoading = input<boolean>(false); // is waiting for the api response
-  isDisable = input<boolean>(false);
+  isDisabled = input<boolean>(false);
   class = input<string>(); //optional classes pass as an attribute in html
   baseStyles = '';
   primary = '';
