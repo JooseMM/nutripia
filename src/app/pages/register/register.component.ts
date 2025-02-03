@@ -1,10 +1,12 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { LogoComponent } from '../../shared/logo/logo.component';
 import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative-icon.component';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { AuthenticationService } from '../login/services/authentication.service';
@@ -13,13 +15,13 @@ import ApiConnectionState from 'src/models/IApiCallState';
 import { Router } from '@angular/router';
 import { ButtonComponent } from 'src/app/shared/button/button.component';
 import {
-  chileanPhoneFormat,
-  humanValidAge,
   letterAndSpacesPattern,
   letterSpaceAndSymbols,
   letterSpaceSymbolsAndNumbers,
 } from 'src/app/constants/app-constants';
 import { CustomInputComponent } from '../../shared/custom-input/custom-input.component';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { max } from 'rxjs';
 
 @Component({
   selector: 'nt-register',
@@ -44,20 +46,18 @@ export class RegisterComponent {
       Validators.required,
       Validators.pattern(letterSpaceSymbolsAndNumbers),
     ]),
-    confirmedPassword: new FormControl('', [
-      Validators.required,
-      Validators.pattern(letterSpaceSymbolsAndNumbers),
-    ]),
+    confirmedPassword: new FormControl('', Validators.required), // add validator to check password matching
     age: new FormControl(0, [
       Validators.required,
-      Validators.pattern(humanValidAge),
+      Validators.min(1),
+      Validators.max(99),
     ]),
     phoneNumber: new FormControl('', [
       Validators.required,
-      Validators.pattern(chileanPhoneFormat),
-    ]), // TODO: add validators to let only phone numbers
+      Validators.minLength(9),
+      Validators.maxLength(15),
+    ]),
     previousDiagnostics: new FormControl('', [
-      Validators.required,
       Validators.pattern(letterSpaceAndSymbols),
     ]),
   });

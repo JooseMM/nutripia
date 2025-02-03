@@ -5,7 +5,6 @@ import { Component, input, OnInit } from '@angular/core';
   selector: 'nt-button',
   imports: [NgClass],
   templateUrl: './button.component.html',
-  styleUrl: './button.component.css',
 })
 export class ButtonComponent implements OnInit {
   isPrimary = input.required<boolean>();

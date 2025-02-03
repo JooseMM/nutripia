@@ -27,7 +27,6 @@ import { CustomInputComponent } from '../../shared/custom-input/custom-input.com
     ButtonComponent,
     LogoComponent,
     DecorativeIconComponent,
-    CustomInputComponent,
   ],
   templateUrl: './login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

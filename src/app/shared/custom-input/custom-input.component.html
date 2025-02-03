@@ -4,14 +4,42 @@
     for="controlName()"
     >{{ label() }}</label
   >
-  <input
-    class="px-4 py-2 border border-lavender-purple rounded-lg focus:border-primary-purple"
-    for="formControlname()"
-    type="type()"
-    placeholder="Ejem: Juan Villegas"
-    [formControl]="control()"
-    [class.border-red]="!isInputValid()"
-  />
+  @if (type() === "number") {
+    <div class="flex w-full space-x-4">
+      <nt-button
+        [isPrimary]="true"
+        class="h-[42px] w-14 lg:p-0 items-center text-3xl lg:text-3xl"
+        [rounded]="false"
+        label="+"
+        type="button"
+        (click)="increaseNumber()"
+      />
+      <input
+        class="py-2 border pl-4 w-14 text-center border-lavender-purple rounded-lg focus:border-primary-purple"
+        [type]="type()"
+        [id]="controlName()"
+        [attr.for]="controlName()"
+        [formControl]="control()"
+      />
+      <nt-button
+        [isPrimary]="true"
+        class="h-[42px] w-14 lg:p-0 items-center text-3x lg:text-3xl"
+        type="button"
+        [rounded]="false"
+        label="-"
+        (click)="decreaseNumber()"
+      />
+    </div>
+  } @else {
+    <input
+      class="px-4 py-2 border border-lavender-purple rounded-lg focus:border-primary-purple"
+      [attr.for]="controlName()"
+      type="type()"
+      placeholder="Ejem: Juan Villegas"
+      [formControl]="control()"
+      [class.border-red]="!isInputValid()"
+    />
+  }
   @if (!isInputValid()) {
     <span class="text-red ml-2"> {{ validationErrorOutput() }}</span>
   }
