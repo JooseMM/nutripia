@@ -2,28 +2,20 @@ import { Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { LogoComponent } from '../../shared/logo/logo.component';
 import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative-icon.component';
 import {
-  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { AuthenticationService } from '../login/services/authentication.service';
-import AuthenticationState from 'src/models/IAuthenticationState';
 import ApiConnectionState from 'src/models/IApiCallState';
 import { Router } from '@angular/router';
 import { ButtonComponent } from 'src/app/shared/button/button.component';
-import {
-  letterAndSpacesPattern,
-  letterSpaceAndSymbols,
-  letterSpaceSymbolsAndNumbers,
-} from 'src/app/constants/app-constants';
 import { CustomInputComponent } from '../../shared/custom-input/custom-input.component';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { max } from 'rxjs';
-import { registerBusinessLogicValidators } from './businessLogic';
+import {
+  registerBusinessLogicValidators,
+  validationError,
+} from './businessLogic';
 
 @Component({
   selector: 'nt-register',
@@ -66,6 +58,7 @@ export class RegisterComponent {
   protected apiConnectionState: Signal<ApiConnectionState> = computed(() =>
     this.authService.getApiConnectionState(),
   );
+  validationErrorObject = validationError;
 
   onSubmit() {
     this.router.navigate(['/']);

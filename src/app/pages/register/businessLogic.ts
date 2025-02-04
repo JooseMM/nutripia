@@ -20,6 +20,19 @@ interface RegisterBusinessLogicValidators {
   phoneNumber: ValidatorFn[];
   previousDiagnostics: ValidatorFn[];
 }
+interface ValidationErrorObjectHandler {
+  fullName: ValidationErrorObject[];
+  email: ValidationErrorObject[];
+  password: ValidationErrorObject[];
+  passwordConfirm: ValidationErrorObject[];
+  age: ValidationErrorObject[];
+  phoneNumber: ValidationErrorObject[];
+  previousDiagnostics: ValidationErrorObject[];
+}
+interface ValidationErrorObject {
+  errorName: string;
+  output: string;
+}
 export const registerBusinessLogicValidators: RegisterBusinessLogicValidators =
   {
     fullName: [Validators.required, Validators.pattern(letterAndSpacesPattern)],
@@ -38,13 +51,39 @@ export const registerBusinessLogicValidators: RegisterBusinessLogicValidators =
     previousDiagnostics: [Validators.pattern(letterSpaceAndSymbols)],
   };
 
+export const validationError: ValidationErrorObjectHandler = {
+  fullName: [
+    { errorName: 'required', output: 'El nombre completo es requerido' },
+    {
+      errorName: 'pattern',
+      output: 'El nombre solo debe contener letras y espacios',
+    },
+  ],
+  email: [
+    { errorName: 'required', output: 'El email  es requerido' },
+    {
+      errorName: 'email',
+      output: 'Formato de email invalido',
+    },
+  ],
+  age: [{ errorName: 'required', output: 'El nombre completo es requerido' }],
+  password: [
+    { errorName: 'required', output: 'El nombre completo es requerido' },
+  ],
+  passwordConfirm: [
+    { errorName: 'required', output: 'El nombre completo es requerido' },
+  ],
+  phoneNumber: [
+    { errorName: 'required', output: 'El nombre completo es requerido' },
+  ],
+  previousDiagnostics: [
+    { errorName: 'required', output: 'El nombre completo es requerido' },
+  ],
+};
 function doPasswordMatchValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const password = control.get('password')?.value;
     const passwordMatch = control.get('passwordConfirm')?.value;
-    console.log(password);
-    console.log(passwordMatch);
-    console.log(control.errors);
     return password === passwordMatch ? null : { notMatchingPassword: true };
   };
 }

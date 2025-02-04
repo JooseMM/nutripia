@@ -1,9 +1,7 @@
 <div class="flex flex-col text-left w-full">
-  <label
-    class="font-medium text-primary-purple mb-2 ml-4"
-    for="controlName()"
-    >{{ label() }}</label
-  >
+  <label class="font-medium text-primary-purple mb-2 ml-4" for="id()">{{
+    label()
+  }}</label>
   @if (type() === "number") {
     <div class="flex w-full space-x-4">
       <nt-button
@@ -17,8 +15,7 @@
       <input
         class="py-2 border pl-4 w-14 text-center border-lavender-purple rounded-lg focus:border-primary-purple"
         [type]="type()"
-        [id]="controlName()"
-        [attr.for]="controlName()"
+        [id]="id()"
         [formControl]="control()"
       />
       <nt-button
@@ -33,14 +30,14 @@
   } @else {
     <input
       class="px-4 py-2 border border-lavender-purple rounded-lg focus:border-primary-purple"
-      [attr.for]="controlName()"
+      [attr.for]="id()"
       type="type()"
       placeholder="Ejem: Juan Villegas"
       [formControl]="control()"
-      [class.border-red]="!isInputValid()"
+      [class.border-red]="isInputInvalid()"
     />
   }
-  @if (!isInputValid()) {
-    <span class="text-red ml-2"> {{ validationErrorOutput() }}</span>
+  @if (isInputInvalid()) {
+    <span class="text-red ml-2"> {{ showFirstValidationErrorMatch() }}</span>
   }
 </div>

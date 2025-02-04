@@ -1,20 +1,31 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  OnInit,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
 
+interface ValidationError {
+  errorName: string;
+  output: string;
+}
 @Component({
   selector: 'nt-custom-input',
   imports: [ReactiveFormsModule, ButtonComponent],
   templateUrl: './custom-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomInputComponent {
+export class CustomInputComponent implements OnInit {
+  ngOnInit(): void {
+    console.log(this.control().errors);
+  }
   label = input.required<string>();
   type = input.required<string>();
   control = input.required<FormControl>();
-  controlName = input.required<string>();
-  isInputValid = input.required<boolean>();
-  validationErrorOutput = input.required<string>();
+  id = input.required<string>();
+  validationErrorObject = input.required<ValidationError[]>();
 
   increaseNumber() {
     const currentValue: number = this.control().value;
@@ -27,5 +38,23 @@ export class CustomInputComponent {
     if (currentValue > 1) {
       this.control().setValue(currentValue - 1);
     }
+  }
+  isInputInvalid(): boolean {
+    return this.control().invalid && this.control().touched;
+  }
+  showFirstValidationErrorMatch() {
+    const control = this.control();
+    const errorObjectArray = this.validationErrorObject();
+    /* iterate throught the validationErrorObject and try to match
+     any error name with the one who exists in the control validation state
+     */
+    console.log(this.control().errors);
+    console.log(errorObjectArray.length);
+    for (let i = 0; i < errorObjectArray.length; i++) {
+      if (control.hasError(errorObjectArray[i].errorName)) {
+        return errorObjectArray[i].output;
+      }
+    }
+    return '';
   }
 }

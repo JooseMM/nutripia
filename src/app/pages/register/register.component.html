@@ -22,64 +22,58 @@
       label="Nombre y Apellido"
       type="text"
       [control]="getFormControl('fullName')"
-      controlName="fullName"
-      [isInputValid]="!isInputInvalid('fullName')"
+      id="fullName"
       class="w-full max-w-72 mt-3"
-      validationErrorOutput="Formato de nombre completo invalido, solo se permiten letras y espacios"
+      [validationErrorObject]="validationErrorObject.fullName"
     />
     <nt-custom-input
       label="Correo Electronico"
       type="text"
       [control]="getFormControl('email')"
-      controlName="email"
-      [isInputValid]="!isInputInvalid('email')"
-      validationErrorOutput="Formato de correo electronico invalido"
+      id="email"
       class="w-full max-w-72 mt-3"
+      [validationErrorObject]="validationErrorObject.email"
     />
     <nt-custom-input
       label="Contraseña"
       type="password"
       [control]="getPasswordNestedControl('password')"
-      controlName="password"
-      [isInputValid]="isInputPasswordValid()"
+      id="password"
       validationErrorOutput="Nueva contraseña invalida debe contener: "
       class="w-full max-w-72 mt-3"
+      [validationErrorObject]="validationErrorObject.password"
     />
     <nt-custom-input
       label="Confirme Contraseña"
       type="password"
       [control]="getPasswordNestedControl('passwordConfirm')"
-      controlName="confirmedPassword"
-      [isInputValid]="doPasswordMatch()"
-      validationErrorOutput="Las contraseñas no son iguales"
+      id="confirmedPassword"
       class="w-full max-w-72 mt-3"
+      [validationErrorObject]="validationErrorObject.passwordConfirm"
     />
     <nt-custom-input
       label="Edad"
       type="number"
       [control]="getFormControl('age')"
-      controlName="age"
-      [isInputValid]="!isInputInvalid('age')"
-      validationErrorOutput="Edad invalida solo se permiten valores de 1 a 99"
+      id="age"
       class="w-full max-w-72 mt-3"
+      [validationErrorObject]="validationErrorObject.age"
     />
     <nt-custom-input
       label="Telefono"
       type="text"
       [control]="getFormControl('phoneNumber')!"
-      controlName="phoneNumber"
-      [isInputValid]="!isInputInvalid('phoneNumber')"
-      validationErrorOutput="Formato de numero telefonico chileno invalido"
+      id="phoneNumber"
       class="w-full max-w-72 mt-3"
+      [validationErrorObject]="validationErrorObject.phoneNumber"
     />
     <nt-custom-input
       label="Diagnosticos Previos"
       type="text"
       [control]="getFormControl('previousDiagnostics')"
-      controlName="previousDiagnostics"
-      [isInputValid]="!isInputInvalid('previousDiagnostics')"
-      validationErrorOutput="Formato invalido, solo se permiten letras, espacios, puntos, comas y guiones"
+      id="previousDiagnostics"
       class="w-full max-w-72 mt-3"
+      [validationErrorObject]="validationErrorObject.previousDiagnostics"
     />
     <!-- the width and height is fixed to to avoid having layout shift while calling the backend -->
     <nt-button
