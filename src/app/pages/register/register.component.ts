@@ -35,6 +35,7 @@ export class RegisterComponent {
       ...registerBusinessLogicValidators.fullName,
     ]),
     email: new FormControl('', [...registerBusinessLogicValidators.email]),
+    rut: new FormControl('', [...registerBusinessLogicValidators.rut]),
     passwordGroup: new FormGroup(
       {
         password: new FormControl('', [
@@ -44,7 +45,9 @@ export class RegisterComponent {
       },
       [...registerBusinessLogicValidators.passwordConfirm],
     ),
-    age: new FormControl(0, [...registerBusinessLogicValidators.age]),
+    yearOfBirth: new FormControl(new Date().getFullYear(), [
+      ...registerBusinessLogicValidators.yearOfBirth,
+    ]),
     phoneNumber: new FormControl('', [
       ...registerBusinessLogicValidators.phoneNumber,
     ]),
@@ -61,8 +64,8 @@ export class RegisterComponent {
   validationErrorObject = validationError;
 
   onSubmit() {
-    this.router.navigate(['/']);
-    //TODO: this.authService.register(credentials);
+    //this.router.navigate(['/']);
+    console.log(this.reactiveForm.value);
   }
 
   isInputInvalid(inputName: string): boolean {

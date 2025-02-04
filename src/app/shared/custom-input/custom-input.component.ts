@@ -29,13 +29,14 @@ export class CustomInputComponent implements OnInit {
 
   increaseNumber() {
     const currentValue: number = this.control().value;
-    if (currentValue < 99) {
+    const currentYear = new Date().getFullYear();
+    if (currentValue < currentYear) {
       this.control().setValue(currentValue + 1);
     }
   }
   decreaseNumber() {
     const currentValue: number = this.control().value;
-    if (currentValue > 1) {
+    if (currentValue > 1900) {
       this.control().setValue(currentValue - 1);
     }
   }

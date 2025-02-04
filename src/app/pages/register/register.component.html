@@ -1,7 +1,7 @@
 <section
   class="flex flex-col text-primary-purple px-mobile-padding items-center h-dvh py-8 | lg:px-0 lg:h-auto lg:items-start lg:flex-row lg:py-0"
 >
-  <div class="hidden | lg:flex flex-col space-y-8 items-center w-[75%] mt-52">
+  <div class="hidden | lg:flex flex-col space-y-6 items-center w-[75%] mt-52">
     <nt-logo class="lg:text-6xl" />
     <div class="flex space-x-8">
       <nt-decorative-icon type="fish" color="#D6D6D6" />
@@ -35,6 +35,14 @@
       [validationErrorObject]="validationErrorObject.email"
     />
     <nt-custom-input
+      label="RUT"
+      type="text"
+      [control]="getFormControl('rut')"
+      id="rut"
+      class="w-full max-w-72 mt-3"
+      [validationErrorObject]="validationErrorObject.rut"
+    />
+    <nt-custom-input
       label="Contraseña"
       type="password"
       [control]="getPasswordNestedControl('password')"
@@ -52,12 +60,12 @@
       [validationErrorObject]="validationErrorObject.passwordConfirm"
     />
     <nt-custom-input
-      label="Edad"
+      label="Año de Nacimiento"
       type="number"
-      [control]="getFormControl('age')"
-      id="age"
+      [control]="getFormControl('yearOfBirth')"
+      id="yearOfBirth"
       class="w-full max-w-72 mt-3"
-      [validationErrorObject]="validationErrorObject.age"
+      [validationErrorObject]="validationErrorObject.yearOfBirth"
     />
     <nt-custom-input
       label="Telefono"

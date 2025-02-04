@@ -6,21 +6,21 @@
     <div class="flex w-full space-x-4">
       <nt-button
         [isPrimary]="true"
-        class="h-[42px] w-14 lg:p-0 items-center text-3xl lg:text-3xl"
+        class="h-[42px] w-16 lg:p-0 items-center text-2xl | lg:text-3xl"
         [rounded]="false"
         label="+"
         type="button"
         (click)="increaseNumber()"
       />
       <input
-        class="py-2 border pl-4 w-14 text-center border-lavender-purple rounded-lg focus:border-primary-purple"
+        class="py-2 border w-16 text-center border-lavender-purple rounded-lg focus:border-primary-purple"
         [type]="type()"
         [id]="id()"
         [formControl]="control()"
       />
       <nt-button
         [isPrimary]="true"
-        class="h-[42px] w-14 lg:p-0 items-center text-3x lg:text-3xl"
+        class="h-[42px] w-16 lg:p-0 items-center text-2xl | lg:text-3xl"
         type="button"
         [rounded]="false"
         label="-"
@@ -31,7 +31,7 @@
     <input
       class="px-4 py-2 border border-lavender-purple rounded-lg focus:border-primary-purple"
       [attr.for]="id()"
-      type="type()"
+      [type]="type()"
       placeholder="Ejem: Juan Villegas"
       [formControl]="control()"
       [class.border-red]="isInputInvalid()"
