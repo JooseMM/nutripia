@@ -2,6 +2,7 @@ import { Component, computed, inject, OnInit, Signal } from '@angular/core';
 import { LogoComponent } from '../../shared/logo/logo.component';
 import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative-icon.component';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -22,6 +23,7 @@ import {
 import { CustomInputComponent } from '../../shared/custom-input/custom-input.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { max } from 'rxjs';
+import { registerBusinessLogicValidators } from './businessLogic';
 
 @Component({
   selector: 'nt-register',
@@ -38,27 +40,24 @@ export class RegisterComponent {
   router = inject(Router);
   reactiveForm: FormGroup = new FormGroup({
     fullName: new FormControl('', [
-      Validators.required,
-      Validators.pattern(letterAndSpacesPattern),
+      ...registerBusinessLogicValidators.fullName,
     ]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.pattern(letterSpaceSymbolsAndNumbers),
-    ]),
-    confirmedPassword: new FormControl('', Validators.required), // add validator to check password matching
-    age: new FormControl(0, [
-      Validators.required,
-      Validators.min(1),
-      Validators.max(99),
-    ]),
+    email: new FormControl('', [...registerBusinessLogicValidators.email]),
+    passwordGroup: new FormGroup(
+      {
+        password: new FormControl('', [
+          ...registerBusinessLogicValidators.password,
+        ]),
+        passwordConfirm: new FormControl('', Validators.required),
+      },
+      [...registerBusinessLogicValidators.passwordConfirm],
+    ),
+    age: new FormControl(0, [...registerBusinessLogicValidators.age]),
     phoneNumber: new FormControl('', [
-      Validators.required,
-      Validators.minLength(9),
-      Validators.maxLength(15),
+      ...registerBusinessLogicValidators.phoneNumber,
     ]),
     previousDiagnostics: new FormControl('', [
-      Validators.pattern(letterSpaceAndSymbols),
+      ...registerBusinessLogicValidators.previousDiagnostics,
     ]),
   });
   //injects the service
@@ -70,9 +69,7 @@ export class RegisterComponent {
 
   onSubmit() {
     this.router.navigate(['/']);
-    // call the service to update its state
     //TODO: this.authService.register(credentials);
-    // pass the state to the isForbidden variable
   }
 
   isInputInvalid(inputName: string): boolean {
@@ -81,7 +78,22 @@ export class RegisterComponent {
       this.reactiveForm.get(inputName)!.touched
     );
   }
-  getFormControlName(controlName: string): FormControl {
+  isInputPasswordValid() {
+    return !(
+      this.reactiveForm.get('passwordGroup')!.get('password')!.invalid &&
+      this.reactiveForm.get('passwordGroup')!.get('password')!.touched
+    );
+  }
+  doPasswordMatch() {
+    return !(
+      this.reactiveForm.get('passwordGroup')!.get('passwordConfirm')!.touched &&
+      this.reactiveForm.get('passwordGroup')!.hasError('notMatchingPassword')
+    );
+  }
+  getFormControl(controlName: string): FormControl {
     return this.reactiveForm.get(controlName) as FormControl;
+  }
+  getPasswordNestedControl(controlName: string): FormControl {
+    return this.getFormControl('passwordGroup').get(controlName) as FormControl;
   }
 }
