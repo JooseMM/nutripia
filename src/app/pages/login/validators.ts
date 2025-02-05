@@ -1,3 +1,8 @@
+import { Validators } from '@angular/forms';
+import {
+  letterAndSpacesPattern,
+  letterSpaceSymbolsAndNumbers,
+} from 'src/app/constants/app-constants';
 import { ValidationError } from 'src/models/IValidationError';
 /*
  * Validation output for the email and password
@@ -16,7 +21,7 @@ export const validationError: LoginValidationErrorObject = {
     },
   ],
   password: [
-    { errorName: 'required', output: 'El nombre completo es requerido' },
+    { errorName: 'required', output: 'La contraseña es requerida' },
     {
       errorName: 'pattern',
       output:
@@ -24,7 +29,7 @@ export const validationError: LoginValidationErrorObject = {
     },
     {
       errorName: 'wrongCredentials',
-      output: 'Email o Contraseña incorrecta',
+      output: 'Contraseña incorrecta',
     },
   ],
 };

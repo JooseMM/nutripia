@@ -6,7 +6,11 @@ import { registerLocaleData } from '@angular/common';
 import localeEsCl from '@angular/common/locales/es-CL';
 import { LogoComponent } from './shared/logo/logo.component';
 import { AuthenticationService } from './shared/services/authentication/authentication.service';
-import { ADMIN_ROLE, CLIENT_ROLE } from './constants/app-constants';
+import {
+  ADMIN_ROLE,
+  CLIENT_ROLE,
+  NOT_AUTHENTICATED,
+} from './constants/app-constants';
 
 @Component({
   selector: 'app-root',
@@ -23,11 +27,9 @@ import { ADMIN_ROLE, CLIENT_ROLE } from './constants/app-constants';
 export class AppComponent {
   title = 'nutripia-app';
   protected isMenuOpen = false;
-  authService = inject(AuthenticationService).authenticationState;
-  currentRole = this.authService().role;
   ADMIN_ROLE = ADMIN_ROLE;
   CLIENT_ROLE = CLIENT_ROLE;
-  NOT_AUTHENTICATED = '';
+  NOT_AUTHENTICATED = NOT_AUTHENTICATED;
 
   protected toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;

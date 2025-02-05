@@ -7,12 +7,15 @@
   .active {
     @apply text-charcoal;
   }
+  .loading {
+  }
+  .idle {
+  }
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
     @apply appearance-none;
     margin: 0;
   }
-
   /* Para Firefox */
   input[type="number"] {
     -moz-appearance: textfield;

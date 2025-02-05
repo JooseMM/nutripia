@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
-import { finalize, map, tap } from 'rxjs';
-import { API_URL } from 'src/app/constants/app-constants';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { finalize, map, Observable, tap } from 'rxjs';
+import { API_URL, NOT_AUTHENTICATED } from 'src/app/constants/app-constants';
 import ApiResponse from 'src/models/IApiResponse';
 import { ApiResponseAdapter } from '../../../pages/login/adapter/ApiResponseAdapter';
 import AuthResponse from 'src/models/IAuthResponse';
@@ -22,60 +22,54 @@ import {
 export class AuthenticationService {
   private apiUrl = ` ${API_URL}/auth/login`;
   private http = inject(HttpClient);
-  private localStorageTokenName = 'authToken';
 
-  // global authentication state
-  authenticationState = signal<AuthenticationState>({
-    ...undefinedAuthenticationState,
-  });
-
-  // global connection state
-  apiConnectionState = signal<ApiConnectionState>({
-    isLoading: false,
-    connectionFinish: false,
-  });
-
-  getApiConnectionState() {
-    return this.apiConnectionState();
+  login(credentials: UserCredentials): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(this.apiUrl, credentials).pipe();
   }
-  getAuthenticationState() {
-    return this.authenticationState();
-  }
+  /*
   login(credentials: UserCredentials) {
-    this.apiConnectionState.set({
-      ...this.apiConnectionState(),
+    this.authenticationServerConnectionState.set({
+      ...this.authenticationServerConnectionState(),
       isLoading: true,
     });
 
-    this.http
-      .post<ApiResponse>(this.apiUrl, credentials)
-      .pipe(
-        map((response: ApiResponse) => ApiResponseAdapter(response)),
-        finalize(() =>
-          this.apiConnectionState.set({
-            isLoading: false,
-            connectionFinish: true,
-          }),
-        ),
-      )
-      .subscribe((response) => {
-        const data = response.data as AuthResponse;
-        // if response is ok = 200 save the token otherwise remove it
-        if (response.statusCode === 200) {
-          localStorage.setItem(this.localStorageTokenName, data.token);
-          this.authenticationState.set(this.jwtDecodeToken(data.token));
-        } else {
-          localStorage.removeItem(this.localStorageTokenName);
-        }
-      });
+    setTimeout(() => {
+      this.http
+        .post<ApiResponse>(this.apiUrl, credentials)
+        .pipe(
+          map((response: ApiResponse) => ApiResponseAdapter(response)),
+          finalize(() =>
+            this.authenticationServerConnectionState.set({
+              isLoading: false,
+              connectionFinish: true,
+            }),
+          ),
+        )
+        .subscribe((response) => {
+          const data = response.data as AuthResponse;
+          // if response is ok = 200 save the token otherwise remove it
+          if (response.statusCode === 200) {
+            localStorage.setItem(this.localStorageTokenName, data.token);
+            this.authenticationState.set({
+              ...this.jwtDecodeToken(data.token),
+            });
+          } else {
+            localStorage.removeItem(this.localStorageTokenName);
+            this.authenticationState.set({ ...undefinedAuthenticationState });
+          }
+          this.authenticationServerConnectionState.set({
+            ...this.authenticationServerConnectionState(),
+          });
+        });
+    }, 2000);
+    return this.getAuthenticationState().role;
   }
+  */
   jwtDecodeToken(token: string): AuthenticationState {
     try {
       const decodedToken = jwtDecode(token);
       return jwtTokenDecodeAdapter(decodedToken as JwtCustomPayload);
     } catch (error) {
-      this.authenticationState.set({ ...undefinedAuthenticationState });
-      localStorage.removeItem(this.localStorageTokenName);
       throw new Error('error while trying to parse jwt token');
     }
   }

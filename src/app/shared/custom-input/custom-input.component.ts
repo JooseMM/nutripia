@@ -41,8 +41,6 @@ export class CustomInputComponent {
     /* iterate throught the validationErrorObject and try to match
      any error name with the one who exists in the control validation state
      */
-    console.log(this.control().errors);
-    console.log(errorObjectArray.length);
     for (let i = 0; i < errorObjectArray.length; i++) {
       if (control.hasError(errorObjectArray[i].errorName)) {
         return errorObjectArray[i].output;

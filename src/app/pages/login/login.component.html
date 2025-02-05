@@ -14,17 +14,18 @@
       <nt-decorative-icon type="banana" color="#D6D6D6" />
       <nt-decorative-icon type="fish" color="#D6D6D6" />
     </div>
+    <p>{{ form.get("password")!.errors }}</p>
   </div>
   <form
     class="flex flex-col w-full max-w-80 | lg:w-[25%] lg:max-w-none lg:px-4 lg:items-center lg:py-10 lg:h-full lg:border-l lg:border-l-lavender-gray"
-    [formGroup]="reactiveForm"
+    [formGroup]="form"
     (ngSubmit)="onSubmit()"
   >
     <nt-custom-input
       label="Correo Electronico"
       type="text"
       id="email"
-      class="mb-3"
+      class="w-full max-w-72"
       [control]="getFormControl('email')"
       [validationErrorObject]="validationErrorObject.email"
     />
@@ -32,17 +33,18 @@
       label="Contraseña"
       type="password"
       id="password"
+      class="w-full max-w-72 mt-3"
       [control]="getFormControl('password')"
       [validationErrorObject]="validationErrorObject.password"
     />
-    <a href="/">¿Olvidaste tu contraseña?</a>
+    <a class="w-full max-w-72" href="/">¿Olvidaste tu contraseña?</a>
     <!-- the width and height is fixed to to avoid having layout shift while calling the backend -->
     <nt-button
       [isPrimary]="true"
       label="Iniciar Sesion"
       class="w-[193px] h-[55px] mx-auto mt-2 text-lg"
       type="submit"
-      [isLoading]="apiConnectionState().isLoading"
+      [isLoading]="httpResponseIsLoading()"
       [isDisabled]="!isFormValid() || !isFormEdited()"
     />
   </form>

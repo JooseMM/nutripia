@@ -13,7 +13,7 @@
         (click)="increaseNumber()"
       />
       <input
-        class="py-2 border w-16 text-center border-lavender-purple rounded-lg focus:border-primary-purple"
+        class="py-2 border w-16 text-center border-lavender-purple rounded-lg"
         [type]="type()"
         [id]="id()"
         [formControl]="control()"
@@ -29,7 +29,7 @@
     </div>
   } @else {
     <input
-      class="px-4 py-2 border border-lavender-purple rounded-lg focus:border-primary-purple"
+      class="w-full px-4 py-2 border border-lavender-purple rounded-lg"
       [attr.for]="id()"
       [type]="type()"
       placeholder="Ejem: Juan Villegas"

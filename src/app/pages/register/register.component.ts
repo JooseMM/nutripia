@@ -58,9 +58,6 @@ export class RegisterComponent {
   //injects the service
   private authService = inject(AuthenticationService);
   // listen to changes in the api connection state
-  protected apiConnectionState: Signal<ApiConnectionState> = computed(() =>
-    this.authService.getApiConnectionState(),
-  );
   validationErrorObject = validationError;
 
   onSubmit() {
