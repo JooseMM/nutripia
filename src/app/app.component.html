@@ -43,33 +43,52 @@
             >Planes</a
           >
         </li>
-        <li>
-          <a
-            class="lg:hover:text-charcoal"
-            routerLink="/agenda"
-            routerLinkActive="active"
-            ariaCurrentWhenActive="page"
-            >Agendar</a
-          >
-        </li>
       </ul>
     </li>
     <li>
       <ul
         class="flex space-y-8 flex-col items-center | lg:py-0 lg:pt-0 lg:px-10 lg:space-y-0 lg:space-x-10 lg:text-nowrap lg:items-center lg:flex lg:flex-row"
       >
-        <li>
-          <a class="lg:hover:text-charcoal" routerLink="/login"
-            >Iniciar Sesion</a
-          >
-        </li>
-        <li>
-          <nt-button
-            [isPrimary]="true"
-            label="Registrate"
-            href="/subscripcion"
-          />
-        </li>
+        @switch (currentRole) {
+          @case (ADMIN_ROLE) {
+            <li>
+              <a class="lg:hover:text-charcoal" routerLink="/logout"
+                >Cerrar Sesion</a
+              >
+            </li>
+            <li>
+              <nt-button
+                [isPrimary]="true"
+                label="Administrar"
+                href="/administracion"
+              />
+            </li>
+          }
+          @case (CLIENT_ROLE) {
+            <li>
+              <a class="lg:hover:text-charcoal" routerLink="/logout"
+                >Cerrar Sesion</a
+              >
+            </li>
+            <li>
+              <nt-button [isPrimary]="true" label="Agendar" href="/agenda" />
+            </li>
+          }
+          @case (NOT_AUTHENTICATED) {
+            <li>
+              <a class="lg:hover:text-charcoal" routerLink="/login"
+                >Iniciar Sesion</a
+              >
+            </li>
+            <li>
+              <nt-button
+                [isPrimary]="true"
+                label="Subscribirse"
+                href="/registro"
+              />
+            </li>
+          }
+        }
       </ul>
     </li>
   </ul>

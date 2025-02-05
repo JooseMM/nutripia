@@ -12,13 +12,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { ButtonComponent } from '../../shared/button/button.component';
-import { AuthenticationService } from './services/authentication.service';
+import { AuthenticationService } from '../../shared/services/authentication/authentication.service';
 import AuthenticationState from 'src/models/IAuthenticationState';
 import ApiConnectionState from 'src/models/IApiCallState';
 import { LogoComponent } from '../../shared/logo/logo.component';
 import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative-icon.component';
 import { Router } from '@angular/router';
-import { CustomInputComponent } from '../../shared/custom-input/custom-input.component';
 
 @Component({
   selector: 'nt-login',

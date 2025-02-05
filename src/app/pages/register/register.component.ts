@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { LogoComponent } from '../../shared/logo/logo.component';
 import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative-icon.component';
 import {
@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AuthenticationService } from '../login/services/authentication.service';
+import { AuthenticationService } from '../../shared/services/authentication/authentication.service';
 import ApiConnectionState from 'src/models/IApiCallState';
 import { Router } from '@angular/router';
 import { ButtonComponent } from 'src/app/shared/button/button.component';

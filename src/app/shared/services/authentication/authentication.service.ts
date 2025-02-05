@@ -3,25 +3,19 @@ import { inject, Injectable, signal } from '@angular/core';
 import { finalize, map, tap } from 'rxjs';
 import { API_URL } from 'src/app/constants/app-constants';
 import ApiResponse from 'src/models/IApiResponse';
-import { ApiResponseAdapter } from '../adapter/ApiResponseAdapter';
+import { ApiResponseAdapter } from '../../../pages/login/adapter/ApiResponseAdapter';
 import AuthResponse from 'src/models/IAuthResponse';
 import AuthenticationState from 'src/models/IAuthenticationState';
 import ApiConnectionState from 'src/models/IApiCallState';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { jwtTokenDecodeAdapter } from '../adapter/jwtTokenDecodeAdapter';
+import { jwtTokenDecodeAdapter } from '../../../pages/login/adapter/jwtTokenDecodeAdapter';
 import rawDecodedToken from 'src/models/IRawDecodeToken';
+import {
+  JwtCustomPayload,
+  undefinedAuthenticationState,
+  UserCredentials,
+} from './utils';
 
-interface UserCredentials {
-  email: string;
-  password: string;
-}
-const undefinedAuthenticationState: AuthenticationState = {
-  email: '',
-  firstName: '',
-  isEmailVerified: false,
-  role: '',
-};
-type JwtCustomPayload = JwtPayload & rawDecodedToken;
 @Injectable({
   providedIn: 'root',
 })
