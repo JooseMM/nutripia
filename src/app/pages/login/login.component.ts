@@ -18,6 +18,8 @@ import ApiConnectionState from 'src/models/IApiCallState';
 import { LogoComponent } from '../../shared/logo/logo.component';
 import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative-icon.component';
 import { Router } from '@angular/router';
+import { CustomInputComponent } from '../../shared/custom-input/custom-input.component';
+import { validationError } from './validators';
 
 @Component({
   selector: 'nt-login',
@@ -26,6 +28,7 @@ import { Router } from '@angular/router';
     ButtonComponent,
     LogoComponent,
     DecorativeIconComponent,
+    CustomInputComponent,
   ],
   templateUrl: './login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +49,7 @@ export class LoginComponent {
     this.authService.getApiConnectionState(),
   );
   router = inject(Router);
+  validationErrorObject = validationError;
 
   onSubmit() {
     const credentials = {
@@ -55,9 +59,12 @@ export class LoginComponent {
 
     //this.router.navigate(['/']);
 
-    // call the service to update its state
+    // call the service to test credentials
     this.authService.login(credentials);
-    // pass the state to the isForbidden variable
+    // check authentication state
+    if (this.isForbidden()) {
+      this.getFormControl('password').setErrors({ wrongCredentials: true });
+    }
   }
 
   isForbidden(): boolean {
@@ -86,6 +93,9 @@ export class LoginComponent {
       this.reactiveForm.get('password')!.invalid &&
       this.reactiveForm.get('password')!.touched
     );
+  }
+  getFormControl(controlName: string): FormControl {
+    return this.reactiveForm.get(controlName) as FormControl;
   }
   isEmailInvalid(): boolean {
     return (

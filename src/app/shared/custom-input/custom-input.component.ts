@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
 
@@ -17,10 +12,7 @@ interface ValidationError {
   templateUrl: './custom-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomInputComponent implements OnInit {
-  ngOnInit(): void {
-    console.log(this.control().errors);
-  }
+export class CustomInputComponent {
   label = input.required<string>();
   type = input.required<string>();
   control = input.required<FormControl>();

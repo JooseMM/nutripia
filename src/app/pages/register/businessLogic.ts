@@ -1,6 +1,5 @@
 import {
   AbstractControl,
-  FormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators,
@@ -10,64 +9,41 @@ import {
   letterSpaceAndSymbols,
   letterSpaceSymbolsAndNumbers,
 } from 'src/app/constants/app-constants';
+import { RegisterValidatorsArray } from 'src/models/IRegisterValidatorsArray';
+import { ValidationErrorObject } from 'src/models/IValidationErrorObject';
 
-interface RegisterBusinessLogicValidators {
-  fullName: ValidatorFn[];
-  email: ValidatorFn[];
-  rut: ValidatorFn[];
-  password: ValidatorFn[];
-  passwordConfirm: ValidatorFn[];
-  yearOfBirth: ValidatorFn[];
-  phoneNumber: ValidatorFn[];
-  previousDiagnostics: ValidatorFn[];
-}
-interface ValidationErrorObjectHandler {
-  fullName: ValidationErrorObject[];
-  email: ValidationErrorObject[];
-  rut: ValidationErrorObject[];
-  password: ValidationErrorObject[];
-  passwordConfirm: ValidationErrorObject[];
-  yearOfBirth: ValidationErrorObject[];
-  phoneNumber: ValidationErrorObject[];
-  previousDiagnostics: ValidationErrorObject[];
-}
-interface ValidationErrorObject {
-  errorName: string;
-  output: string;
-}
 /*
  * Validators for the Register Input
  */
-export const registerBusinessLogicValidators: RegisterBusinessLogicValidators =
-  {
-    fullName: [Validators.required, Validators.pattern(letterAndSpacesPattern)],
-    email: [Validators.required, Validators.email],
-    rut: [
-      Validators.required,
-      Validators.pattern(/^(\d{1,2}\.\d{3}\.\d{3}-[\dkK])$/),
-    ],
-    yearOfBirth: [
-      Validators.required,
-      Validators.min(1900),
-      Validators.max(new Date().getFullYear()),
-    ],
-    password: [
-      Validators.required,
-      Validators.pattern(letterSpaceSymbolsAndNumbers),
-    ],
-    passwordConfirm: [doPasswordMatchValidator()],
-    phoneNumber: [
-      Validators.required,
-      Validators.minLength(9),
-      Validators.maxLength(15),
-    ],
-    previousDiagnostics: [Validators.pattern(letterSpaceAndSymbols)],
-  };
+export const registerBusinessLogicValidators: RegisterValidatorsArray = {
+  fullName: [Validators.required, Validators.pattern(letterAndSpacesPattern)],
+  email: [Validators.required, Validators.email],
+  rut: [
+    Validators.required,
+    Validators.pattern(/^(\d{1,2}\.\d{3}\.\d{3}-[\dkK])$/),
+  ],
+  yearOfBirth: [
+    Validators.required,
+    Validators.min(1900),
+    Validators.max(new Date().getFullYear()),
+  ],
+  password: [
+    Validators.required,
+    Validators.pattern(letterSpaceSymbolsAndNumbers),
+  ],
+  passwordConfirm: [doPasswordMatchValidator()],
+  phoneNumber: [
+    Validators.required,
+    Validators.minLength(9),
+    Validators.maxLength(15),
+  ],
+  previousDiagnostics: [Validators.pattern(letterSpaceAndSymbols)],
+};
 
 /*
  * Validation output for the inputs
  */
-export const validationError: ValidationErrorObjectHandler = {
+export const validationError: ValidationErrorObject = {
   fullName: [
     { errorName: 'required', output: 'El nombre completo es requerido' },
     {

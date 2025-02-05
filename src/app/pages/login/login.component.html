@@ -2,7 +2,7 @@
   class="flex flex-col text-primary-purple px-mobile-padding items-center h-dvh py-8 | lg:px-0 lg:h-[800px] lg:items-start lg:flex-row lg:py-0"
 >
   <div
-    class="hidden | lg:flex flex-col space-y-8 items-center h-full w-[65%] mt-52"
+    class="hidden | lg:flex flex-col space-y-8 items-center h-full w-[75%] mt-52"
   >
     <nt-logo class="lg:text-6xl" />
     <div class="flex space-x-8">
@@ -16,49 +16,31 @@
     </div>
   </div>
   <form
-    class="flex flex-col w-full max-w-80 | lg:w-[35%] lg:max-w-none lg:px-4 lg:items-center lg:py-10 lg:h-full lg:border-l lg:border-l-lavender-gray"
+    class="flex flex-col w-full max-w-80 | lg:w-[25%] lg:max-w-none lg:px-4 lg:items-center lg:py-10 lg:h-full lg:border-l lg:border-l-lavender-gray"
     [formGroup]="reactiveForm"
     (ngSubmit)="onSubmit()"
   >
-    <div class="flex flex-col text-left w-full max-w-72">
-      <label class="font-medium mb-2 ml-4" for="email"
-        >Correo Electronico</label
-      >
-      <input
-        class="px-4 py-2 border border-lavender-purple rounded-lg lg:focus:border-primary-purple"
-        for="email"
-        type="text"
-        placeholder="Ejem: pia@nutricionista.com"
-        formControlName="email"
-        [class.border-red]="isEmailInvalid()"
-      />
-      @if (isEmailInvalid()) {
-        <span class="text-red">Formato de email no valido</span>
-      }
-    </div>
-    <div class="flex flex-col text-left mt-3 w-full max-w-72">
-      <label class="font-medium mb-2 ml-4" for="password">Contraseña</label>
-      <input
-        class="px-4 py-2 border border-lavender-purple rounded-lg focus:border-primary-purple"
-        for="email"
-        type="password"
-        placeholder="Escribe tu contraseña aca"
-        formControlName="password"
-        [class.border-red]="isPasswordInvalid() || isForbidden()"
-      />
-      @if (isForbidden()) {
-        <span class="text-red">Usuario o contraseña incorrecta</span>
-      }
-      @if (isPasswordInvalid()) {
-        <span class="text-red">La contraseña no puede estar vacia</span>
-      }
-    </div>
+    <nt-custom-input
+      label="Correo Electronico"
+      type="text"
+      id="email"
+      class="mb-3"
+      [control]="getFormControl('email')"
+      [validationErrorObject]="validationErrorObject.email"
+    />
+    <nt-custom-input
+      label="Contraseña"
+      type="password"
+      id="password"
+      [control]="getFormControl('password')"
+      [validationErrorObject]="validationErrorObject.password"
+    />
     <a href="/">¿Olvidaste tu contraseña?</a>
     <!-- the width and height is fixed to to avoid having layout shift while calling the backend -->
     <nt-button
       [isPrimary]="true"
       label="Iniciar Sesion"
-      class="w-[193px] h-[55px] mx-auto mt-3 |"
+      class="w-[193px] h-[55px] mx-auto mt-2 text-lg"
       type="submit"
       [isLoading]="apiConnectionState().isLoading"
       [isDisabled]="!isFormValid() || !isFormEdited()"
