@@ -15,7 +15,7 @@
   </div>
   <form
     class="flex flex-col w-full max-w-80 | lg:w-[25%] lg:max-w-none lg:px-4 lg:items-center lg:py-10 lg:h-full lg:border-l lg:border-l-lavender-gray"
-    [formGroup]="reactiveForm"
+    [formGroup]="form"
     (ngSubmit)="onSubmit()"
   >
     <nt-custom-input
@@ -25,6 +25,7 @@
       id="fullName"
       class="w-full max-w-72 mt-3"
       [validationErrorObject]="validationErrorObject.fullName"
+      placeholder="Ejem: Pia Ulloa"
     />
     <nt-custom-input
       label="Correo Electronico"
@@ -33,6 +34,7 @@
       id="email"
       class="w-full max-w-72 mt-3"
       [validationErrorObject]="validationErrorObject.email"
+      placeholder="Ejem: pia@Ulloa.com"
     />
     <nt-custom-input
       label="RUT"
@@ -41,6 +43,7 @@
       id="rut"
       class="w-full max-w-72 mt-3"
       [validationErrorObject]="validationErrorObject.rut"
+      placeholder="Ejem: 26.245.083-k"
     />
     <nt-custom-input
       label="Contraseña"
@@ -50,6 +53,7 @@
       validationErrorOutput="Nueva contraseña invalida debe contener: "
       class="w-full max-w-72 mt-3"
       [validationErrorObject]="validationErrorObject.password"
+      placeholder="La contraseña debe contener mas de 6 caracteres"
     />
     <nt-custom-input
       label="Confirme Contraseña"
@@ -58,6 +62,7 @@
       id="confirmedPassword"
       class="w-full max-w-72 mt-3"
       [validationErrorObject]="validationErrorObject.passwordConfirm"
+      placeholder="Asegurate de escribir la misma contraseña"
     />
     <nt-custom-input
       label="Año de Nacimiento"
@@ -66,6 +71,7 @@
       id="yearOfBirth"
       class="w-full max-w-72 mt-3"
       [validationErrorObject]="validationErrorObject.yearOfBirth"
+      placeholder="Ejem: 1995"
     />
     <nt-custom-input
       label="Telefono"
@@ -74,6 +80,7 @@
       id="phoneNumber"
       class="w-full max-w-72 mt-3"
       [validationErrorObject]="validationErrorObject.phoneNumber"
+      placeholder="Ejem: +56 9 3245 3254"
     />
     <nt-custom-input
       label="Diagnosticos Previos"
@@ -82,6 +89,16 @@
       id="previousDiagnostics"
       class="w-full max-w-72 mt-3"
       [validationErrorObject]="validationErrorObject.previousDiagnostics"
+      placeholder="Ejem: Diabetes, Hipertension"
+    />
+    <nt-custom-input
+      label="Metas"
+      type="text"
+      [control]="getFormControl('goals')"
+      id="goals"
+      class="w-full max-w-72 mt-3"
+      [validationErrorObject]="validationErrorObject.goals"
+      placeholder="Ejem: Perder 6kg de manera controlada"
     />
     <!-- the width and height is fixed to to avoid having layout shift while calling the backend -->
     <nt-button
@@ -89,8 +106,8 @@
       label="Registrarse"
       class="w-[193px] h-[55px] mx-auto mt-3 lg:m-0"
       type="submit"
-      [isLoading]="false"
-      [isDisabled]="reactiveForm.invalid || !reactiveForm.touched"
+      [isLoading]="httpResponseIsLoading()"
+      [isDisabled]="form.invalid || !form.touched"
       class="mt-3"
     />
   </form>

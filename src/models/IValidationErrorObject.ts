@@ -9,4 +9,5 @@ export interface ValidationErrorObject {
   yearOfBirth: ValidationError[];
   phoneNumber: ValidationError[];
   previousDiagnostics: ValidationError[];
+  goals: ValidationError[];
 }

@@ -19,6 +19,11 @@ export const validationError: LoginValidationErrorObject = {
       errorName: 'email',
       output: 'Formato de email invalido',
     },
+    {
+      errorName: 'emailIsNotConfirmed',
+      output:
+        'El correo electronico no ha sido confirmado, por favor revisa la bandeja de entrada en tu correo',
+    },
   ],
   password: [
     { errorName: 'required', output: 'La contraseña es requerida' },

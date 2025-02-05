@@ -28,6 +28,7 @@
       class="w-full max-w-72"
       [control]="getFormControl('email')"
       [validationErrorObject]="validationErrorObject.email"
+      placeholder="Ejem: pia@ulloa.com"
     />
     <nt-custom-input
       label="Contraseña"
@@ -36,6 +37,7 @@
       class="w-full max-w-72 mt-3"
       [control]="getFormControl('password')"
       [validationErrorObject]="validationErrorObject.password"
+      placeholder="Escribe tu contraseña aca"
     />
     <a class="w-full max-w-72" href="/">¿Olvidaste tu contraseña?</a>
     <!-- the width and height is fixed to to avoid having layout shift while calling the backend -->

@@ -18,6 +18,7 @@ export class CustomInputComponent {
   control = input.required<FormControl>();
   id = input.required<string>();
   validationErrorObject = input.required<ValidationError[]>();
+  placeholder = input.required<string>();
 
   increaseNumber() {
     const currentValue: number = this.control().value;

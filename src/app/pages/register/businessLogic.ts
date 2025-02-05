@@ -5,6 +5,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  chileanRutValidator,
   letterAndSpacesPattern,
   letterSpaceAndSymbols,
   letterSpaceSymbolsAndNumbers,
@@ -18,10 +19,7 @@ import { ValidationErrorObject } from 'src/models/IValidationErrorObject';
 export const registerBusinessLogicValidators: RegisterValidatorsArray = {
   fullName: [Validators.required, Validators.pattern(letterAndSpacesPattern)],
   email: [Validators.required, Validators.email],
-  rut: [
-    Validators.required,
-    Validators.pattern(/^(\d{1,2}\.\d{3}\.\d{3}-[\dkK])$/),
-  ],
+  rut: [Validators.required, Validators.pattern(chileanRutValidator)],
   yearOfBirth: [
     Validators.required,
     Validators.min(1900),
@@ -38,6 +36,7 @@ export const registerBusinessLogicValidators: RegisterValidatorsArray = {
     Validators.maxLength(15),
   ],
   previousDiagnostics: [Validators.pattern(letterSpaceAndSymbols)],
+  goals: [Validators.pattern(letterSpaceSymbolsAndNumbers)],
 };
 
 /*
@@ -56,6 +55,10 @@ export const validationError: ValidationErrorObject = {
     {
       errorName: 'email',
       output: 'Formato de email invalido',
+    },
+    {
+      errorName: 'emailAlreadyExists',
+      output: 'El correo electronico ya posee una cuenta asociada',
     },
   ],
   rut: [
@@ -103,6 +106,13 @@ export const validationError: ValidationErrorObject = {
       errorName: 'pattern',
       output:
         'Los diagnosticos solo pueden contener palabras, espacios y signos de puntuacion',
+    },
+  ],
+  goals: [
+    {
+      errorName: 'pattern',
+      output:
+        'Las metas solo debe incluir palabras, numeros o signos de puntuacion',
     },
   ],
 };

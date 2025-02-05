@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, signal, Signal } from '@angular/core';
 import { LogoComponent } from '../../shared/logo/logo.component';
 import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative-icon.component';
 import {
@@ -16,6 +16,11 @@ import {
   registerBusinessLogicValidators,
   validationError,
 } from './businessLogic';
+import { newUserObjectAdapter } from '../login/adapter/newUserObjectAdapter';
+import UserObject from 'src/models/IUserObject';
+import { finalize } from 'rxjs';
+import ApiResponse from 'src/models/IApiResponse';
+import AuthResponse from 'src/models/IAuthResponse';
 
 @Component({
   selector: 'nt-register',
@@ -30,7 +35,8 @@ import {
 })
 export class RegisterComponent {
   router = inject(Router);
-  reactiveForm: FormGroup = new FormGroup({
+  httpResponseIsLoading = signal(false);
+  form: FormGroup = new FormGroup({
     fullName: new FormControl('', [
       ...registerBusinessLogicValidators.fullName,
     ]),
@@ -54,37 +60,65 @@ export class RegisterComponent {
     previousDiagnostics: new FormControl('', [
       ...registerBusinessLogicValidators.previousDiagnostics,
     ]),
+    goals: new FormControl('', [
+      ...registerBusinessLogicValidators.previousDiagnostics,
+    ]),
   });
   //injects the service
-  private authService = inject(AuthenticationService);
+  private authenticationService = inject(AuthenticationService);
   // listen to changes in the api connection state
   validationErrorObject = validationError;
 
   onSubmit() {
-    //this.router.navigate(['/']);
-    console.log(this.reactiveForm.value);
+    this.httpResponseIsLoading.set(true);
+    const newUserData: UserObject = newUserObjectAdapter(this.form.value);
+    this.authenticationService
+      .register(newUserData)
+      .pipe(finalize(() => this.httpResponseIsLoading.set(false)))
+      .subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+        error: (rawResponse) => {
+          const response = rawResponse.error as ApiResponse;
+          console.log(response);
+          switch (response.statusCode) {
+            case 409: // Conflict status code, the email already exists in db
+              // insert the validator error for the control to show
+              this.form.get('email')?.setErrors({ emailAlreadyExists: true });
+              break;
+            case 400:
+              // inserts a validator error for the control to show
+              this.form.get('password')?.setErrors({ pattern: true });
+              break;
+            default: // Bad Request and Internal server error status code
+              // insert the object error for the control to show
+              // TODO: add all other feedback for the api response
+              break;
+          }
+        },
+      });
   }
 
   isInputInvalid(inputName: string): boolean {
     return (
-      this.reactiveForm.get(inputName)!.invalid &&
-      this.reactiveForm.get(inputName)!.touched
+      this.form.get(inputName)!.invalid && this.form.get(inputName)!.touched
     );
   }
   isInputPasswordValid() {
     return !(
-      this.reactiveForm.get('passwordGroup')!.get('password')!.invalid &&
-      this.reactiveForm.get('passwordGroup')!.get('password')!.touched
+      this.form.get('passwordGroup')!.get('password')!.invalid &&
+      this.form.get('passwordGroup')!.get('password')!.touched
     );
   }
   doPasswordMatch() {
     return !(
-      this.reactiveForm.get('passwordGroup')!.get('passwordConfirm')!.touched &&
-      this.reactiveForm.get('passwordGroup')!.hasError('notMatchingPassword')
+      this.form.get('passwordGroup')!.get('passwordConfirm')!.touched &&
+      this.form.get('passwordGroup')!.hasError('notMatchingPassword')
     );
   }
   getFormControl(controlName: string): FormControl {
-    return this.reactiveForm.get(controlName) as FormControl;
+    return this.form.get(controlName) as FormControl;
   }
   getPasswordNestedControl(controlName: string): FormControl {
     return this.getFormControl('passwordGroup').get(controlName) as FormControl;

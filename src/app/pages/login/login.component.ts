@@ -31,6 +31,7 @@ import { catchError, finalize, of, Subscription, tap } from 'rxjs';
 import ApiResponse from 'src/models/IApiResponse';
 import AuthResponse from 'src/models/IAuthResponse';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ApiResponseErrorAdapter } from './adapter/ApiResponseErrorAdapter';
 
 @Component({
   selector: 'nt-login',
@@ -50,11 +51,8 @@ export class LoginComponent {
   responseSubscription: Subscription = new Subscription();
   // reactive form
   form: FormGroup = new FormGroup({
-    email: new FormControl('pia.nutricionista@gmail.com', [
-      Validators.required,
-      Validators.email,
-    ]),
-    password: new FormControl('6Esfer@s1997', [
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [
       Validators.required,
       Validators.pattern(letterSpaceSymbolsAndNumbers),
     ]),
@@ -81,11 +79,23 @@ export class LoginComponent {
           localStorage.setItem(AUTH_TOKEN_NAME, data.token);
           this.router.navigate(['/']);
         },
-        error: () => {
+        error: (response) => {
+          const errorResponse = ApiResponseErrorAdapter(response);
+          console.log(errorResponse);
+          switch (errorResponse.statusCode) {
+            case 401: // Unauthorize, credentials are wrong
+            case 400:
+              this.getFormControl('password').setErrors({
+                wrongCredentials: true,
+              });
+              break;
+            case 409: // Conflict, email is not verified
+              this.getFormControl('email').setErrors({
+                emailIsNotConfirmed: true,
+              });
+              break;
+          }
           localStorage.removeItem(AUTH_TOKEN_NAME);
-          this.getFormControl('password').setErrors({
-            wrongCredentials: true,
-          });
         },
       });
   }

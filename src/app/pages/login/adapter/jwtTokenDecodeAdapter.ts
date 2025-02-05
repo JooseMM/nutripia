@@ -1,4 +1,5 @@
-import { JwtPayload } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { JwtCustomPayload } from 'src/app/shared/services/authentication/utils';
 import AuthenticationState from 'src/models/IAuthenticationState';
 import AuthResponse from 'src/models/IAuthResponse';
 import rawDecodedToken from 'src/models/IRawDecodeToken';
@@ -8,7 +9,16 @@ const parseBoolean = (bool: string): boolean => {
   return bool === 'true' || bool === 'True';
 };
 
-export const jwtTokenDecodeAdapter = (
+export const jwtDecodeToken = (token: string): AuthenticationState => {
+  try {
+    const decodedToken = jwtDecode(token);
+    return authenticationStateAdapter(decodedToken as JwtCustomPayload);
+  } catch (error) {
+    throw new Error('error while trying to parse jwt token');
+  }
+};
+
+export const authenticationStateAdapter = (
   token: JwtPayload & rawDecodedToken,
 ): AuthenticationState => {
   return {

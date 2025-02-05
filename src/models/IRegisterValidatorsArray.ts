@@ -9,4 +9,5 @@ export interface RegisterValidatorsArray {
   yearOfBirth: ValidatorFn[];
   phoneNumber: ValidatorFn[];
   previousDiagnostics: ValidatorFn[];
+  goals: ValidatorFn[];
 }
