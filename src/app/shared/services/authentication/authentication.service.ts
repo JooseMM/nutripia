@@ -41,6 +41,9 @@ export class AuthenticationService {
       isLoading: true,
       isComplete: false,
     });
+    this.authenticationState.next({
+      ...undefinedAuthenticationState,
+    });
     // hit the endpoint
     this.http
       .post<ApiResponse>(`${this.apiUrl}/login`, credentials)
@@ -80,6 +83,7 @@ export class AuthenticationService {
                 error: 'emailIsNotConfirmed',
               });
               break;
+            // TODO: handle other possible errors related with server issues
             default:
               this.authenticationState.next({
                 ...undefinedAuthenticationState,

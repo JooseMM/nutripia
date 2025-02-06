@@ -28,22 +28,26 @@
         </li>
         <li>
           <a
-            class="lg:hover:text-charcoal"
-            routerLink="/beneficios"
-            routerLinkActive="active"
-            (click)="toggleMenu()"
+            class="lg:hover:text-charcoal lg:hover:cursor-pointer"
+            (click)="scrollTo('whyUs')"
             ariaCurrentWhenActive="page"
-            >Beneficio</a
+            >Beneficios</a
           >
         </li>
         <li>
           <a
-            class="lg:hover:text-charcoal"
-            routerLink="/planes"
-            (click)="toggleMenu()"
-            routerLinkActive="active"
+            class="lg:hover:text-charcoal lg:hover:cursor-pointer"
+            (click)="scrollTo('prices')"
             ariaCurrentWhenActive="page"
             >Planes</a
+          >
+        </li>
+        <li>
+          <a
+            class="lg:hover:text-charcoal lg:hover:cursor-pointer"
+            (click)="scrollTo('about')"
+            ariaCurrentWhenActive="page"
+            >Sobre Mi</a
           >
         </li>
       </ul>

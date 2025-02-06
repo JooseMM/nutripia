@@ -86,10 +86,13 @@ export class LoginComponent implements OnInit, OnDestroy {
                 emailIsNotConfirmed: true,
               });
               break;
-            default:
+            case '':
               this.getFormControl('email').setErrors(null);
               this.getFormControl('password').setErrors(null);
-              this.router.navigate(['/']);
+              this.form.setErrors(null);
+          }
+          if (response.role !== '') {
+            this.router.navigate(['/']);
           }
         },
       });
