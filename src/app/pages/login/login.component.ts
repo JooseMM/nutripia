@@ -2,13 +2,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed,
-  Inject,
   inject,
-  OnChanges,
-  signal,
-  Signal,
-  SimpleChanges,
+  OnDestroy,
+  OnInit,
 } from '@angular/core';
 import {
   FormControl,
@@ -26,12 +22,11 @@ import { validationError } from './validators';
 import {
   AUTH_TOKEN_NAME,
   letterSpaceSymbolsAndNumbers,
+  undefinedAuthenticationState,
 } from 'src/app/constants/app-constants';
-import { catchError, finalize, of, Subscription, tap } from 'rxjs';
-import ApiResponse from 'src/models/IApiResponse';
-import AuthResponse from 'src/models/IAuthResponse';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ApiResponseErrorAdapter } from './adapter/ApiResponseErrorAdapter';
+import { finalize, Observable, Subscription, tap } from 'rxjs';
+import ResponseState from 'src/models/IApiCallState';
+import AuthenticationState from 'src/models/IAuthenticationState';
 
 @Component({
   selector: 'nt-login',
@@ -43,12 +38,19 @@ import { ApiResponseErrorAdapter } from './adapter/ApiResponseErrorAdapter';
     CustomInputComponent,
   ],
   templateUrl: './login.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
+  ngOnInit(): void {
+    this.responseState = this.authenticationService.resposeState$.subscribe(
+      (value) => (this.isLoading = value.isLoading),
+    );
+  }
+  private cdr = inject(ChangeDetectorRef);
   validationErrorObject = validationError;
   router = inject(Router);
-  responseSubscription: Subscription = new Subscription();
+  responseState: Subscription = new Subscription();
+  authenticationState: Subscription = new Subscription();
+  isLoading = false;
   // reactive form
   form: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -57,7 +59,6 @@ export class LoginComponent {
       Validators.pattern(letterSpaceSymbolsAndNumbers),
     ]),
   });
-  httpResponseIsLoading = signal(false);
   //injects the service
   private authenticationService = inject(AuthenticationService);
   // listen to changes in the auth state
@@ -68,34 +69,30 @@ export class LoginComponent {
       email: this.form.get('email')!.value,
     };
     // update requestConnectionState for buttons animation
-    this.httpResponseIsLoading.set(true);
     // call the service to test credentials
-    this.responseSubscription = this.authenticationService
-      .login(credentials)
-      .pipe(finalize(() => this.httpResponseIsLoading.set(false)))
-      .subscribe({
-        next: (response: ApiResponse) => {
-          const data = response.data as AuthResponse;
-          localStorage.setItem(AUTH_TOKEN_NAME, data.token);
-          this.router.navigate(['/']);
-        },
-        error: (response) => {
-          const errorResponse = ApiResponseErrorAdapter(response);
-          console.log(errorResponse);
-          switch (errorResponse.statusCode) {
-            case 401: // Unauthorize, credentials are wrong
-            case 400:
+    this.authenticationService.login(credentials);
+    this.authenticationState =
+      this.authenticationService.authenticationState$.subscribe({
+        next: (response) => {
+          switch (response.error) {
+            case 'wrongCredentials':
               this.getFormControl('password').setErrors({
-                wrongCredentials: true,
+                [response.error]: true,
               });
               break;
-            case 409: // Conflict, email is not verified
+            case 'emailIsNotConfirmed':
               this.getFormControl('email').setErrors({
-                emailIsNotConfirmed: true,
+                [response.error]: true,
               });
+              break;
+            case '':
+              this.router.navigate(['/']);
+              break;
+            default:
+              // TODO: handle other changes
               break;
           }
-          localStorage.removeItem(AUTH_TOKEN_NAME);
+          this.cdr.markForCheck();
         },
       });
   }
@@ -120,5 +117,9 @@ export class LoginComponent {
   }
   isEmailInvalid(): boolean {
     return this.form.get('email')!.invalid && this.form.get('email')!.touched;
+  }
+  ngOnDestroy(): void {
+    this.responseState.unsubscribe();
+    this.authenticationState.unsubscribe();
   }
 }

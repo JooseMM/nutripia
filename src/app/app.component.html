@@ -21,6 +21,7 @@
             class="lg:hover:text-charcoal"
             routerLink="/inicio"
             routerLinkActive="active"
+            (click)="toggleMenu()"
             ariaCurrentWhenActive="page"
             >Inicio</a
           >
@@ -30,6 +31,7 @@
             class="lg:hover:text-charcoal"
             routerLink="/beneficios"
             routerLinkActive="active"
+            (click)="toggleMenu()"
             ariaCurrentWhenActive="page"
             >Beneficio</a
           >
@@ -38,6 +40,7 @@
           <a
             class="lg:hover:text-charcoal"
             routerLink="/planes"
+            (click)="toggleMenu()"
             routerLinkActive="active"
             ariaCurrentWhenActive="page"
             >Planes</a
@@ -49,12 +52,12 @@
       <ul
         class="flex space-y-8 flex-col items-center | lg:py-0 lg:pt-0 lg:px-10 lg:space-y-0 lg:space-x-10 lg:text-nowrap lg:items-center lg:flex lg:flex-row"
       >
-        @switch ("") {
+        @switch (currentUserRole) {
           @case (ADMIN_ROLE) {
             <li>
-              <a class="lg:hover:text-charcoal" routerLink="/logout"
-                >Cerrar Sesion</a
-              >
+              <button class="lg:hover:text-charcoal" (click)="logout()">
+                Cerrar Sesion
+              </button>
             </li>
             <li>
               <nt-button
@@ -66,23 +69,34 @@
           }
           @case (CLIENT_ROLE) {
             <li>
-              <a class="lg:hover:text-charcoal" routerLink="/logout"
-                >Cerrar Sesion</a
-              >
+              <button
+                class="lg:hover:text-charcoal"
+                (click)="logout()"
+                (click)="toggleMenu()"
+              ></button>
             </li>
             <li>
-              <nt-button [isPrimary]="true" label="Agendar" href="/agenda" />
+              <nt-button
+                [isPrimary]="true"
+                label="Agendar"
+                href="/agenda"
+                (click)="toggleMenu()"
+              />
             </li>
           }
           @case (NOT_AUTHENTICATED) {
             <li>
-              <a class="lg:hover:text-charcoal" routerLink="/login"
+              <a
+                class="lg:hover:text-charcoal"
+                routerLink="/login"
+                (click)="toggleMenu()"
                 >Iniciar Sesion</a
               >
             </li>
             <li>
               <nt-button
                 [isPrimary]="true"
+                (click)="toggleMenu()"
                 label="Subscribirse"
                 href="/subscripcion"
               />

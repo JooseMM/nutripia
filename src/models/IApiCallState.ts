@@ -1,4 +1,4 @@
-export default interface ApiConnectionState {
+export default interface ResponseState {
   isLoading: boolean;
-  connectionFinish: boolean;
+  isComplete: boolean;
 }

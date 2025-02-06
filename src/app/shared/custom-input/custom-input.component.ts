@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
+import { ValidationError } from 'src/models/IValidationError';
 
-interface ValidationError {
-  errorName: string;
-  output: string;
-}
 @Component({
   selector: 'nt-custom-input',
   imports: [ReactiveFormsModule, ButtonComponent],

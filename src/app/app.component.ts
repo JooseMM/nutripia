@@ -1,4 +1,12 @@
-import { Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ButtonComponent } from './shared/button/button.component';
 import { LOCALE_ID } from '@angular/core';
@@ -11,6 +19,7 @@ import {
   CLIENT_ROLE,
   NOT_AUTHENTICATED,
 } from './constants/app-constants';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -23,18 +32,39 @@ import {
   ],
   templateUrl: './app.component.html',
   providers: [{ provide: LOCALE_ID, useValue: 'es-CL' }],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'nutripia-app';
   protected isMenuOpen = false;
   ADMIN_ROLE = ADMIN_ROLE;
   CLIENT_ROLE = CLIENT_ROLE;
   NOT_AUTHENTICATED = NOT_AUTHENTICATED;
+  AuthenticationStateSubscription: Subscription = new Subscription();
+  currentUserRole: string = '';
+  authenticationService = inject(AuthenticationService);
+  cdr = inject(ChangeDetectorRef);
 
+  constructor() {
+    registerLocaleData(localeEsCl, 'es-CL'); // register local data to angular internal system
+  }
   protected toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
-  constructor() {
-    registerLocaleData(localeEsCl, 'es-CL'); // register local data to angular internal system
+  logout() {
+    this.authenticationService.logout();
+    this.toggleMenu();
+  }
+  ngOnInit(): void {
+    this.AuthenticationStateSubscription =
+      this.authenticationService.authenticationState$.subscribe({
+        next: (newValue) => {
+          this.cdr.markForCheck();
+          this.currentUserRole = newValue.role;
+        },
+      });
+  }
+  ngOnDestroy(): void {
+    this.AuthenticationStateSubscription.unsubscribe();
   }
 }

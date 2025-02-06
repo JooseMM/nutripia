@@ -46,7 +46,7 @@
       label="Iniciar Sesion"
       class="w-[193px] h-[55px] mx-auto mt-2 text-lg"
       type="submit"
-      [isLoading]="httpResponseIsLoading()"
+      [isLoading]="isLoading"
       [isDisabled]="!isFormValid() || !isFormEdited()"
     />
   </form>
