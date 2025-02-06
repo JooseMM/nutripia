@@ -87,12 +87,8 @@ export class LoginComponent implements OnInit, OnDestroy {
               });
               break;
             case '':
-              this.getFormControl('email').setErrors(null);
-              this.getFormControl('password').setErrors(null);
-              this.form.setErrors(null);
-          }
-          if (response.role !== '') {
-            this.router.navigate(['/']);
+              this.router.navigate(['/']);
+              break;
           }
         },
       });
