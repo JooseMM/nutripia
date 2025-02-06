@@ -107,7 +107,7 @@
       class="w-[193px] h-[55px] mx-auto mt-3 lg:m-0"
       type="submit"
       [isLoading]="httpResponseIsLoading()"
-      [isDisabled]="form.invalid || !form.touched"
+      [isDisabled]="form.invalid || !form.dirty"
       class="mt-3"
     />
   </form>

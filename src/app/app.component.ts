@@ -7,7 +7,12 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { ButtonComponent } from './shared/button/button.component';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
@@ -44,6 +49,7 @@ export class AppComponent implements OnInit, OnDestroy {
   currentUserRole: string = '';
   authenticationService = inject(AuthenticationService);
   cdr = inject(ChangeDetectorRef);
+  router = inject(Router);
 
   constructor() {
     registerLocaleData(localeEsCl, 'es-CL'); // register local data to angular internal system
@@ -54,6 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
   logout() {
     this.authenticationService.logout();
     this.toggleMenu();
+    this.router.navigate(['/']);
   }
   ngOnInit(): void {
     this.AuthenticationStateSubscription =

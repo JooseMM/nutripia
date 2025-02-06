@@ -63,6 +63,11 @@ export class AuthenticationService {
           const errorResponse = ApiResponseErrorAdapter(response);
           switch (errorResponse.statusCode) {
             case 401: // Unauthorize, credentials are wrong
+              this.authenticationState.next({
+                ...undefinedAuthenticationState,
+                error: 'wrongCredentials',
+              });
+              break;
             case 400: // Bad Request
               this.authenticationState.next({
                 ...undefinedAuthenticationState,
@@ -75,6 +80,10 @@ export class AuthenticationService {
                 error: 'emailIsNotConfirmed',
               });
               break;
+            default:
+              this.authenticationState.next({
+                ...undefinedAuthenticationState,
+              });
           }
           localStorage.removeItem(AUTH_TOKEN_NAME);
         },

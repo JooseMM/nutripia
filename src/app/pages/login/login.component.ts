@@ -71,36 +71,31 @@ export class LoginComponent implements OnInit, OnDestroy {
     // update requestConnectionState for buttons animation
     // call the service to test credentials
     this.authenticationService.login(credentials);
-    this.authenticationState =
-      this.authenticationService.authenticationState$.subscribe({
-        next: (response) => {
+    this.authenticationState = this.authenticationService.authenticationState$
+      .pipe(finalize(() => this.cdr.markForCheck()))
+      .subscribe({
+        next: (response: AuthenticationState) => {
           switch (response.error) {
             case 'wrongCredentials':
               this.getFormControl('password').setErrors({
-                [response.error]: true,
+                wrongCredentials: true,
               });
               break;
             case 'emailIsNotConfirmed':
               this.getFormControl('email').setErrors({
-                [response.error]: true,
+                emailIsNotConfirmed: true,
               });
               break;
-            case '':
-              this.router.navigate(['/']);
-              break;
             default:
-              // TODO: handle other changes
-              break;
+              this.getFormControl('email').setErrors(null);
+              this.getFormControl('password').setErrors(null);
+              this.router.navigate(['/']);
           }
-          this.cdr.markForCheck();
         },
       });
   }
-
   isFormEdited(): boolean {
-    return (
-      this.form.get('email')!.touched && this.form.get('password')!.touched
-    );
+    return this.form.get('email')!.dirty && this.form.get('password')!.dirty;
   }
 
   isFormValid(): boolean {

@@ -89,7 +89,10 @@ export class RegisterComponent {
               break;
             case 400:
               // inserts a validator error for the control to show
-              this.form.get('password')?.setErrors({ pattern: true });
+              this.form
+                .get('passwordGroup')
+                ?.get('password')!
+                .setErrors({ pattern: true });
               break;
             default: // Bad Request and Internal server error status code
               // insert the object error for the control to show

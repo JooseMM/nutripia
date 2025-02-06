@@ -16,5 +16,5 @@ export const undefinedAuthenticationState: AuthenticationState = {
   firstName: '',
   isEmailVerified: false,
   role: '',
-  error: '',
+  error: null,
 };
