@@ -10,7 +10,7 @@ import { unknowUserGuard } from './guards/unknow-user.guard';
 
 export const routes: Routes = [
   { path: 'inicio', component: HomePage },
-  { path: 'agenda', component: SchedulePage, canActivate: [clientGuard] },
+  { path: 'agenda', component: SchedulePage, canActivate: [] },
   { path: 'login', component: LoginComponent, canActivate: [unknowUserGuard] },
   {
     path: 'subscripcion',
@@ -22,5 +22,5 @@ export const routes: Routes = [
     component: AdministrationComponent,
     canActivate: [adminGuard],
   },
-  { path: '', redirectTo: '/inicio', pathMatch: 'full' },
+  { path: '', redirectTo: '/agenda', pathMatch: 'full' },
 ];

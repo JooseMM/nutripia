@@ -18,3 +18,27 @@ export const undefinedAuthenticationState: AuthenticationState = {
   role: '',
   error: null,
 };
+export const SINGLE_LETTER_WEEK_DAY = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+export const THREE_LETTER_WEEKDAY = [
+  'LUN',
+  'MAR',
+  'MIE',
+  'JUE',
+  'VIE',
+  'SAB',
+  'DOM',
+];
+export const MONTH_NAMES = [
+  'Enero',
+  'Febrero',
+  'Marzo',
+  'Abril',
+  'Mayo',
+  'Junio',
+  'Julio',
+  'Agosto',
+  'Septiembre',
+  'Octubre',
+  'Noviembre',
+  'Diciembre',
+];

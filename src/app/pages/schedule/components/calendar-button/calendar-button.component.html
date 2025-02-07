@@ -1,0 +1,13 @@
+<button
+  [ngClass]="
+    state() === 'normal'
+      ? normalStyles
+      : state() === 'selected'
+        ? selectedStyles
+        : state() === 'full'
+          ? takenSyles
+          : null
+  "
+>
+  {{ day() }}
+</button>

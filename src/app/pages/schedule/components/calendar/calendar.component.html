@@ -1,1 +1,27 @@
-<p>calendar works!</p>
+<div class="w-full mx-auto max-w-96 text-center">
+  <span class="text-primary-purple text-lg">Seleccione una fecha</span>
+  <h2
+    class="text-2xl font-black text-primary-purple py-4 border-b border-lavender-gray"
+  >
+    {{ getMonthName() }}
+  </h2>
+  <ul class="lg:hidden grid grid-cols-7 py-4">
+    @for (weekDay of singleLetterWeekDay; track $index) {
+      <li class="text-charcoal text-xl text-center opacity-80">
+        {{ weekDay }}
+      </li>
+    }
+  </ul>
+  <ul class="lg:hidden grid grid-cols-7">
+    @for (day of daysOfTheMonth; track $index) {
+      <li class="text-charcoal text-xl text-center opacity-80">
+        <nt-calendar-button
+          [day]="day.numberDay"
+          [state]="day.state"
+          (click)="selectADay($index)"
+        />
+      </li>
+    }
+  </ul>
+  <ul class="hidden"></ul>
+</div>
