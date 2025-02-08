@@ -1,27 +1,25 @@
-<div class="w-full mx-auto max-w-96 text-center">
+<div class="w-full mx-auto max-w-80 text-center">
   <span class="text-primary-purple text-lg">Seleccione una fecha</span>
   <div
     class="flex space-x-12 py-4 items-center justify-center border-b border-lavender-gray"
   >
-    <button class="text-primary-purple font-medium text-3xl">&lt;</button>
+    <button class="text-primary-purple font-medium text-3xl"></button>
     <h2 class="text-2xl font-black text-primary-purple">
       {{ getMonthName() }}
     </h2>
     <button
       (click)="renderNextMonth()"
       class="text-primary-purple font-medium text-3xl"
-    >
-      &gt;
-    </button>
+    ></button>
   </div>
-  <ul class="lg:hidden grid grid-cols-7 py-4">
+  <ul class="lg:hidden grid grid-cols-7 pt-4 pb-5">
     @for (weekDay of singleLetterWeekDay; track $index) {
-      <li class="text-charcoal text-xl text-center opacity-80">
+      <li class="text-[#838383] text-xl text-center opacity-80">
         {{ weekDay }}
       </li>
     }
   </ul>
-  <ul class="lg:hidden grid grid-cols-7">
+  <ul class="lg:hidden grid grid-cols-7 border-b border-lavender-gray">
     @for (day of daysOfTheMonth(); track $index) {
       <li class="text-charcoal text-xl text-center opacity-80">
         <nt-calendar-button
@@ -32,8 +30,4 @@
       </li>
     }
   </ul>
-  <div>
-    <h2>Seleccione una hora</h2>
-    <div></div>
-  </div>
 </div>

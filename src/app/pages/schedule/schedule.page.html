@@ -1,2 +1,31 @@
-<p>schedule works!</p>
-<nt-calendar />
+<section class="py-6">
+  <nt-calendar />
+  <div class="space-y-3 mt-6 flex flex-col items-center">
+    <h2 class="text-lg text-primary-purple">Seleccione una hora</h2>
+    <div class="space-x-8">
+      <button class="text-3xl text-charcoal font-light">+</button>
+      <span
+        class="py-2 px-6 text-lg text-primary-purple border border-charcoal rounded-md"
+        >09:00hrs</span
+      >
+      <button class="text-3xl text-charcoal font-light">-</button>
+    </div>
+  </div>
+  <div class="space-y-3 mt-6 flex flex-col items-center">
+    <h2 class="text-lg text-primary-purple">Seleccione modalidad</h2>
+    <div class="flex space-x-6">
+      <button class="flex items-center justify-center space-x-2">
+        <span class="border border-primary-purple rounded-full p-1 flex">
+          <span class="p-2.5 bg-white rounded-full"></span>
+        </span>
+        <p class="text-charcoal">Presencial</p>
+      </button>
+      <button class="flex items-center justify-center space-x-2">
+        <span class="border border-primary-purple rounded-full p-1 flex">
+          <span class="p-2.5 bg-primary-purple rounded-full"></span>
+        </span>
+        <p class="text-charcoal">Teleconsulta</p>
+      </button>
+    </div>
+  </div>
+</section>

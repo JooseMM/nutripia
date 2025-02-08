@@ -6,8 +6,11 @@
         ? selectedStyles
         : state() === 'full'
           ? takenSyles
-          : null
+          : state() === 'disable'
+            ? disableStyles
+            : null
   "
+  [disabled]="state() === 'disable' ? true : false"
 >
   {{ day() }}
 </button>
