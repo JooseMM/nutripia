@@ -1,4 +1,10 @@
-import { Component, input, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import {
   MONTH_NAMES,
   SINGLE_LETTER_WEEK_DAY,
@@ -6,7 +12,7 @@ import {
 } from 'src/app/constants/app-constants';
 import { CalendarButtonComponent } from '../calendar-button/calendar-button.component';
 import { CalendarButtonState } from '../calendar-button/utils';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 interface DayObject {
   state: CalendarButtonState;
@@ -25,25 +31,33 @@ export class CalendarComponent {
   threeLetterWeekDay = THREE_LETTER_WEEKDAY;
   singleLetterWeekDay = SINGLE_LETTER_WEEK_DAY;
   monthNames = [...MONTH_NAMES];
-  selectedDayIndex: number = -1;
-  daysOfTheMonth = signal(this.getDaysInMonth());
+  selectedDayIndex: WritableSignal<number> = signal(-1);
+  daysOfTheMonth: WritableSignal<DayObject[]> = signal(this.getDaysInMonth());
+  cdr = inject(ChangeDetectorRef);
 
   selectADay(newIndex: number) {
-    const oldIndex = this.selectedDayIndex;
-    const wasPreviousDayFull = this.daysOfTheMonth()[oldIndex].state === 'full';
+    const oldIndex = this.selectedDayIndex();
+    /*
+     * condition to know is the last index had a state of full or an undefined index(-1)
+     * if this is true, then the selected button is updated if not its not touched
+     */
+    const wasPreviousDayValid =
+      oldIndex !== -1 && this.daysOfTheMonth()[oldIndex].state !== 'full';
 
-    this.daysOfTheMonth.update((prev) => {
+    this.daysOfTheMonth.update((prev: DayObject[]) => {
       const current: DayObject[] = [...prev];
-      current[oldIndex].state = 'normal';
+      if (wasPreviousDayValid) {
+        current[oldIndex].state = 'normal';
+      }
       current[newIndex].state = 'selected';
-      return current;
+      return [...current];
     });
-    this.selectedDayIndex = newIndex;
-    //this.daysOfTheMonth[newIndex].state = 'selected';
+    this.selectedDayIndex.set(newIndex);
   }
   renderNextMonth() {
-    this.year.update((prev) => prev++);
-    this.daysOfTheMonth = this.getDaysInMonth();
+    this.month.update((prev) => ++prev);
+    this.daysOfTheMonth.set(this.getDaysInMonth());
+    console.log(this.getDaysInMonth().length);
   }
   renderPreviousMonth() {}
   getDaysInMonth(): DayObject[] {
@@ -57,6 +71,7 @@ export class CalendarComponent {
         equals to the last day in january
     */
     const numberOfDays = new Date(this.year(), this.month() + 1, 0).getDate();
+    console.log(new Date(this.year(), this.month() + 1, 0).getDay());
     /*
      * create and return an array with the same length as
      * the days of the selected month that hold an DayObject
@@ -65,7 +80,7 @@ export class CalendarComponent {
       { length: numberOfDays },
       (_, index) =>
         ({
-          state: this.selectedDayIndex === index ? 'selected' : 'normal',
+          state: this.selectedDayIndex() === index ? 'selected' : 'normal',
           numberDay: index + 1,
         }) as DayObject,
     );

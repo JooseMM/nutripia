@@ -3,16 +3,16 @@
   <div
     class="flex space-x-12 py-4 items-center justify-center border-b border-lavender-gray"
   >
+    <button class="text-primary-purple font-medium text-3xl">&lt;</button>
+    <h2 class="text-2xl font-black text-primary-purple">
+      {{ getMonthName() }}
+    </h2>
     <button
       (click)="renderNextMonth()"
       class="text-primary-purple font-medium text-3xl"
     >
-      &lt;
+      &gt;
     </button>
-    <h2 class="text-2xl font-black text-primary-purple">
-      {{ getMonthName() }}
-    </h2>
-    <button class="text-primary-purple font-medium text-3xl">&gt;</button>
   </div>
   <ul class="lg:hidden grid grid-cols-7 py-4">
     @for (weekDay of singleLetterWeekDay; track $index) {
@@ -22,7 +22,7 @@
     }
   </ul>
   <ul class="lg:hidden grid grid-cols-7">
-    @for (day of daysOfTheMonth; track $index) {
+    @for (day of daysOfTheMonth(); track $index) {
       <li class="text-charcoal text-xl text-center opacity-80">
         <nt-calendar-button
           [day]="day.numberDay"
