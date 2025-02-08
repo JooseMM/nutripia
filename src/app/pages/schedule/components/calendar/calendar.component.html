@@ -1,10 +1,19 @@
 <div class="w-full mx-auto max-w-96 text-center">
   <span class="text-primary-purple text-lg">Seleccione una fecha</span>
-  <h2
-    class="text-2xl font-black text-primary-purple py-4 border-b border-lavender-gray"
+  <div
+    class="flex space-x-12 py-4 items-center justify-center border-b border-lavender-gray"
   >
-    {{ getMonthName() }}
-  </h2>
+    <button
+      (click)="renderNextMonth()"
+      class="text-primary-purple font-medium text-3xl"
+    >
+      &lt;
+    </button>
+    <h2 class="text-2xl font-black text-primary-purple">
+      {{ getMonthName() }}
+    </h2>
+    <button class="text-primary-purple font-medium text-3xl">&gt;</button>
+  </div>
   <ul class="lg:hidden grid grid-cols-7 py-4">
     @for (weekDay of singleLetterWeekDay; track $index) {
       <li class="text-charcoal text-xl text-center opacity-80">
@@ -23,5 +32,8 @@
       </li>
     }
   </ul>
-  <ul class="hidden"></ul>
+  <div>
+    <h2>Seleccione una hora</h2>
+    <div></div>
+  </div>
 </div>
