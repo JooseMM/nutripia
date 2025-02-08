@@ -11,18 +11,28 @@
       <button class="text-3xl text-charcoal font-light">-</button>
     </div>
   </div>
-  <div class="space-y-3 mt-6 flex flex-col items-center">
+  <div class="space-y-4 mt-6 flex flex-col items-center">
     <h2 class="text-lg text-primary-purple">Seleccione modalidad</h2>
     <div class="flex space-x-6">
-      <button class="flex items-center justify-center space-x-2">
+      <button
+        (click)="appointmentIsNotOnline()"
+        class="flex items-center justify-center space-x-2"
+      >
         <span class="border border-primary-purple rounded-full p-1 flex">
-          <span class="p-2.5 bg-white rounded-full"></span>
+          <span
+            [ngClass]="isAppointmentOnline ? notSelectedClass : selectedClass"
+          ></span>
         </span>
         <p class="text-charcoal">Presencial</p>
       </button>
-      <button class="flex items-center justify-center space-x-2">
+      <button
+        (click)="appointmentIsOnline()"
+        class="flex items-center justify-center space-x-2"
+      >
         <span class="border border-primary-purple rounded-full p-1 flex">
-          <span class="p-2.5 bg-primary-purple rounded-full"></span>
+          <span
+            [ngClass]="isAppointmentOnline ? selectedClass : notSelectedClass"
+          ></span>
         </span>
         <p class="text-charcoal">Teleconsulta</p>
       </button>
