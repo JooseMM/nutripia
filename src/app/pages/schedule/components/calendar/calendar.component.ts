@@ -1,7 +1,8 @@
 import {
-  ChangeDetectorRef,
   Component,
-  inject,
+  computed,
+  effect,
+  Signal,
   signal,
   WritableSignal,
 } from '@angular/core';
@@ -12,7 +13,8 @@ import {
 } from 'src/app/constants/app-constants';
 import { CalendarButtonComponent } from '../calendar-button/calendar-button.component';
 import { CalendarButtonState } from '../calendar-button/utils';
-import { Subscription } from 'rxjs';
+import { NgClass } from '@angular/common';
+import { ButtonComponent } from '../../../../shared/button/button.component';
 
 interface DayObject {
   state: CalendarButtonState;
@@ -20,57 +22,78 @@ interface DayObject {
 }
 @Component({
   selector: 'nt-calendar',
-  imports: [CalendarButtonComponent],
+  imports: [CalendarButtonComponent, NgClass, ButtonComponent],
   templateUrl: './calendar.component.html',
 })
 export class CalendarComponent {
-  currentDate = new Date();
-  month = signal(this.currentDate.getMonth());
-  year = signal(this.currentDate.getFullYear());
-  calendarSubscription: Subscription = new Subscription();
+  selectedDate: WritableSignal<Date> = signal(this.getCurrentDate());
   threeLetterWeekDay = THREE_LETTER_WEEKDAY;
   singleLetterWeekDay = SINGLE_LETTER_WEEK_DAY;
   monthNames = [...MONTH_NAMES];
-  fullDays = [14, 23, 10]; // TODO: get this from a service
-  selectedDayIndex: WritableSignal<number> = signal(-1);
-  daysOfTheMonth: WritableSignal<DayObject[]> = signal(this.getDaysInMonth());
-  cdr = inject(ChangeDetectorRef);
-
-  selectADay(newIndex: number) {
-    const oldIndex = this.selectedDayIndex();
-    /*
-     * condition to know is the last index had a state of full or if its the same index
-     * if this is true, then the selected button is updated if not its not touched
-     */
-    if (
-      this.daysOfTheMonth()[newIndex].state !== 'full' &&
-      oldIndex !== newIndex
-    ) {
-      this.daysOfTheMonth.update((prev: DayObject[]) => {
-        const current: DayObject[] = [...prev];
-        /*
-         * -1 is used as an null value
-         * if the value is null the state is not gonna be updated
-         */
-        if (oldIndex !== -1) {
-          current[oldIndex].state = 'normal';
-        }
-        /*
-         * change the state of the desire day to 'selected'
-         */
-        current[newIndex].state = 'selected';
-        return [...current];
-      });
-      this.selectedDayIndex.set(newIndex); // update the signal
-    }
+  isAppointmentOnline: WritableSignal<boolean> = signal(false);
+  fullDays = [14, 10]; // TODO: get this from a service
+  daysOfTheMonth: Signal<DayObject[]> = computed(() =>
+    this.getDaysInMonth(
+      this.selectedDate().getFullYear(),
+      this.selectedDate().getMonth(),
+      this.fullDays,
+      this.selectedDate().getDate(),
+    ),
+  );
+  notSelectedClass = 'p-2.5 bg-white rounded-full';
+  selectedClass = 'p-2.5 bg-primary-purple rounded-full';
+  constructor() {
+    effect(() => console.log(this.selectedDate()));
   }
-  renderNextMonth() {
-    this.month.update((prev) => ++prev);
-    this.daysOfTheMonth.set(this.getDaysInMonth());
-    console.log(this.getDaysInMonth().length);
+  selectADay(selectedDay: number) {
+    this.selectedDate.update((prev) => {
+      return new Date(
+        prev.getFullYear(),
+        prev.getMonth(),
+        selectedDay,
+        prev.getHours(),
+        0,
+        0,
+        0,
+      );
+    });
+  }
+  setAppointmentIsOnline(isOnline: boolean) {
+    this.isAppointmentOnline.set(isOnline);
+  }
+  updateMonth(operator: number) {
+    this.selectedDate.update((prev) => {
+      return new Date(
+        prev.getFullYear(),
+        prev.getMonth() + operator,
+        prev.getDate(),
+        prev.getHours(),
+        0,
+        0,
+        0,
+      );
+    });
+  }
+  getCurrentDate() {
+    const now = new Date(); // Current date and time
+    // Create a new Date object with the same year, month, and day as the current date
+    return new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      9,
+      0,
+      0,
+      0,
+    );
   }
   renderPreviousMonth() {}
-  getDaysInMonth(): DayObject[] {
+  getDaysInMonth(
+    year: number,
+    month: number,
+    fullDays: number[],
+    selectedDay: number,
+  ): DayObject[] {
     /*
      * getting info from external api will be needed
      *
@@ -79,17 +102,9 @@ export class CalendarComponent {
      * months in js start at 0, so saying the 0 day in month 1
      * equals to the last day in january
      **/
-    const lastDayOfSelectedDays = new Date(
-      this.year(),
-      this.month() + 1,
-      0,
-    ).getDate();
-    const firstDayOfSelectedMonth = new Date(this.year(), this.month(), 1);
-    const lastDayOfPreviousMonth = new Date(
-      this.year(),
-      this.month(),
-      0,
-    ).getDate();
+    const lastDayOfSelectedDays = new Date(year, month + 1, 0).getDate();
+    const firstDayOfSelectedMonth = new Date(year, month, 1);
+    const lastDayOfPreviousMonth = new Date(year, month, 0).getDate();
     /*
      * get the day of the week from sunday (0) to Saturday (6)
      * because our format starts with monday(0) to Sunday(6) we need to
@@ -109,7 +124,6 @@ export class CalendarComponent {
          * belongs to the previous month array length (monthStartAtDay - 1),
          * substract the current index (monthStartAtDay - 1 - index)
          * to later substract that value to the last day of the previous month
-         *
          * */
       }),
     );
@@ -121,9 +135,11 @@ export class CalendarComponent {
       { length: lastDayOfSelectedDays },
       (_, index) =>
         ({
-          state: this.fullDays.includes(index + 1) // check for full days and mark them as not available
+          state: fullDays.includes(index + 1) // check for full days and mark them as not available
             ? 'full'
-            : 'normal',
+            : selectedDay === index + 1
+              ? 'selected'
+              : 'normal',
           numberDay: index + 1,
         }) as DayObject,
     );
@@ -131,6 +147,12 @@ export class CalendarComponent {
     return [...previousMonthDays, ...selectedMonthDays];
   }
   getMonthName() {
-    return this.monthNames[this.month()];
+    return this.monthNames[this.selectedDate().getMonth()];
+  }
+  saveAppointment() {
+    console.log('Selected day: \n');
+    console.log(this.selectedDate());
+    console.log('is online: \n');
+    console.log(this.isAppointmentOnline());
   }
 }
