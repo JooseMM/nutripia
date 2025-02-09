@@ -10,11 +10,13 @@ import {
   MONTH_NAMES,
   SINGLE_LETTER_WEEK_DAY,
   THREE_LETTER_WEEKDAY,
+  WORK_END_HOUR,
+  WORK_START_HOUR,
 } from 'src/app/constants/app-constants';
-import { CalendarButtonComponent } from '../calendar-button/calendar-button.component';
-import { CalendarButtonState } from '../calendar-button/utils';
+import { CalendarButtonComponent } from './components/calendar-button/calendar-button.component';
+import { CalendarButtonState } from './utils';
 import { NgClass } from '@angular/common';
-import { ButtonComponent } from '../../../../shared/button/button.component';
+import { ButtonComponent } from 'src/app/shared/button/button.component';
 
 interface DayObject {
   state: CalendarButtonState;
@@ -61,18 +63,25 @@ export class CalendarComponent {
   setAppointmentIsOnline(isOnline: boolean) {
     this.isAppointmentOnline.set(isOnline);
   }
-  updateMonth(operator: number) {
-    this.selectedDate.update((prev) => {
-      return new Date(
-        prev.getFullYear(),
-        prev.getMonth() + operator,
-        prev.getDate(),
-        prev.getHours(),
-        0,
-        0,
-        0,
-      );
-    });
+  updateMonth(updateBy: number) {
+    const currentMonth = this.selectedDate().getMonth() + updateBy;
+    /*
+     * Dont update is the operation is not valid
+     */
+    const isOperationValid = currentMonth > -1 && currentMonth < 13;
+    if (isOperationValid) {
+      this.selectedDate.update((prev) => {
+        return new Date(
+          prev.getFullYear(),
+          currentMonth,
+          prev.getDate(),
+          prev.getHours(),
+          0,
+          0,
+          0,
+        );
+      });
+    }
   }
   getCurrentDate() {
     const now = new Date(); // Current date and time
@@ -154,5 +163,24 @@ export class CalendarComponent {
     console.log(this.selectedDate());
     console.log('is online: \n');
     console.log(this.isAppointmentOnline());
+  }
+  updateHour(updateBy: number) {
+    const currentHours = this.selectedDate().getHours() + updateBy;
+    // Date handles hours to wrap around 24, business logic tell us to online have available hours from 9hrs to 20hrs
+    const validOperation =
+      currentHours < WORK_END_HOUR && currentHours > WORK_START_HOUR;
+    if (validOperation) {
+      this.selectedDate.update((prev) => {
+        return new Date(
+          prev.getFullYear(),
+          prev.getMonth(),
+          prev.getDate(),
+          currentHours,
+          0,
+          0,
+          0,
+        );
+      });
+    }
   }
 }

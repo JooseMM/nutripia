@@ -1,0 +1,129 @@
+<section class="w-full mt-10 mx-auto max-w-80 text-center">
+  <span class="text-primary-purple text-lg tracking-wide"
+    >Seleccione una fecha</span
+  >
+  <div
+    class="flex py-4 items-center justify-center border-b border-lavender-gray"
+  >
+    <button
+      (click)="updateMonth(-1)"
+      class="text-primary-purple font-medium text-3xl"
+    >
+      <svg
+        width="35"
+        height="35"
+        viewBox="0 0 60 60"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M8.78672 51.2133C14.4531 56.8795 21.9867 60 30 60C38.0133 60 45.5469 56.8795 51.2133 51.2133C56.8795 45.5469 60 38.0134 60 30C60 21.9866 56.8795 14.4531 51.2133 8.78672C45.5469 3.12047 38.0133 0 30 0C21.9867 0 14.4531 3.12047 8.78672 8.78672C3.12047 14.4531 0 21.9866 0 30C0 38.0134 3.12047 45.5469 8.78672 51.2133ZM18.4639 29.1108L37.0889 19.1157C38.213 18.5125 39.503 19.5913 39.109 20.8041L36.0041 30.3607L39.1091 39.9173C39.5033 41.1305 38.2127 42.2087 37.089 41.6057L18.4641 31.6106C17.4693 31.077 17.4676 29.6456 18.4639 29.1108Z"
+          fill="#8878A5"
+        />
+      </svg>
+    </button>
+    <h2 class="text-2xl w-60 font-black text-primary-purple">
+      {{ getMonthName() }}
+    </h2>
+    <button
+      (click)="updateMonth(+1)"
+      class="text-primary-purple font-medium text-3xl"
+    >
+      <svg
+        width="35"
+        height="35"
+        viewBox="0 0 61 61"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M52.1962 9.58445C46.5298 3.9182 38.9962 0.797729 30.9829 0.797729C22.9696 0.797729 15.436 3.9182 9.76963 9.58445C4.10338 15.2508 0.98291 22.7843 0.98291 30.7977C0.98291 38.8111 4.10338 46.3446 9.76963 52.011C15.436 57.6773 22.9696 60.7977 30.9829 60.7977C38.9962 60.7977 46.5298 57.6773 52.1962 52.011C57.8624 46.3446 60.9829 38.8111 60.9829 30.7977C60.9829 22.7843 57.8624 15.2508 52.1962 9.58445ZM42.519 31.6869L23.894 41.682C22.7699 42.2853 21.4799 41.2064 21.8739 39.9937L24.9788 30.437L21.8738 20.8804C21.4796 19.6673 22.7702 18.589 23.8939 19.1921L42.5188 29.1871C43.5137 29.7208 43.5153 31.1521 42.519 31.6869Z"
+          fill="#8878A5"
+        />
+      </svg>
+    </button>
+  </div>
+  <ul class="lg:hidden grid grid-cols-7 pt-4 pb-5">
+    @for (weekDay of singleLetterWeekDay; track $index) {
+      <li class="text-[#838383] text-xl text-center opacity-80">
+        {{ weekDay }}
+      </li>
+    }
+  </ul>
+  <ul class="lg:hidden grid grid-cols-7 border-b border-lavender-gray">
+    @for (day of daysOfTheMonth(); track $index) {
+      <li class="text-charcoal text-xl text-center opacity-80">
+        <nt-calendar-button
+          [day]="day.numberDay"
+          [state]="day.state"
+          (click)="selectADay(day.numberDay)"
+        />
+      </li>
+    }
+  </ul>
+  <div class="space-y-3 mt-6 flex flex-col items-center">
+    <h2 class="text-lg text-primary-purple tracking-wide">
+      Seleccione una hora
+    </h2>
+    <div class="space-x-8">
+      <button
+        (click)="updateHour(-1)"
+        class="text-3xl text-charcoal font-light"
+      >
+        -
+      </button>
+      <span
+        class="py-2 px-6 text-lg text-primary-purple border border-charcoal rounded-md"
+        >{{
+          selectedDate().toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        }}</span
+      >
+      <button
+        (click)="updateHour(+1)"
+        class="text-3xl text-charcoal font-light"
+      >
+        +
+      </button>
+    </div>
+  </div>
+  <div class="space-y-4 mt-8 flex flex-col items-center">
+    <h2 class="text-lg text-primary-purple tracking-wide">
+      Seleccione modalidad
+    </h2>
+    <div class="flex space-x-6">
+      <button
+        (click)="setAppointmentIsOnline(false)"
+        class="flex items-center justify-center space-x-2"
+      >
+        <span class="border border-primary-purple rounded-full p-1 flex">
+          <span
+            [ngClass]="isAppointmentOnline() ? notSelectedClass : selectedClass"
+          ></span>
+        </span>
+        <p class="text-charcoal">Presencial</p>
+      </button>
+      <button
+        (click)="setAppointmentIsOnline(true)"
+        class="flex items-center justify-center space-x-2"
+      >
+        <span class="border border-primary-purple rounded-full p-1 flex">
+          <span
+            [ngClass]="isAppointmentOnline() ? selectedClass : notSelectedClass"
+          ></span>
+        </span>
+        <p class="text-charcoal">Teleconsulta</p>
+      </button>
+    </div>
+  </div>
+  <div class="flex space-x-6 items-center justify-center mt-8 mb-10">
+    <nt-button
+      [isPrimary]="true"
+      label="Reservar"
+      (click)="saveAppointment()"
+    />
+    <button class="text-charcoal">Cancelar</button>
+  </div>
+</section>
