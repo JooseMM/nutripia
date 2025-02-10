@@ -10,6 +10,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import {
+  MONTH_NAMES,
   WORK_END_HOUR,
   WORK_START_HOUR,
 } from 'src/app/constants/app-constants';
@@ -80,5 +81,8 @@ export class ScheduleComponent {
   }
   dateDidChange(newDate: Date) {
     this.selectedDate.set(newDate);
+  }
+  getMonthName() {
+    return MONTH_NAMES[this.selectedDate().getMonth()];
   }
 }

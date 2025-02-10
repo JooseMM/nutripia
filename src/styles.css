@@ -7,13 +7,6 @@ html {
   scroll-behavior: smooth;
 }
 @layer components {
-  .active {
-    @apply text-charcoal;
-  }
-  .loading {
-  }
-  .idle {
-  }
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
     @apply appearance-none;

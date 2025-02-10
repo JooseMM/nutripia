@@ -1,17 +1,18 @@
-<section class="w-full mt-10 mx-auto max-w-80 text-center">
-  <span class="text-primary-purple text-lg tracking-wide"
+<section
+  class="w-full overflow-hidden mx-auto max-w-80 text-center | lg:max-w-[900px] lg:flex lg:flex-col lg:items-center lg:justify-center lg:rounded-2xl lg:outline lg:outline-1 lg:outline-lavender-gray"
+>
+  <span class="text-primary-purple text-lg tracking-wide | lg:hidden"
     >Seleccione una fecha</span
   >
   <div
-    class="flex py-4 items-center justify-center border-b border-lavender-gray"
+    class="flex py-4 items-center justify-center border-b | lg:w-full lg:py-6 lg:bg-primary-purple"
   >
     <button
       (click)="updateMonth(-1)"
       class="text-primary-purple font-medium text-3xl"
     >
       <svg
-        width="30"
-        height="30"
+        class="w-8 h-8"
         viewBox="0 0 60 60"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -22,7 +23,9 @@
         />
       </svg>
     </button>
-    <h2 class="text-2xl w-60 font-black text-primary-purple tracking-wider">
+    <h2
+      class="text-2xl font-black text-primary-purple tracking-wider | lg:w-52 lg:text-white lg:font-medium lg:text-3xl"
+    >
       {{ getMonthName() }}
     </h2>
     <button
@@ -30,8 +33,7 @@
       class="text-primary-purple font-medium text-3xl"
     >
       <svg
-        width="30"
-        height="30"
+        class="w-8 h-8"
         viewBox="0 0 61 61"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -43,16 +45,27 @@
       </svg>
     </button>
   </div>
-  <ul class="lg:hidden grid grid-cols-7 pt-4 pb-5">
+  <ul class="grid grid-cols-7 pt-4 pb-5 w-full | lg:hidden">
     @for (weekDay of singleLetterWeekDay; track $index) {
       <li class="text-[#838383] text-xl text-center opacity-80">
         {{ weekDay }}
       </li>
     }
   </ul>
-  <ul class="lg:hidden grid grid-cols-7 border-b border-lavender-gray">
+  <ul class="hidden bg-lavender-white grid-cols-7 py-3 w-full | lg:grid">
+    @for (weekDay of threeLetterWeekDay; track $index) {
+      <li
+        class="text-primary-purple font-medium tracking-wider text-xl text-center opacity-80"
+      >
+        {{ weekDay }}
+      </li>
+    }
+  </ul>
+  <ul
+    class="grid grid-cols-7 border-b border-lavender-gray w-full lg:border-none"
+  >
     @for (day of daysOfTheMonth(); track $index) {
-      <li class="text-charcoal text-xl text-center opacity-80">
+      <li class="text-charcoal text-xl text-center">
         <nt-calendar-button
           [day]="day.numberDay"
           [state]="day.state"

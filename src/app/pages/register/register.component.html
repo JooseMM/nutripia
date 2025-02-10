@@ -1,7 +1,9 @@
 <section
   class="flex flex-col text-primary-purple px-mobile-padding items-center h-dvh py-8 | lg:px-0 lg:h-auto lg:items-start lg:flex-row lg:py-0"
 >
-  <div class="hidden | lg:flex flex-col space-y-6 items-center w-[75%] mt-52">
+  <div
+    class="hidden | lg:flex flex-col space-y-6 items-center w-big-container mt-52"
+  >
     <nt-logo class="lg:text-6xl" />
     <div class="flex space-x-8">
       <nt-decorative-icon type="fish" color="#D6D6D6" />
@@ -14,7 +16,7 @@
     </div>
   </div>
   <form
-    class="flex flex-col w-full max-w-80 | lg:w-[25%] lg:max-w-none lg:px-4 lg:items-center lg:py-10 lg:h-full lg:border-l lg:border-l-lavender-gray"
+    class="flex flex-col w-full max-w-80 | lg:w-small-container lg:max-w-none lg:px-4 lg:items-center lg:py-10 lg:h-full lg:border-l lg:border-l-lavender-gray"
     [formGroup]="form"
     (ngSubmit)="onSubmit()"
   >

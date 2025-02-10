@@ -12,5 +12,5 @@
   "
   [disabled]="state() === 'disable' ? true : false"
 >
-  {{ day() }}
+  <p [ngClass]="state() === 'disable' ? 'opacity-30' : ''">{{ day() }}</p>
 </button>
