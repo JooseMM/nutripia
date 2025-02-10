@@ -7,10 +7,11 @@ import { clientGuard } from './guards/client.guard';
 import { adminGuard } from './guards/admin.guard';
 import { unknowUserGuard } from './guards/unknow-user.guard';
 import { CalendarComponent } from './pages/calendar/calendar.component';
+import { ScheduleComponent } from './pages/schedule/schedule.component';
 
 export const routes: Routes = [
   { path: 'inicio', component: HomePage },
-  { path: 'agenda', component: CalendarComponent, canActivate: [] },
+  { path: 'agenda', component: ScheduleComponent, canActivate: [] },
   { path: 'login', component: LoginComponent, canActivate: [unknowUserGuard] },
   {
     path: 'subscripcion',

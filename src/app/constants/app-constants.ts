@@ -43,4 +43,4 @@ export const MONTH_NAMES = [
   'Diciembre',
 ];
 export const WORK_START_HOUR = 8;
-export const WORK_END_HOUR = 20;
+export const WORK_END_HOUR = 19;

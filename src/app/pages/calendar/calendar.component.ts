@@ -1,100 +1,80 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
+  input,
+  output,
   Signal,
-  signal,
-  WritableSignal,
 } from '@angular/core';
 import {
   MONTH_NAMES,
   SINGLE_LETTER_WEEK_DAY,
   THREE_LETTER_WEEKDAY,
-  WORK_END_HOUR,
-  WORK_START_HOUR,
 } from 'src/app/constants/app-constants';
 import { CalendarButtonComponent } from './components/calendar-button/calendar-button.component';
 import { CalendarButtonState } from './utils';
-import { NgClass } from '@angular/common';
-import { ButtonComponent } from 'src/app/shared/button/button.component';
-
 interface DayObject {
   state: CalendarButtonState;
   numberDay: number;
 }
 @Component({
   selector: 'nt-calendar',
-  imports: [CalendarButtonComponent, NgClass, ButtonComponent],
+  imports: [CalendarButtonComponent],
   templateUrl: './calendar.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent {
-  selectedDate: WritableSignal<Date> = signal(this.getCurrentDate());
+  notAvailableDays = input<number[]>([]);
+  selectedDate = input.required<Date>();
+  dateChange = output<Date>();
   threeLetterWeekDay = THREE_LETTER_WEEKDAY;
   singleLetterWeekDay = SINGLE_LETTER_WEEK_DAY;
   monthNames = [...MONTH_NAMES];
-  isAppointmentOnline: WritableSignal<boolean> = signal(false);
-  fullDays = [14, 10]; // TODO: get this from a service
   daysOfTheMonth: Signal<DayObject[]> = computed(() =>
     this.getDaysInMonth(
       this.selectedDate().getFullYear(),
       this.selectedDate().getMonth(),
-      this.fullDays,
+      this.notAvailableDays(),
       this.selectedDate().getDate(),
     ),
   );
-  notSelectedClass = 'p-2.5 bg-white rounded-full';
-  selectedClass = 'p-2.5 bg-primary-purple rounded-full';
-  constructor() {
-    effect(() => console.log(this.selectedDate()));
+
+  updateSelectedDate(newDate: Date) {
+    this.dateChange.emit(new Date(newDate)); // trigger the event for the parent listener
   }
   selectADay(selectedDay: number) {
-    this.selectedDate.update((prev) => {
-      return new Date(
-        prev.getFullYear(),
-        prev.getMonth(),
+    const currentDate = this.selectedDate();
+
+    this.updateSelectedDate(
+      new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
         selectedDay,
-        prev.getHours(),
+        currentDate.getHours(),
         0,
         0,
-        0,
-      );
-    });
-  }
-  setAppointmentIsOnline(isOnline: boolean) {
-    this.isAppointmentOnline.set(isOnline);
+      ),
+    );
   }
   updateMonth(updateBy: number) {
-    const currentMonth = this.selectedDate().getMonth() + updateBy;
+    const newMonth = this.selectedDate().getMonth() + updateBy;
+    const isOperationValid = newMonth > -1 && newMonth < 12;
     /*
      * Dont update is the operation is not valid
      */
-    const isOperationValid = currentMonth > -1 && currentMonth < 13;
     if (isOperationValid) {
-      this.selectedDate.update((prev) => {
-        return new Date(
-          prev.getFullYear(),
-          currentMonth,
-          prev.getDate(),
-          prev.getHours(),
+      const currentDate = this.selectedDate();
+      this.updateSelectedDate(
+        new Date(
+          currentDate.getFullYear(),
+          newMonth,
+          currentDate.getDate(),
+          currentDate.getHours(),
           0,
           0,
-          0,
-        );
-      });
+        ),
+      );
     }
-  }
-  getCurrentDate() {
-    const now = new Date(); // Current date and time
-    // Create a new Date object with the same year, month, and day as the current date
-    return new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      9,
-      0,
-      0,
-      0,
-    );
   }
   renderPreviousMonth() {}
   getDaysInMonth(
@@ -157,30 +137,5 @@ export class CalendarComponent {
   }
   getMonthName() {
     return this.monthNames[this.selectedDate().getMonth()];
-  }
-  saveAppointment() {
-    console.log('Selected day: \n');
-    console.log(this.selectedDate());
-    console.log('is online: \n');
-    console.log(this.isAppointmentOnline());
-  }
-  updateHour(updateBy: number) {
-    const currentHours = this.selectedDate().getHours() + updateBy;
-    // Date handles hours to wrap around 24, business logic tell us to online have available hours from 9hrs to 20hrs
-    const validOperation =
-      currentHours < WORK_END_HOUR && currentHours > WORK_START_HOUR;
-    if (validOperation) {
-      this.selectedDate.update((prev) => {
-        return new Date(
-          prev.getFullYear(),
-          prev.getMonth(),
-          prev.getDate(),
-          currentHours,
-          0,
-          0,
-          0,
-        );
-      });
-    }
   }
 }
