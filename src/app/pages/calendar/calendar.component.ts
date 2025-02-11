@@ -38,13 +38,17 @@ export class CalendarComponent {
       this.selectedDate().getDate(),
     ),
   );
-
   updateSelectedDate(newDate: Date) {
-    this.dateChange.emit(new Date(newDate)); // trigger the event for the parent listener
+    /*
+     * trigger the event for the parent listener
+     * */
+    this.dateChange.emit(new Date(newDate));
   }
   selectADay(selectedDay: number) {
     const currentDate = this.selectedDate();
-
+    /*
+     * update the whole date
+     */
     this.updateSelectedDate(
       new Date(
         currentDate.getFullYear(),
@@ -76,7 +80,9 @@ export class CalendarComponent {
       );
     }
   }
-  renderPreviousMonth() {}
+  getMonthName() {
+    return this.monthNames[this.selectedDate().getMonth()];
+  }
   getDaysInMonth(
     year: number,
     month: number,
@@ -132,10 +138,38 @@ export class CalendarComponent {
           numberDay: index + 1,
         }) as DayObject,
     );
+    /*
+     * in order to not have  a blank space at the end of the calendar in some cases
+     * we need to show the next month days in the available boxes left
+     *
+     * first we check what's out array length so far
+     * */
+    const combinedArraysLength =
+      previousMonthDays.length + selectedMonthDays.length;
+    /*
+     * why 35? If the calendar needs to fill days in the fith row
+     * the length so far will be less than that
+     *
+     * if its greater than 35 it means that it needs to fill days in the sixth row
+     *
+     * below we substrack to 35 and 42 to the values of the combined array
+     * this gives us the amount of days left to fill
+     * */
+    const nextMonthDaysLength =
+      combinedArraysLength < 35
+        ? 35 - combinedArraysLength
+        : 42 - combinedArraysLength;
 
-    return [...previousMonthDays, ...selectedMonthDays];
-  }
-  getMonthName() {
-    return this.monthNames[this.selectedDate().getMonth()];
+    const nextMonthDays = Array.from(
+      { length: nextMonthDaysLength },
+      (_, index): DayObject => ({
+        state: 'disable',
+        numberDay: index + 1,
+        /*
+         * then we create an array of DayObject and combined it with the rest
+         * */
+      }),
+    );
+    return [...previousMonthDays, ...selectedMonthDays, ...nextMonthDays];
   }
 }

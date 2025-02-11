@@ -1,6 +1,6 @@
 <section class="lg:flex lg:justify-center">
   <div
-    class="flex flex-col mt-10 mb-20 items-center | lg:space-y-6 lg:w-big-container"
+    class="flex flex-col items-center mt-10 | lg:space-y-6 lg:w-big-container lg:px-8 lg:mt-10 lg:mb-20"
   >
     <h2 class="hidden | lg:block lg:text-2xl lg:text-primary-purple">
       Seleccione una fecha
@@ -9,14 +9,11 @@
       [selectedDate]="selectedDate()"
       (dateChange)="dateDidChange($event)"
       [notAvailableDays]="notAvailableDays"
-      class="w-full"
+      class="w-full max-w-[90%]"
     />
   </div>
-  <div class="lg:w-small-container border-l border-lavender-gray">
-    <div class="text-center mt-12 space-y-6">
-      <h2 class="hidden | lg:block lg:text-2xl lg:text-primary-purple">
-        Cita actual
-      </h2>
+  <div class="lg:w-small-container border-l border-lavender-gray lg:px-4">
+    <div class="hidden text-center | lg:mt-24 lg:block">
       <div
         class="flex flex-col text-white rounded-lg items-start bg-primary-purple max-w-72 mx-auto py-4 px-6 outline outline-1 outline-charcoal"
       >
