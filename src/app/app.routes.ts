@@ -6,12 +6,11 @@ import { AdministrationComponent } from './pages/administration/administration.c
 import { clientGuard } from './guards/client.guard';
 import { adminGuard } from './guards/admin.guard';
 import { unknowUserGuard } from './guards/unknow-user.guard';
-import { CalendarComponent } from './pages/calendar/calendar.component';
 import { ScheduleComponent } from './pages/schedule/schedule.component';
 
 export const routes: Routes = [
   { path: 'inicio', component: HomePage },
-  { path: 'agenda', component: ScheduleComponent, canActivate: [] },
+  { path: 'agenda', component: ScheduleComponent, canActivate: [clientGuard] },
   { path: 'login', component: LoginComponent, canActivate: [unknowUserGuard] },
   {
     path: 'subscripcion',
@@ -23,5 +22,5 @@ export const routes: Routes = [
     component: AdministrationComponent,
     canActivate: [adminGuard],
   },
-  { path: '', redirectTo: '/agenda', pathMatch: 'full' },
+  { path: '', redirectTo: '/inicio', pathMatch: 'full' },
 ];
