@@ -22,7 +22,7 @@ export const authenticationStateAdapter = (
 ): AuthenticationState => {
   return {
     email: token.email,
-    firstName: token.name,
+    fullName: token.name,
     isEmailVerified: parseBoolean(token.email_verified),
     role: token.user_role,
     error: '',

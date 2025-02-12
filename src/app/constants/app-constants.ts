@@ -11,9 +11,10 @@ export const AUTH_TOKEN_NAME = 'authToken';
 export const chileanRutValidator = new RegExp(
   /^(\d{1,2}\.\d{3}\.\d{3}-[\dkK])$/,
 );
+export const PRIMARY_HEX = '#8878A5';
 export const undefinedAuthenticationState: AuthenticationState = {
   email: '',
-  firstName: '',
+  fullName: '',
   isEmailVerified: false,
   role: '',
   error: null,

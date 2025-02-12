@@ -10,15 +10,17 @@ export class AppoitmentsService {
   URL = `${API_URL}/appointments`;
   appointmentArray = signal([]);
   http = inject(HttpClient);
+
   constructor() {}
+
   getAppointments() {
     return this.appointmentArray();
   }
   getAll(): void {
     //this.http.get()
   }
-  createOne(Date): void {
-    this.http.post();
+  createOne(newAppointment: { date: Date; isOnline: boolean }): void {
+    //this.http.post();
   }
   updateOne(newAppointment: Appointment) {}
   removeOne(id: string) {}
