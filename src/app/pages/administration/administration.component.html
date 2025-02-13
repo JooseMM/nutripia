@@ -3,13 +3,12 @@
     <ul class="w-full h-dvh">
       <li class="w-full">
         <button
-          [ngClass]="
-            inClientSection() ? baseStyles : baseStyles + selectedStyles
-          "
+          class="flex justify-center space-x-5 py-4 w-full items-center text-2xl text-primary-purple border border-lavender-gray"
+          [ngClass]="inClientSection() ? '' : selectedStyles"
           (click)="setClientSection(false)"
         >
           <svg
-            width="35"
+            width="30"
             viewBox="0 0 21 21"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -48,18 +47,17 @@
               stroke-linecap="round"
             />
           </svg>
-          <span>Agenda</span>
+          <span class="text-xl">Agenda</span>
         </button>
       </li>
       <li>
         <button
-          [ngClass]="
-            inClientSection() ? baseStyles + selectedStyles : baseStyles
-          "
+          class="flex justify-center space-x-5 py-4 w-full items-center text-2xl text-primary-purple border border-lavender-gray"
+          [ngClass]="inClientSection() ? selectedStyles : ''"
           (click)="setClientSection(true)"
         >
           <svg
-            width="35"
+            width="30"
             viewBox="0 0 21 21"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -74,12 +72,12 @@
               stroke-linecap="round"
             />
           </svg>
-          <span>Clientes</span>
+          <span class="text-xl">Clientes</span>
         </button>
       </li>
     </ul>
   </aside>
-  <article>
-    <nt-user-list />
-  </article>
+  @if (inClientSection()) {
+    <nt-user-administration class="w-full" />
+  }
 </section>

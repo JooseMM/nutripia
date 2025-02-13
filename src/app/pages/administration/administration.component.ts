@@ -6,17 +6,15 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { PRIMARY_HEX } from 'src/app/constants/app-constants';
-import { UserListComponent } from './components/user-list/user-list.component';
+import { UserAdministrationComponent } from './components/user-list/user-administration.component';
 
 @Component({
   selector: 'nt-administration',
-  imports: [NgClass, UserListComponent],
+  imports: [NgClass, UserAdministrationComponent],
   templateUrl: './administration.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdministrationComponent {
-  baseStyles: string =
-    'flex justify-center space-x-5 py-4 w-full items-center text-2xl text-primary-purple border border-lavender-gray ';
   selectedStyles: string =
     'bg-primary-purple text-white border-b border-charcoal';
   inClientSection: WritableSignal<boolean> = signal(true);

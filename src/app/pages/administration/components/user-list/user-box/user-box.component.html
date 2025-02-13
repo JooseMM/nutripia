@@ -1,10 +1,10 @@
 <div
   (dblclick)="toggleExpandableBox()"
-  class="rounded-xl transition-all duration-300 ease-in-out cursor-pointer text-white border w-[440px] | lg:hover:opacity-90"
+  class="rounded-xl transition-all duration-300 ease-in-out cursor-pointer text-white border w-[500px]"
   [ngClass]="getStyles()"
 >
   @if (this.isOpen()) {
-    <div class="flex items-start justify-between">
+    <div class="flex py-3 items-start justify-between">
       <div class="flex flex-col">
         <span class="font-bold text-xl tracking-wide">{{
           user().fullName
@@ -12,16 +12,15 @@
         <span>{{ user().email }}</span>
       </div>
       <button
-        [ngClass]="
-          user().hasPaid ? 'lg:hover:bg-[#A499BA]' : 'lg:hover:bg-[#CE8B95]'
-        "
-        class="p-4 rounded-full"
+        [ngClass]="user().hasPaid ? 'bg-[#A499BA]' : 'bg-[#CE8B95]'"
+        class="p-4 rounded-full lg:hover:outline outline-1 outline-white"
+        (click)="setIsEditing(true)"
       >
         <img src="assets/icons/edit-icon.svg" />
       </button>
     </div>
-    <div class="flex space-x-12">
-      <ul class="flex flex-col justify-center items-start ml-4 space-y-1 mt-4">
+    <div class="flex space-x-6">
+      <ul class="flex flex-col justify-center items-start ml-4 space-y-2">
         <li class="flex flex-row space-x-4 items-center">
           <img src="assets/icons/phone-icon-fill.svg" width="20" height="20" />
           <span>{{ user().phoneNumber }}</span>
@@ -35,18 +34,18 @@
           <span>{{ user().age }} años</span>
         </li>
       </ul>
-      <ul class="flex flex-col justify-center items-start ml-4 space-y-1 mt-4">
+      <ul class="flex flex-col items-start ml-4 space-y-2">
         <li class="flex flex-row space-x-4 items-end">
           <img src="assets/icons/pill-icon.svg" width="20" height="20" />
           <span>{{ user().previousDiagnostics || "Ninguno" }}</span>
         </li>
         <li class="flex flex-row space-x-4 items-end">
-          <img src="assets/icons/award-icon.svg" width="20" height="20" />
-          <span>{{ user().goals }}</span>
-        </li>
-        <li class="flex flex-row space-x-4 items-end">
           <img src="assets/icons/dollar-icon.svg" width="20" height="20" />
           <span>{{ user().hasPaid ? "Pago al dia" : "Pago con demora" }}</span>
+        </li>
+        <li class="flex flex-row space-x-4 items-end">
+          <img src="assets/icons/award-icon.svg" width="20" height="20" />
+          <span>{{ user().goals }}</span>
         </li>
       </ul>
     </div>

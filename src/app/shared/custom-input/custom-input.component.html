@@ -3,7 +3,7 @@
     label()
   }}</label>
   @if (type() === "number") {
-    <div class="flex w-full space-x-4 justify-center">
+    <div class="flex w-full space-x-4">
       <nt-button
         [isPrimary]="true"
         class="h-[42px] w-16 lg:p-0 items-center text-2xl | lg:text-3xl"
@@ -13,7 +13,7 @@
         (click)="increaseNumber()"
       />
       <input
-        class="py-2 border w-16 text-center border-lavender-purple rounded-lg"
+        class="py-2 border w-16 text-primary-purple text-center border-lavender-purple rounded-lg"
         [type]="type()"
         [id]="id()"
         [formControl]="control()"
