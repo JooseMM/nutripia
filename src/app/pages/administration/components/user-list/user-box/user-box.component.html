@@ -3,27 +3,25 @@
     <span class="font-bold text-xl tracking-wide">{{ user().fullName }}</span>
     <span>{{ user().email }}</span>
   </div>
-  <ul>
-    <li class="flex space-x-4">
-      <img src="phone-icon.svg" width="20" height="20" />
+  <ul class="flex flex-col justify-center">
+    <li class="flex flex-row space-x-4">
+      <img src="assets/icons/phone-icon.svg" width="20" height="20" />
       <span>{{ user().phoneNumber }}</span>
     </li>
-    <li>
-      {{ user().rut }}
+    <li class="flex flex-row space-x-4">
+      <img src="assets/icons/phone-icon.svg" width="20" height="20" />
+      <span>{{ user().rut }}</span>
     </li>
-    <li>
-      {{ user().email }}
-    </li>
-    <li class="flex space-x-4">
+    <li class="flex flex-row space-x-4">
       {{ user().age }}
     </li>
-    <li>
+    <li class="flex flex-row space-x-4">
       {{ user().previousDiagnostics }}
     </li>
-    <li>
+    <li class="flex flex-row space-x-4">
       {{ user().hasPaid }}
     </li>
-    <li>
+    <li class="flex flex-row space-x-4">
       {{ user().goals }}
     </li>
   </ul>

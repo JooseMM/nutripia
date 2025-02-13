@@ -10,6 +10,7 @@ import User from 'src/models/IUser';
 })
 export class UserBoxComponent {
   user = input.required<User>();
-  userPaidStyles = 'bg-primary-purple px-4 text-white';
+  userPaidStyles =
+    'bg-primary-purple px-6 py-6 space-y-5 rounded-xl text-white';
   userNotPaidStyles = '';
 }

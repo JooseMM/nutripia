@@ -1,3 +1,5 @@
-@for (user of userList; track $index) {
-  <nt-user-box [user]="user" />
-}
+<article class="p-14">
+  @for (user of userList; track $index) {
+    <nt-user-box [user]="user" />
+  }
+</article>
