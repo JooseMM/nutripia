@@ -18,7 +18,9 @@ module.exports = {
         charcoal: "#313131", // font color
         "soft-charcoal": "#474747",
         "lighter-charcoal": "#737373",
-        red: "#EF6868",
+        "wrong-input": "#EF6868",
+        red: "#BA6874",
+        "red-dark": "#3F1D22",
       },
       spacing: {
         "big-container": "70%",

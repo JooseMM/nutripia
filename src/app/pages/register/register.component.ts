@@ -19,8 +19,6 @@ import {
 import { newUserObjectAdapter } from '../login/adapter/newUserObjectAdapter';
 import { finalize } from 'rxjs';
 import ApiResponse from 'src/models/IApiResponse';
-import AuthResponse from 'src/models/IAuthResponse';
-import User from 'src/models/IUser';
 import NewClient from 'src/models/INewClient';
 
 @Component({

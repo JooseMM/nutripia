@@ -1,28 +1,62 @@
-<button [ngClass]="user().hasPaid ? userPaidStyles : userNotPaidStyles">
-  <div class="flex flex-col">
-    <span class="font-bold text-xl tracking-wide">{{ user().fullName }}</span>
-    <span>{{ user().email }}</span>
-  </div>
-  <ul class="flex flex-col justify-center">
-    <li class="flex flex-row space-x-4">
-      <img src="assets/icons/phone-icon.svg" width="20" height="20" />
-      <span>{{ user().phoneNumber }}</span>
-    </li>
-    <li class="flex flex-row space-x-4">
-      <img src="assets/icons/phone-icon.svg" width="20" height="20" />
-      <span>{{ user().rut }}</span>
-    </li>
-    <li class="flex flex-row space-x-4">
-      {{ user().age }}
-    </li>
-    <li class="flex flex-row space-x-4">
-      {{ user().previousDiagnostics }}
-    </li>
-    <li class="flex flex-row space-x-4">
-      {{ user().hasPaid }}
-    </li>
-    <li class="flex flex-row space-x-4">
-      {{ user().goals }}
-    </li>
-  </ul>
-</button>
+<div
+  (dblclick)="toggleExpandableBox()"
+  class="rounded-xl transition-all duration-300 ease-in-out cursor-pointer text-white border w-[440px] | lg:hover:opacity-90"
+  [ngClass]="getStyles()"
+>
+  @if (this.isOpen()) {
+    <div class="flex items-start justify-between">
+      <div class="flex flex-col">
+        <span class="font-bold text-xl tracking-wide">{{
+          user().fullName
+        }}</span>
+        <span>{{ user().email }}</span>
+      </div>
+      <button
+        [ngClass]="
+          user().hasPaid ? 'lg:hover:bg-[#A499BA]' : 'lg:hover:bg-[#CE8B95]'
+        "
+        class="p-4 rounded-full"
+      >
+        <img src="assets/icons/edit-icon.svg" />
+      </button>
+    </div>
+    <div class="flex space-x-12">
+      <ul class="flex flex-col justify-center items-start ml-4 space-y-1 mt-4">
+        <li class="flex flex-row space-x-4 items-center">
+          <img src="assets/icons/phone-icon-fill.svg" width="20" height="20" />
+          <span>{{ user().phoneNumber }}</span>
+        </li>
+        <li class="flex flex-row space-x-4 items-start">
+          <img src="assets/icons/id-icon.svg" width="20" height="20" />
+          <span>{{ user().rut }}</span>
+        </li>
+        <li class="flex flex-row space-x-4 items-center">
+          <img src="assets/icons/heart-icon.svg" width="20" height="20" />
+          <span>{{ user().age }} años</span>
+        </li>
+      </ul>
+      <ul class="flex flex-col justify-center items-start ml-4 space-y-1 mt-4">
+        <li class="flex flex-row space-x-4 items-end">
+          <img src="assets/icons/pill-icon.svg" width="20" height="20" />
+          <span>{{ user().previousDiagnostics || "Ninguno" }}</span>
+        </li>
+        <li class="flex flex-row space-x-4 items-end">
+          <img src="assets/icons/award-icon.svg" width="20" height="20" />
+          <span>{{ user().goals }}</span>
+        </li>
+        <li class="flex flex-row space-x-4 items-end">
+          <img src="assets/icons/dollar-icon.svg" width="20" height="20" />
+          <span>{{ user().hasPaid ? "Pago al dia" : "Pago con demora" }}</span>
+        </li>
+      </ul>
+    </div>
+  } @else {
+    <ul>
+      <li class="text-lg font-bold tracking-wide">{{ user().fullName }}</li>
+      <li class="flex flex-row space-x-3 items-center opacity-85">
+        <img src="assets/icons/dollar-icon.svg" width="20" height="20" />
+        <span>{{ user().hasPaid ? "Pago al dia" : "Pago con demora" }}</span>
+      </li>
+    </ul>
+  }
+</div>
