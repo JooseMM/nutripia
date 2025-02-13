@@ -3,10 +3,19 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  scroll-behavior: smooth;
-}
 @layer components {
+  html {
+    scroll-behavior: smooth;
+  }
+  .background-switcher {
+    background-image: url("assets/icons/check-icon-white.svg"),
+      url("assets/icons/uncheck-icon-white.svg");
+    background-repeat: no-repeat;
+    background-position:
+      center left 1.2rem,
+      center right 1.5rem;
+    background-size: 1.3rem, 1.1rem;
+  }
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
     @apply appearance-none;

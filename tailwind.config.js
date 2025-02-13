@@ -28,6 +28,10 @@ module.exports = {
         "mobile-padding": "5vw",
         "desktop-padding": "10vw",
       },
+      backgroundImage: {
+        "check-icon": "url('assets/icons/check-icon.svg')",
+        "uncheck-icon": "url('assets/icons/uncheck-icon.svg')",
+      },
     },
   },
   plugins: [],

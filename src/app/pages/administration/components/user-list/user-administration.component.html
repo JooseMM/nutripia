@@ -81,6 +81,14 @@
         [validationErrorObject]="validationErrorObject.goals"
         placeholder="Ejem: Perder 6kg de manera controlada"
       />
+      <div class="mt-6 w-full flex flex-col items-center">
+        <label class="ml-4 font-medium text-primary-purple"
+          >Estado de pago</label
+        >
+        <div class="mt-2">
+          <nt-payment-switcher />
+        </div>
+      </div>
       <!-- the width and height is fixed to to avoid having layout shift while calling the backend -->
       <div class="flex space-x-8 justify-center items-center mt-8">
         <nt-button
@@ -92,7 +100,7 @@
           [isDisabled]="form.invalid || !form.dirty"
         />
         <button
-          class="text-charcoal lg:hover:cursor-pointer"
+          class="text-primary-purple font-medium lg:hover:cursor-pointer"
           (click)="setIsEditing(false)"
         >
           Cancelar

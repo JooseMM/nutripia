@@ -9,6 +9,7 @@ import {
   validationError,
 } from 'src/app/pages/register/businessLogic';
 import { ButtonComponent } from 'src/app/shared/button/button.component';
+import { PaymentSwitcherComponent } from '../payment-switcher/payment-switcher.component';
 
 @Component({
   selector: 'nt-user-administration',
@@ -18,6 +19,7 @@ import { ButtonComponent } from 'src/app/shared/button/button.component';
     ButtonComponent,
     CustomInputComponent,
     ReactiveFormsModule,
+    PaymentSwitcherComponent,
   ],
   templateUrl: './user-administration.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
