@@ -10,4 +10,5 @@ export default interface User {
   previousDiagnostics: string;
   goals: string;
   hasPaid: boolean;
+  markForChange: boolean;
 }

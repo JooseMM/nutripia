@@ -3,16 +3,11 @@
     class="p-8 grid gap-6 auto-rows-min justify-center items-start"
     [ngClass]="isEditing() ? 'grid-cols-2' : 'grid-cols-3'"
   >
-    @for (user of userList; track $index) {
-      <nt-user-box
-        [user]="user"
-        [isEditing]="isEditing()"
-        (isEditingChange)="setIsEditing($event)"
-        class="h-fit"
-      />
+    @for (userId of userIdList(); track $index) {
+      <nt-user-box [userId]="userId" class="h-fit" />
     }
   </div>
-  @if (isEditing()) {
+  @if (isEditing() !== null) {
     <form
       class="flex flex-col w-full max-w-80 | lg:w-small-container lg:max-w-none lg:p-8 lg:items-center lg:h-full lg:border-l lg:border-l-lavender-gray"
       [formGroup]="form"
@@ -81,14 +76,6 @@
         [validationErrorObject]="validationErrorObject.goals"
         placeholder="Ejem: Perder 6kg de manera controlada"
       />
-      <div class="mt-6 w-full flex flex-col items-center">
-        <label class="ml-4 font-medium text-primary-purple"
-          >Estado de pago</label
-        >
-        <div class="mt-2">
-          <nt-payment-switcher />
-        </div>
-      </div>
       <!-- the width and height is fixed to to avoid having layout shift while calling the backend -->
       <div class="flex space-x-8 justify-center items-center mt-8">
         <nt-button
@@ -101,7 +88,7 @@
         />
         <button
           class="text-primary-purple font-medium lg:hover:cursor-pointer"
-          (click)="setIsEditing(false)"
+          (click)="stopEditing()"
         >
           Cancelar
         </button>

@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  Signal,
+  signal,
+} from '@angular/core';
 import User from 'src/models/IUser';
 import { UserBoxComponent } from './user-box/user-box.component';
 import { NgClass } from '@angular/common';
@@ -9,7 +16,7 @@ import {
   validationError,
 } from 'src/app/pages/register/businessLogic';
 import { ButtonComponent } from 'src/app/shared/button/button.component';
-import { PaymentSwitcherComponent } from '../payment-switcher/payment-switcher.component';
+import { UserAdministrationService } from './services/user-administration.service';
 
 @Component({
   selector: 'nt-user-administration',
@@ -19,13 +26,15 @@ import { PaymentSwitcherComponent } from '../payment-switcher/payment-switcher.c
     ButtonComponent,
     CustomInputComponent,
     ReactiveFormsModule,
-    PaymentSwitcherComponent,
   ],
   templateUrl: './user-administration.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [UserAdministrationService],
 })
 export class UserAdministrationComponent {
-  isEditing = signal(true);
+  userAdminService = inject(UserAdministrationService);
+  isEditing = computed(() => this.userAdminService.getOnEditingUserId());
+  validationErrorObject = validationError;
   form: FormGroup = new FormGroup({
     fullName: new FormControl('', [
       ...registerBusinessLogicValidators.fullName,
@@ -45,63 +54,11 @@ export class UserAdministrationComponent {
       ...registerBusinessLogicValidators.previousDiagnostics,
     ]),
   });
-  userList: User[] = [
-    {
-      id: '1234',
-      fullName: 'Jose Moreno',
-      age: 26,
-      role: 'client_user',
-      rut: '26.701.979-7',
-      email: 'josexmoreno1998@gmail.com',
-      previousDiagnostics: '',
-      phoneNumber: '9 3284 2343',
-      yearOfBirth: 1998,
-      hasPaid: true,
-      goals: 'Mejorar condicion fisica y mental',
-    },
-    {
-      id: '1234',
-      fullName: 'Jose Moreno',
-      age: 26,
-      role: 'client_user',
-      rut: '26.701.979-7',
-      email: 'josexmoreno1998@gmail.com',
-      previousDiagnostics: '',
-      phoneNumber: '9 3284 2343',
-      yearOfBirth: 1998,
-      hasPaid: true,
-      goals: 'Mejorar condicion fisica y mental',
-    },
-    {
-      id: '234',
-      fullName: 'Jose Moreno',
-      age: 26,
-      role: 'client_user',
-      rut: '26.721.979-7',
-      email: 'josexmoreno1998@gmail.com',
-      previousDiagnostics: '',
-      phoneNumber: '9 3284 2343',
-      yearOfBirth: 1998,
-      hasPaid: false,
-      goals: 'Ganar masa muscular',
-    },
-    {
-      id: '124',
-      fullName: 'Jose Mijares',
-      age: 26,
-      role: 'client_user',
-      rut: '26.721.979-7',
-      email: 'josexmoreno1998@gmail.com',
-      previousDiagnostics: '',
-      phoneNumber: '9 3284 2343',
-      yearOfBirth: 1998,
-      hasPaid: false,
-      goals: 'Ganar masa muscular',
-    },
-  ];
-  validationErrorObject = validationError;
-  setIsEditing(newState: boolean) {
-    this.isEditing.set(newState);
+  userIdList: Signal<string[]> = computed(() =>
+    this.userAdminService.getAllUsersId(),
+  );
+  stopEditing() {
+    this.userAdminService.setOnEditingUserId(null);
   }
   getFormControl(controlName: string): FormControl {
     return this.form.get(controlName) as FormControl;

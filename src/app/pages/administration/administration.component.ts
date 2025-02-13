@@ -6,7 +6,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { PRIMARY_HEX } from 'src/app/constants/app-constants';
-import { UserAdministrationComponent } from './components/user-list/user-administration.component';
+import { UserAdministrationComponent } from './components/user-administration/user-administration.component';
 
 @Component({
   selector: 'nt-administration',

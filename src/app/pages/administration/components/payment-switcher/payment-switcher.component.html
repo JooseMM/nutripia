@@ -1,18 +1,18 @@
 <button
   (click)="toggleHadPaid()"
-  class="w-40 h-12 px-1.5 background-switcher flex items-center border rounded-full | lg:hover:cursor-pointer lg:hover:opacity-80"
+  class="w-40 h-12 px-1.5 background-switcher flex items-center border rounded-full | lg:hover:cursor-pointer"
   [ngClass]="
-    hadPaid() ? 'bg-primary-purple border-charcoal' : 'bg-red border-red-dark'
+    userPaid() ? 'bg-[#A396BA] border-white' : 'bg-[#9A5761] border-[#703C43]'
   "
 >
   <div
     class="font-medium h-9 bg-white transition-all duration-300 flex w-24 justify-center items-center px-6 rounded-full border"
     [ngClass]="
-      hadPaid()
-        ? 'text-primary-purple border-charcoal translate-x-0'
-        : 'text-red border-red-dark translate-x-[49px]'
+      userPaid()
+        ? 'text-primary-purple border-[#413232] translate-x-0'
+        : 'text-red border-[#59262E] translate-x-[49px]'
     "
   >
-    <span>{{ hadPaid() ? "Ok" : "Demora" }}</span>
+    <span>{{ userPaid() ? "Ok" : "Demora" }}</span>
   </div>
 </button>

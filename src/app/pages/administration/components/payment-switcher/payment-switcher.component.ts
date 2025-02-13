@@ -2,9 +2,13 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  signal,
-  WritableSignal,
+  computed,
+  inject,
+  input,
+  InputSignal,
+  Signal,
 } from '@angular/core';
+import { UserAdministrationService } from '../user-administration/services/user-administration.service';
 
 @Component({
   selector: 'nt-payment-switcher',
@@ -13,9 +17,12 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentSwitcherComponent {
-  hadPaid: WritableSignal<boolean> = signal(true);
-
+  userId: InputSignal<string> = input.required<string>();
+  userService = inject(UserAdministrationService);
+  userPaid: Signal<boolean> = computed(
+    () => this.userService.getUserById(this.userId())!.hasPaid,
+  );
   toggleHadPaid() {
-    this.hadPaid.update((prev) => !prev);
+    this.userService.updateUserPaymentState(this.userId());
   }
 }

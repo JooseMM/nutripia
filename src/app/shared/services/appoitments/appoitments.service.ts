@@ -11,8 +11,6 @@ export class AppoitmentsService {
   appointmentArray = signal([]);
   http = inject(HttpClient);
 
-  constructor() {}
-
   getAppointments() {
     return this.appointmentArray();
   }

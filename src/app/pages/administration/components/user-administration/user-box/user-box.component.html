@@ -3,18 +3,18 @@
   class="rounded-xl transition-all duration-300 ease-in-out cursor-pointer text-white border w-[500px]"
   [ngClass]="getStyles()"
 >
-  @if (this.isOpen()) {
+  @if (this.isBoxOpen()) {
     <div class="flex py-3 items-start justify-between">
       <div class="flex flex-col">
         <span class="font-bold text-xl tracking-wide">{{
-          user().fullName
+          user()!.fullName
         }}</span>
-        <span>{{ user().email }}</span>
+        <span>{{ user()!.email }}</span>
       </div>
       <button
-        [ngClass]="user().hasPaid ? 'bg-[#A499BA]' : 'bg-[#CE8B95]'"
+        [ngClass]="user()!.hasPaid ? 'bg-[#A499BA]' : 'bg-[#CE8B95]'"
         class="p-4 rounded-full lg:hover:outline outline-1 outline-white"
-        (click)="setIsEditing(true)"
+        (click)="startEditing(user()!.id)"
       >
         <img src="assets/icons/edit-icon.svg" />
       </button>
@@ -23,39 +23,50 @@
       <ul class="flex flex-col justify-center items-start ml-4 space-y-2">
         <li class="flex flex-row space-x-4 items-center">
           <img src="assets/icons/phone-icon-fill.svg" width="20" height="20" />
-          <span>{{ user().phoneNumber }}</span>
+          <span>{{ user()!.phoneNumber }}</span>
         </li>
         <li class="flex flex-row space-x-4 items-start">
           <img src="assets/icons/id-icon.svg" width="20" height="20" />
-          <span>{{ user().rut }}</span>
+          <span>{{ user()!.rut }}</span>
         </li>
         <li class="flex flex-row space-x-4 items-center">
           <img src="assets/icons/heart-icon.svg" width="20" height="20" />
-          <span>{{ user().age }} años</span>
+          <span>{{ user()!.age }} años</span>
         </li>
       </ul>
       <ul class="flex flex-col items-start ml-4 space-y-2">
         <li class="flex flex-row space-x-4 items-end">
           <img src="assets/icons/pill-icon.svg" width="20" height="20" />
-          <span>{{ user().previousDiagnostics || "Ninguno" }}</span>
+          <span>{{ user()!.previousDiagnostics || "Ninguno" }}</span>
         </li>
         <li class="flex flex-row space-x-4 items-end">
           <img src="assets/icons/dollar-icon.svg" width="20" height="20" />
-          <span>{{ user().hasPaid ? "Pago al dia" : "Pago con demora" }}</span>
+          <span>{{ user()!.hasPaid ? "Pago al dia" : "Pago con demora" }}</span>
         </li>
         <li class="flex flex-row space-x-4 items-end">
           <img src="assets/icons/award-icon.svg" width="20" height="20" />
-          <span>{{ user().goals }}</span>
+          <span>{{ user()!.goals }}</span>
         </li>
       </ul>
     </div>
   } @else {
-    <ul>
-      <li class="text-lg font-bold tracking-wide">{{ user().fullName }}</li>
-      <li class="flex flex-row space-x-3 items-center opacity-85">
-        <img src="assets/icons/dollar-icon.svg" width="20" height="20" />
-        <span>{{ user().hasPaid ? "Pago al dia" : "Pago con demora" }}</span>
-      </li>
-    </ul>
+    <div>
+      <ul class="flex items-center justify-between">
+        <li class="flex flex-col">
+          <span class="text-lg font-bold tracking-wide"
+            >{{ user()!.fullName }}
+          </span>
+          <div class="flex flex-row space-x-3 items-center opacity-85">
+            <img src="assets/icons/dollar-icon.svg" width="20" height="20" />
+            <span>{{
+              user()!.hasPaid ? "Pago al dia" : "Pago con demora"
+            }}</span>
+          </div>
+        </li>
+        <li>
+          <nt-payment-switcher [userId]="userId()" />
+        </li>
+      </ul>
+    </div>
   }
 </div>
