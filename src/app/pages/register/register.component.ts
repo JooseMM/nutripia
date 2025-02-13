@@ -20,7 +20,8 @@ import { newUserObjectAdapter } from '../login/adapter/newUserObjectAdapter';
 import { finalize } from 'rxjs';
 import ApiResponse from 'src/models/IApiResponse';
 import AuthResponse from 'src/models/IAuthResponse';
-import User from 'src/models/IClientUser';
+import User from 'src/models/IUser';
+import NewClient from 'src/models/INewClient';
 
 @Component({
   selector: 'nt-register',
@@ -71,7 +72,7 @@ export class RegisterComponent {
 
   onSubmit() {
     this.httpResponseIsLoading.set(true);
-    const newUserData: User = newUserObjectAdapter(this.form.value);
+    const newUserData: NewClient = newUserObjectAdapter(this.form.value);
     this.authenticationService
       .register(newUserData)
       .pipe(finalize(() => this.httpResponseIsLoading.set(false)))

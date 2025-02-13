@@ -6,7 +6,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { PRIMARY_HEX } from 'src/app/constants/app-constants';
-import User from 'src/models/IClientUser';
+import User from 'src/models/IUser';
 import { UserListComponent } from './components/user-list/user-list.component';
 
 @Component({

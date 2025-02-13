@@ -1,5 +1,5 @@
-import User from 'src/models/IClientUser';
-import UserObject from 'src/models/IUserObject';
+import NewClient from 'src/models/INewClient';
+import User from 'src/models/IUser';
 
 interface RawFormType {
   email: string;
@@ -7,12 +7,12 @@ interface RawFormType {
   goals: string;
   passwordGroup: { password: string; passwordConfirm: string };
   phoneNumber: string;
-  previousDiagnostics: string | null;
+  previousDiagnostics: string;
   rut: string;
   yearOfBirth: number;
 }
 
-export const newUserObjectAdapter = (rawForm: RawFormType): User => {
+export const newUserObjectAdapter = (rawForm: RawFormType): NewClient => {
   return {
     fullName: rawForm.fullName,
     yearOfBirth: rawForm.yearOfBirth,
@@ -20,7 +20,7 @@ export const newUserObjectAdapter = (rawForm: RawFormType): User => {
     rut: rawForm.rut,
     phoneNumber: rawForm.phoneNumber,
     password: rawForm.passwordGroup.password,
-    previousDiagnostic: rawForm.previousDiagnostics,
+    previousDiagnostics: rawForm.previousDiagnostics,
     goals: rawForm.goals,
   };
 };

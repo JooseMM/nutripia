@@ -8,13 +8,13 @@ import {
 } from 'src/app/constants/app-constants';
 import ApiResponse from 'src/models/IApiResponse';
 import { checkExistingToken, UserCredentials } from './utils';
-import UserObject from 'src/models/IUserObject';
 import AuthenticationState from 'src/models/IAuthenticationState';
 import ResponseState from 'src/models/IApiCallState';
 import AuthResponse from 'src/models/IAuthResponse';
 import { ApiResponseErrorAdapter } from 'src/app/pages/login/adapter/ApiResponseErrorAdapter';
 import { jwtDecodeToken } from 'src/app/pages/login/adapter/jwtTokenDecodeAdapter';
-import User from 'src/models/IClientUser';
+import User from 'src/models/IUser';
+import NewClient from 'src/models/INewClient';
 
 @Injectable({
   providedIn: 'root',
@@ -94,7 +94,7 @@ export class AuthenticationService {
         },
       });
   }
-  register(newUser: User) {
+  register(newUser: NewClient) {
     return this.http.post<ApiResponse>(`${this.apiUrl}/register`, newUser);
   }
   logout() {

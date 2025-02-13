@@ -1,6 +1,6 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import User from 'src/models/IClientUser';
+import User from 'src/models/IUser';
 
 @Component({
   selector: 'nt-user-box',

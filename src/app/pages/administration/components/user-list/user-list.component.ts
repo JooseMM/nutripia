@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import User from 'src/models/IClientUser';
+import User from 'src/models/IUser';
 import { UserBoxComponent } from './user-box/user-box.component';
 
 @Component({
@@ -18,17 +18,21 @@ export class UserListComponent {
       rut: '267019797-7',
       email: 'josexmoreno1998@gmail.com',
       previousDiagnostics: '',
+      phoneNumber: '',
+      yearOfBirth: 1998,
       hasPaid: true,
       goals: 'Ganar masa muscular',
     },
     {
-      id: '123',
-      fullName: 'Kevin Contreras',
-      age: 20,
+      id: '1234',
+      fullName: 'Jose Moreno',
+      age: 26,
       role: 'client_user',
       rut: '267019797-7',
       email: 'josexmoreno1998@gmail.com',
       previousDiagnostics: '',
+      phoneNumber: '',
+      yearOfBirth: 1998,
       hasPaid: true,
       goals: 'Ganar masa muscular',
     },
