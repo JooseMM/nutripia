@@ -14,6 +14,7 @@ import ResponseState from 'src/models/IApiCallState';
 import AuthResponse from 'src/models/IAuthResponse';
 import { ApiResponseErrorAdapter } from 'src/app/pages/login/adapter/ApiResponseErrorAdapter';
 import { jwtDecodeToken } from 'src/app/pages/login/adapter/jwtTokenDecodeAdapter';
+import User from 'src/models/IClientUser';
 
 @Injectable({
   providedIn: 'root',
@@ -93,7 +94,7 @@ export class AuthenticationService {
         },
       });
   }
-  register(newUser: UserObject) {
+  register(newUser: User) {
     return this.http.post<ApiResponse>(`${this.apiUrl}/register`, newUser);
   }
   logout() {

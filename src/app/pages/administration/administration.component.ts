@@ -6,16 +6,16 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { PRIMARY_HEX } from 'src/app/constants/app-constants';
-import ClientUser from 'src/models/IClientUser';
+import User from 'src/models/IClientUser';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 @Component({
   selector: 'nt-administration',
-  imports: [NgClass],
+  imports: [NgClass, UserListComponent],
   templateUrl: './administration.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdministrationComponent {
-  userList: ClientUser[] = [];
   baseStyles: string =
     'flex justify-center space-x-5 py-4 w-full items-center text-2xl border border-lavender-gray ';
   selectedStyles: string =

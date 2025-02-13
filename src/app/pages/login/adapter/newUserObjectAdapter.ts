@@ -1,3 +1,4 @@
+import User from 'src/models/IClientUser';
 import UserObject from 'src/models/IUserObject';
 
 interface RawFormType {
@@ -11,7 +12,7 @@ interface RawFormType {
   yearOfBirth: number;
 }
 
-export const newUserObjectAdapter = (rawForm: RawFormType): UserObject => {
+export const newUserObjectAdapter = (rawForm: RawFormType): User => {
   return {
     fullName: rawForm.fullName,
     yearOfBirth: rawForm.yearOfBirth,

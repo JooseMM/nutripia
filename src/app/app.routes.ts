@@ -20,7 +20,7 @@ export const routes: Routes = [
   {
     path: 'administracion',
     component: AdministrationComponent,
-    canActivate: [adminGuard],
+    canActivate: [],
   },
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
 ];

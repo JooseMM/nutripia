@@ -17,10 +17,10 @@ import {
   validationError,
 } from './businessLogic';
 import { newUserObjectAdapter } from '../login/adapter/newUserObjectAdapter';
-import UserObject from 'src/models/IUserObject';
 import { finalize } from 'rxjs';
 import ApiResponse from 'src/models/IApiResponse';
 import AuthResponse from 'src/models/IAuthResponse';
+import User from 'src/models/IClientUser';
 
 @Component({
   selector: 'nt-register',
@@ -71,7 +71,7 @@ export class RegisterComponent {
 
   onSubmit() {
     this.httpResponseIsLoading.set(true);
-    const newUserData: UserObject = newUserObjectAdapter(this.form.value);
+    const newUserData: User = newUserObjectAdapter(this.form.value);
     this.authenticationService
       .register(newUserData)
       .pipe(finalize(() => this.httpResponseIsLoading.set(false)))
