@@ -9,6 +9,7 @@ import {
   Signal,
 } from '@angular/core';
 import { UserAdministrationService } from '../user-administration/services/user-administration.service';
+import User from 'src/models/IUser';
 
 @Component({
   selector: 'nt-payment-switcher',
@@ -20,7 +21,10 @@ export class PaymentSwitcherComponent {
   userId: InputSignal<string> = input.required<string>();
   userService = inject(UserAdministrationService);
   userPaid: Signal<boolean> = computed(
-    () => this.userService.getUserById(this.userId())!.hasPaid,
+    () =>
+      this.userService
+        .getAllUsers()
+        .find((user: User) => user.id === this.userId())!?.hasPaid,
   );
   toggleHadPaid() {
     this.userService.updateUserPaymentState(this.userId());

@@ -1,6 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { API_URL, AUTH_TOKEN_NAME } from 'src/app/constants/app-constants';
+import {
+  ChangeDetectorRef,
+  effect,
+  inject,
+  Injectable,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import User from 'src/models/IUser';
 import { mockUsers } from './utils';
 
@@ -15,12 +20,24 @@ export class UserAdministrationService {
 
   constructor() {
     this.updateUsersArray();
+    console.log(this.usersArray().find((user: User) => user.markedForChange));
   }
   getOnEditingUserId() {
     return this.onEditingUserId();
   }
   setOnEditingUserId(newUserId: string | null): void {
     this.onEditingUserId.set(newUserId);
+  }
+  updateUser(newUserData: User): void {
+    this.usersArray.update((prev) => {
+      return prev.map((user: User) => {
+        if (user.id === newUserData.id) {
+          user = { ...newUserData, markedForChange: true };
+        }
+        return user;
+      });
+    });
+    this.setOnEditingUserId(null);
   }
   updateUsersArray(): void {
     /*
@@ -39,14 +56,12 @@ export class UserAdministrationService {
   getAllUsersId(): string[] {
     return this.getAllUsers().map((user) => user.id);
   }
-  getUserById(userId: string): User | undefined {
-    return this.getAllUsers().find((user: User) => user.id === userId);
-  }
   updateUserPaymentState(userId: string): void {
     this.usersArray.update((oldState) =>
       oldState.map((user: User) => {
         if (user.id === userId) {
           user.hasPaid = !user.hasPaid;
+          user.markedForChange = true;
         }
         return user;
       }),

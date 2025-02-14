@@ -34,6 +34,7 @@ export class CustomInputComponent {
     const currentValue: number = this.control().value;
     if (currentValue > 1900) {
       this.control().setValue(currentValue - 1);
+      this.control().markAsDirty();
     }
   }
   isInputInvalid(): boolean {

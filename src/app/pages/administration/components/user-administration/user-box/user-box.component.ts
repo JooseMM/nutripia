@@ -22,7 +22,9 @@ export class UserBoxComponent {
   userId = input.required<string>();
   userService = inject(UserAdministrationService);
   user: Signal<User | undefined> = computed(() =>
-    this.userService.getUserById(this.userId()),
+    this.userService
+      .getAllUsers()
+      .find((user: User) => user.id === this.userId()),
   );
   isBoxOpen = signal(false);
 
@@ -39,5 +41,9 @@ export class UserBoxComponent {
       'h-20 py-[0.75rem] px-6': !this.isBoxOpen(),
       'h-auto px-5 pt-1 pb-5': this.isBoxOpen(),
     };
+  }
+  getUserAge() {
+    const currentDate = new Date().getFullYear();
+    return currentDate - this.user()!.yearOfBirth;
   }
 }

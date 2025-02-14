@@ -1,7 +1,6 @@
 export default interface User {
   id: string;
   fullName: string;
-  age: number;
   rut: string;
   yearOfBirth: number;
   phoneNumber: string;
@@ -10,5 +9,5 @@ export default interface User {
   previousDiagnostics: string;
   goals: string;
   hasPaid: boolean;
-  markForChange: boolean;
+  markedForChange: boolean;
 }
