@@ -15,7 +15,6 @@ import { UserEditingFormComponent } from './user-editing-form/user-editing-form.
   imports: [UserBoxComponent, NgClass, UserEditingFormComponent],
   templateUrl: './user-administration.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [UserAdministrationService],
 })
 export class UserAdministrationComponent {
   userAdminService = inject(UserAdministrationService);

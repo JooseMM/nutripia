@@ -1,6 +1,6 @@
 <section class="flex flex-grow">
-  <aside class="w-52 border-r border-lavender-gray">
-    <ul class="w-full h-[85dvh]">
+  <aside class="flex flex-col w-full max-w-52 border-r border-lavender-gray">
+    <ul class="w-full h-[80dvh]">
       <li class="w-full">
         <button
           class="flex justify-center space-x-5 py-4 w-full items-center text-2xl text-primary-purple border border-lavender-gray"
@@ -76,7 +76,15 @@
         </button>
       </li>
     </ul>
-    <button>Save</button>
+    <button
+      (click)="saveChanges()"
+      class="bg-white border border-primary-purple transition-opacity duration-500 py-3 px-6 rounded-full mb-4 mx-auto"
+      [ngClass]="
+        unsaveChanges() ? 'opacity-100 | lg:hover:opacity-80' : 'opacity-10'
+      "
+    >
+      <img src="assets/icons/save-icon.svg" />
+    </button>
   </aside>
   @if (inClientSection()) {
     <nt-user-administration class="w-full" />

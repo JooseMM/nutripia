@@ -22,5 +22,5 @@ export const routes: Routes = [
     component: AdministrationComponent,
     canActivate: [],
   },
-  { path: '', redirectTo: '/inicio', pathMatch: 'full' },
+  { path: '', redirectTo: '/administracion', pathMatch: 'full' },
 ];

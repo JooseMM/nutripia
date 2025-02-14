@@ -9,7 +9,9 @@ import {
 import User from 'src/models/IUser';
 import { mockUsers } from './utils';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class UserAdministrationService {
   //private URL = `${API_URL}/users`;
   //private http = inject(HttpClient);
@@ -20,7 +22,6 @@ export class UserAdministrationService {
 
   constructor() {
     this.updateUsersArray();
-    console.log(this.usersArray().find((user: User) => user.markedForChange));
   }
   getOnEditingUserId() {
     return this.onEditingUserId();
@@ -62,6 +63,20 @@ export class UserAdministrationService {
         if (user.id === userId) {
           user.hasPaid = !user.hasPaid;
           user.markedForChange = true;
+        }
+        return user;
+      }),
+    );
+  }
+  saveChanges(): void {
+    const toChange: User[] = this.usersArray().filter(
+      (user: User) => user.markedForChange,
+    );
+    console.log(toChange);
+    this.usersArray.update((prev) =>
+      prev.map((user: User) => {
+        if (user.markedForChange) {
+          user.markedForChange = false;
         }
         return user;
       }),
