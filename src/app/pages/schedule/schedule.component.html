@@ -5,12 +5,7 @@
     <h2 class="hidden | lg:block lg:text-2xl lg:text-primary-purple">
       Seleccione una fecha
     </h2>
-    <nt-calendar
-      [selectedDate]="selectedDate()"
-      (dateChange)="dateDidChange($event)"
-      [notAvailableDays]="notAvailableDays"
-      class="w-full max-w-[90%]"
-    />
+    <nt-calendar class="w-full max-w-[90%]" />
   </div>
   <div class="lg:w-small-container border-l border-lavender-gray lg:px-4">
     <div class="hidden text-center | lg:mt-24 lg:block">
@@ -18,16 +13,11 @@
         class="flex flex-col text-white rounded-lg items-start bg-primary-purple max-w-72 mx-auto py-4 px-6 outline outline-1 outline-charcoal"
       >
         <span class="text-xl font-bold tracking-wide p-0 m-0">{{
-          selectedDate().getDate() + " de " + getMonthName()
+          this.getLongDate()
         }}</span>
         <div class="flex justify-between w-full">
           <span class="opacity-60 text-lg m-0 p-0"
-            >{{
-              selectedDate().toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            }}
+            >{{ getTime() }}
             &nbsp;/&nbsp;
             {{ isAppointmentOnline() ? "Teleconsulta" : "Presencial" }}</span
           >
@@ -40,22 +30,17 @@
       </h3>
       <div class="space-x-8">
         <button
-          (click)="updateHour(-1)"
+          (click)="updateHourBy(-1)"
           class="text-3xl text-charcoal font-light"
         >
           -
         </button>
         <span
           class="py-2 px-6 text-lg text-primary-purple border border-charcoal rounded-md"
-          >{{
-            selectedDate().toLocaleTimeString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-          }}</span
+          >{{ getTime() }}</span
         >
         <button
-          (click)="updateHour(+1)"
+          (click)="updateHourBy(+1)"
           class="text-3xl text-charcoal font-light"
         >
           +

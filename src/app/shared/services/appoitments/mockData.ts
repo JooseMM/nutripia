@@ -7,7 +7,7 @@ const getMockAppointment = (day: number, hour?: number): Appointment => {
   now.setHours(hour ?? WORK_START_HOUR);
   now.setMinutes(0);
   return {
-    id: 'bs123',
+    id: `id-${now.getDate()}`,
     publicId: 'bs134',
     isCompleted: false,
     appointmentDateTime: now,
@@ -16,7 +16,7 @@ const getMockAppointment = (day: number, hour?: number): Appointment => {
   } as Appointment;
 };
 const mockDates: Appointment[] = [
-  getMockAppointment(15),
+  getMockAppointment(14),
   getMockAppointment(20, 12),
   getMockAppointment(30, 9),
 ];

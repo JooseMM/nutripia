@@ -1,16 +1,15 @@
 <button
+  class="h-[70px] w-full pt-1 text-primary-purple text-lg font-normal rounded-lg flex justify-center items-start | sm:border-l sm:border-b sm:border-lavender-gray sm:font-normal sm:text-xl sm:rounded-none sm:px-2 sm:py-1 sm:hover:cursor-pointer sm:items-end sm:justify-end sm:text-right"
   [ngClass]="
-    state() === 'normal'
-      ? normalStyles
-      : state() === 'selected'
-        ? selectedStyles
-        : state() === 'full'
+    day().isSelected
+      ? selectedStyles
+      : day().isDisabled
+        ? disableStyles
+        : day().appointments.length > 0
           ? takenSyles
-          : state() === 'disable'
-            ? disableStyles
-            : null
+          : null
   "
-  [disabled]="state() === 'disable' ? true : false"
+  [disabled]="day().isDisabled"
 >
-  <p [ngClass]="state() === 'disable' ? 'opacity-30' : ''">{{ day() }}</p>
+  <p [ngClass]="day().isDisabled ? 'opacity-30' : ''">{{ day().numberDay }}</p>
 </button>

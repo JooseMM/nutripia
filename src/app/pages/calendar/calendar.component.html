@@ -88,11 +88,7 @@
   >
     @for (day of daysOfTheMonth(); track $index) {
       <li class="text-charcoal text-xl text-center">
-        <nt-calendar-button
-          [day]="day.numberDay"
-          [state]="day.state"
-          (click)="selectADay(day.numberDay)"
-        />
+        <nt-calendar-button [day]="day" />
       </li>
     }
   </ul>
