@@ -87,8 +87,14 @@
     class="grid grid-cols-7 border-b border-lavender-gray w-full sm:border-none"
   >
     @for (day of daysOfTheMonth(); track $index) {
-      <li class="text-charcoal text-xl text-center">
-        <nt-calendar-button [day]="day" />
+      <li
+        class="w-full text-primary-purple pr-2 pb-1 h-[70px] | sm:border-lavender-gray sm:flex sm:items-end sm:justify-end sm:text-right lg:hover:cursor-pointer"
+        (click)="day.isDisabled ? null : newDaySelected(day.numberDay)"
+        [ngClass]="getBoxDayClass($index, day, daysOfTheMonth().length)"
+      >
+        <span [ngClass]="day.isDisabled ? 'opacity-30' : 'opacity-100'">{{
+          day.numberDay
+        }}</span>
       </li>
     }
   </ul>

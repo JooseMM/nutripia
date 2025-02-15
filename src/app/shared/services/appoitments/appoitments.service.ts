@@ -49,6 +49,19 @@ export class AppoitmentService {
   getMonthNameOf(monthIndex: number): string {
     return MONTH_NAMES[monthIndex];
   }
+  updateSelectedDay(newDay: number) {
+    const prev = this.selectedDate();
+    this.selectedDate.set(
+      new Date(
+        prev.getFullYear(),
+        prev.getMonth(),
+        newDay,
+        prev.getHours(),
+        0,
+        0,
+      ),
+    );
+  }
   updateMonth(updateBy: number): void {
     const newMonth = this.selectedDate().getMonth() + updateBy;
     const isOperationValid = newMonth > -1 && newMonth < 12;
