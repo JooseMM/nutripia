@@ -16,6 +16,7 @@ import {
 } from 'src/app/constants/app-constants';
 import { ButtonComponent } from '../../shared/button/button.component';
 import { CalendarComponent } from '../calendar/calendar.component';
+import { AppoitmentsService } from 'src/app/shared/services/appoitments/appoitments.service';
 
 @Component({
   selector: 'nt-schedule',
@@ -24,30 +25,20 @@ import { CalendarComponent } from '../calendar/calendar.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScheduleComponent {
-  selectedDate: WritableSignal<Date> = signal(this.getCurrentDate());
+  appointmentService = inject(AppoitmentsService);
+  selectedDate: WritableSignal<Date> = signal(
+    this.appointmentService.getCurrentDate(),
+  );
   isAppointmentOnline: WritableSignal<boolean> = signal(false);
   notSelectedClass = 'p-2.5 bg-white rounded-full';
   selectedClass = 'p-2.5 bg-primary-purple rounded-full';
-  notAvailableDays: number[] = [14, 10]; // TODO: get this from a service
+  notAvailableDates: number[] = [14, 10]; // TODO: get this from a service
 
   constructor() {
     effect(() => console.log(this.selectedDate()));
   }
   setAppointmentIsOnline(isOnline: boolean) {
     this.isAppointmentOnline.set(isOnline);
-  }
-  getCurrentDate() {
-    const now = new Date(); // Current date and time
-    // Create a new Date object with the same year, month, and day as the current date
-    return new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      WORK_START_HOUR,
-      0,
-      0,
-      0,
-    );
   }
   updateHour(updateBy: number) {
     const currentHours = this.selectedDate().getHours() + updateBy;
@@ -70,7 +61,7 @@ export class ScheduleComponent {
   }
   saveAppointment(): void {
     // TODO: check the validity of the input to save
-    if (this.notAvailableDays.includes(this.selectedDate().getDate())) {
+    if (this.notAvailableDates.includes(this.selectedDate().getDate())) {
       console.log('Dia seleccionado no disponible');
     } else {
       console.log('Selected day:');

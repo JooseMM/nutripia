@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   output,
   Signal,
@@ -13,6 +14,8 @@ import {
 } from 'src/app/constants/app-constants';
 import { CalendarButtonComponent } from './components/calendar-button/calendar-button.component';
 import { CalendarButtonState } from './utils';
+import { AppoitmentsService } from 'src/app/shared/services/appoitments/appoitments.service';
+import Appointment from 'src/models/IAppointment';
 interface DayObject {
   state: CalendarButtonState;
   numberDay: number;
@@ -24,9 +27,10 @@ interface DayObject {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent {
-  notAvailableDays = input<number[]>([]);
-  selectedDate = input.required<Date>();
-  dateChange = output<Date>();
+  appointmentService = inject(AppoitmentsService);
+  appointments = input<Appointment[]>(
+    this.appointmentService.getAppointments(),
+  );
   threeLetterWeekDay = THREE_LETTER_WEEKDAY;
   singleLetterWeekDay = SINGLE_LETTER_WEEK_DAY;
   monthNames = [...MONTH_NAMES];
@@ -34,32 +38,12 @@ export class CalendarComponent {
     this.getDaysInMonth(
       this.selectedDate().getFullYear(),
       this.selectedDate().getMonth(),
-      this.notAvailableDays(),
+      this.reservedDates(),
       this.selectedDate().getDate(),
     ),
   );
-  updateSelectedDate(newDate: Date) {
-    /*
-     * trigger the event for the parent listener
-     * */
-    this.dateChange.emit(new Date(newDate));
-  }
-  selectADay(selectedDay: number) {
-    const currentDate = this.selectedDate();
-    /*
-     * update the whole date
-     */
-    this.updateSelectedDate(
-      new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        selectedDay,
-        currentDate.getHours(),
-        0,
-        0,
-      ),
-    );
-  }
+  updateSelectedDate(newDate: Date) {}
+  selectADay(selectedDay: number) {}
   updateMonth(updateBy: number) {
     const newMonth = this.selectedDate().getMonth() + updateBy;
     const isOperationValid = newMonth > -1 && newMonth < 12;
