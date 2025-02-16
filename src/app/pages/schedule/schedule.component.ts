@@ -12,6 +12,7 @@ import { ButtonComponent } from '../../shared/button/button.component';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { AppoitmentService } from 'src/app/shared/services/appoitments/appoitments.service';
 import { ResponseTrackerService } from 'src/app/shared/services/response-tracker/response-tracker.service';
+import Appointment from 'src/models/IAppointment';
 
 @Component({
   selector: 'nt-schedule',
@@ -36,6 +37,9 @@ export class ScheduleComponent {
       .getSelectedDate()
       .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
   );
+  onEditAppointment = computed(() =>
+    this.appointmentService.getOnEditAppointment(),
+  );
   isAppointmentOnline: WritableSignal<boolean> = signal(false);
   notSelectedClass = 'p-2.5 bg-white rounded-full';
   selectedClass = 'p-2.5 bg-primary-purple rounded-full';
@@ -51,5 +55,19 @@ export class ScheduleComponent {
   }
   saveAppointment() {
     this.appointmentService.saveAppointment(this.isAppointmentOnline());
+  }
+  setOnEditAppointment() {
+    this.appointmentService.setOnEditAppointment();
+  }
+  getDateOwner() {
+    const currentSelectedDate = this.appointmentService.getSelectedDate();
+    const appointment = this.appointmentService
+      .getAppointments()
+      .find(
+        (appointment: Appointment) =>
+          (appointment.date as Date).getTime() ===
+          currentSelectedDate.getTime(),
+      );
+    return appointment?.user?.fullName;
   }
 }

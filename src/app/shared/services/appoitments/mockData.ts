@@ -20,6 +20,8 @@ const getMockAppointment = (day: number, hour?: number): Appointment => {
 const mockDates: Appointment[] = [
   getMockAppointment(14),
   getMockAppointment(20, 12),
+  getMockAppointment(20, 13),
+  getMockAppointment(20, 14),
   getMockAppointment(30, 9),
 ];
 

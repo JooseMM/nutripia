@@ -18,6 +18,7 @@ import mockDates from './mockData';
 import DayObject from './IDayObject';
 import AppointmentDto from 'src/models/IAppointmentDto';
 import { ResponseTrackerService } from '../response-tracker/response-tracker.service';
+import { AuthenticationService } from '../authentication/authentication.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,9 +26,12 @@ import { ResponseTrackerService } from '../response-tracker/response-tracker.ser
 export class AppoitmentService {
   private http = inject(HttpClient);
   private URL = `${API_URL}/appointments`;
+  private AuthService = inject(AuthenticationService);
   private ResponseTrackerService = inject(ResponseTrackerService);
   private selectedDate: WritableSignal<Date> = signal(this.getCurrentDate());
   private appointments = signal(mockDates);
+  private onEditAppoitment: WritableSignal<Appointment | null> = signal(null);
+  private authenticationState = signal(this.AuthService.authenticationState$);
   private daysOfTheMonth: Signal<DayObject[]> = computed(() =>
     this.getDaysInCurrentMonth(
       this.selectedDate().getFullYear(),
@@ -40,6 +44,19 @@ export class AppoitmentService {
     ),
   );
 
+  getOnEditAppointment() {
+    return this.onEditAppoitment();
+  }
+  setOnEditAppointment(): void {
+    const appointmentsArr = this.appointments();
+    this.onEditAppoitment.set(
+      appointmentsArr.find(
+        (appointment: Appointment) =>
+          (appointment.date as Date).getTime() ===
+          this.selectedDate().getTime(),
+      )!,
+    );
+  }
   getSelectedDate(): Date {
     return this.selectedDate();
   }
@@ -53,15 +70,30 @@ export class AppoitmentService {
     return MONTH_NAMES[monthIndex];
   }
   updateSelectedDay(newDay: number) {
-    const prev = this.selectedDate();
+    const previousDate = this.selectedDate();
+    /*
+     * get an array of numbers that represents the amount of time
+     * that has pass since the EPOCH to be able to compare dates
+     */
+    const reservedDates: number[] = this.getAppointmentsByMonth(
+      this.appointments(),
+      previousDate.getMonth(),
+    ).map((item) => (item.date as Date).getTime());
+
+    const newDateToCheck = new Date(
+      previousDate.getFullYear(),
+      previousDate.getMonth(),
+      newDay,
+      WORK_START_HOUR,
+      0,
+      0,
+    );
+
     this.selectedDate.set(
-      new Date(
-        prev.getFullYear(),
-        prev.getMonth(),
-        newDay,
-        prev.getHours(),
-        0,
-        0,
+      this.getNearestAvailableHour(
+        newDateToCheck,
+        reservedDates,
+        previousDate.getHours(),
       ),
     );
   }
@@ -90,15 +122,37 @@ export class AppoitmentService {
     const selectedDate = this.selectedDate();
     const current = this.selectedDate();
     let newHour = current.getHours() + updateBy;
-    const reservedDates: Date[] = this.getAppointmentsByMonth(
+    /*
+     * get an array of numbers that represents the amount of time
+     * that has pass since the EPOCH to be able to compare dates
+     */
+    const reservedDates: number[] = this.getAppointmentsByMonth(
       this.appointments(),
       current.getMonth(),
-    ).map((item) => item.date as Date);
+    ).map((item) => (item.date as Date).getTime());
 
+    /*
+     * check if the new hour is between the desire work time
+     */
     if (newHour > WORK_END_HOUR || newHour < WORK_START_HOUR) {
-      console.log('not valid hour');
       return;
     }
+    this.selectedDate.set(
+      this.getNearestAvailableHour(
+        selectedDate,
+        reservedDates,
+        newHour,
+        updateBy,
+      ),
+    );
+    // Date handles hours to wrap around 24, business logic tell us to only have available hours from 9hrs to 20hrs
+  }
+  getNearestAvailableHour(
+    selectedDate: Date,
+    reservedDates: number[],
+    newHour: number,
+    updateBy?: number,
+  ): Date {
     const newSelectedDate = new Date(
       selectedDate.getFullYear(),
       selectedDate.getMonth(),
@@ -108,21 +162,21 @@ export class AppoitmentService {
       0,
       0,
     );
-    console.log(reservedDates);
-    console.log(reservedDates.includes(newSelectedDate));
-    while (reservedDates.includes(newSelectedDate)) {
-      newHour = newHour + updateBy;
-      newSelectedDate.setTime(
-        newHour < WORK_END_HOUR && newHour > WORK_START_HOUR
-          ? newHour
-          : WORK_START_HOUR,
-      );
-      console.log('loop');
+    /*
+     * a loop that will not stop until it finds an hour
+     * that does not exists in th reservedDates array
+     * if not valid hours are find
+     */
+    while (reservedDates.includes(newSelectedDate.getTime())) {
+      newHour += updateBy ?? 1;
+      if (newHour < WORK_END_HOUR && newHour > WORK_START_HOUR) {
+        newSelectedDate.setHours(newHour);
+      } else {
+        newSelectedDate.setHours(WORK_START_HOUR);
+        updateBy = 1;
+      }
     }
-
-    this.selectedDate.set(newSelectedDate);
-
-    // Date handles hours to wrap around 24, business logic tell us to only have available hours from 9hrs to 20hrs
+    return newSelectedDate;
   }
   saveAppointment(isAppointmentOnline: boolean): void {
     // TODO: add user data to the appointment

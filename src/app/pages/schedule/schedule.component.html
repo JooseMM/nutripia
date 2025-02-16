@@ -12,18 +12,21 @@
   >
     <div class="hidden text-center | lg:mt-24 lg:block">
       <div
-        class="flex flex-col text-white rounded-lg items-start bg-primary-purple max-w-72 mx-auto py-4 px-6 outline outline-1 outline-charcoal"
+        class="flex flex-col text-white rounded-lg items-start bg-primary-purple max-w-96 mx-auto py-4 px-6 outline outline-1 outline-charcoal"
       >
-        <span class="text-xl font-bold tracking-wide p-0 m-0">{{
-          this.getLongDate()
-        }}</span>
-        <div class="flex justify-between w-full">
-          <span class="opacity-60 text-lg m-0 p-0"
-            >{{ getTime() }}
-            &nbsp;/&nbsp;
-            {{ isAppointmentOnline() ? "Teleconsulta" : "Presencial" }}</span
-          >
-        </div>
+        @if (!onEditAppointment()) {
+          <span class="text-xl font-bold tracking-wide p-0 m-0">{{
+            this.getLongDate()
+          }}</span>
+          <div class="flex justify-between w-full">
+            <span class="opacity-60 text-lg m-0 p-0"
+              >{{ getTime() }}
+              &nbsp;/&nbsp;
+              {{ isAppointmentOnline() ? "Teleconsulta" : "Presencial" }}
+              {{ getDateOwner() }}
+            </span>
+          </div>
+        }
       </div>
     </div>
     <div class="space-y-3 mt-10 flex flex-col items-center">
@@ -85,8 +88,10 @@
     <div class="flex space-x-6 items-center justify-center mt-8 mb-10">
       <nt-button
         [isPrimary]="true"
-        label="Reservar"
-        (click)="saveAppointment()"
+        [label]="onEditAppointment() ? 'Reservar' : 'Actualizar'"
+        (click)="
+          onEditAppointment() ? saveAppointment() : setOnEditAppointment()
+        "
         [isLoading]="isResponseLoading()"
       />
       <button class="text-charcoal">Cancelar</button>
