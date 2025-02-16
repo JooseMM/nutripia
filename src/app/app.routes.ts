@@ -10,7 +10,7 @@ import { ScheduleComponent } from './pages/schedule/schedule.component';
 
 export const routes: Routes = [
   { path: 'inicio', component: HomePage },
-  { path: 'agenda', component: ScheduleComponent, canActivate: [clientGuard] },
+  { path: 'agenda', component: ScheduleComponent, canActivate: [] },
   { path: 'login', component: LoginComponent, canActivate: [unknowUserGuard] },
   {
     path: 'subscripcion',

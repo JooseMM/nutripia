@@ -12,7 +12,7 @@ import { UserEditingFormComponent } from './user-editing-form/user-editing-form.
 
 @Component({
   selector: 'nt-user-administration',
-  imports: [UserBoxComponent, NgClass, UserEditingFormComponent],
+  imports: [UserBoxComponent, UserEditingFormComponent],
   templateUrl: './user-administration.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

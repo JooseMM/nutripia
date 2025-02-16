@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   inject,
   OnDestroy,
   OnInit,
@@ -19,14 +20,10 @@ import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative
 import { Router } from '@angular/router';
 import { CustomInputComponent } from '../../shared/custom-input/custom-input.component';
 import { validationError } from './validators';
-import {
-  AUTH_TOKEN_NAME,
-  letterSpaceSymbolsAndNumbers,
-  undefinedAuthenticationState,
-} from 'src/app/constants/app-constants';
-import { finalize, Observable, Subscription, tap } from 'rxjs';
-import ResponseState from 'src/models/IApiCallState';
+import { letterSpaceSymbolsAndNumbers } from 'src/app/constants/app-constants';
+import { finalize, Subscription } from 'rxjs';
 import AuthenticationState from 'src/models/IAuthenticationState';
+import { ResponseTrackerService } from 'src/app/shared/services/response-tracker/response-tracker.service';
 
 @Component({
   selector: 'nt-login',
@@ -39,18 +36,13 @@ import AuthenticationState from 'src/models/IAuthenticationState';
   ],
   templateUrl: './login.component.html',
 })
-export class LoginComponent implements OnInit, OnDestroy {
-  ngOnInit(): void {
-    this.responseState = this.authenticationService.resposeState$.subscribe(
-      (value) => (this.isLoading = value.isLoading),
-    );
-  }
+export class LoginComponent implements OnDestroy {
   private cdr = inject(ChangeDetectorRef);
   validationErrorObject = validationError;
   router = inject(Router);
-  responseState: Subscription = new Subscription();
   authenticationState: Subscription = new Subscription();
-  isLoading = false;
+  responseTrackingService = inject(ResponseTrackerService);
+  isLoading = computed(() => this.responseTrackingService.getState().isLoading);
   // reactive form
   form: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -113,7 +105,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     return this.form.get('email')!.invalid && this.form.get('email')!.touched;
   }
   ngOnDestroy(): void {
-    this.responseState.unsubscribe();
     this.authenticationState.unsubscribe();
   }
 }

@@ -5,7 +5,7 @@
     >Seleccione una fecha</span
   >
   <div
-    class="flex py-4 items-center justify-center border-b | sm:w-full sm:py-6 sm:bg-primary-purple"
+    class="flex py-4 items-center justify-center border-b | sm:w-full sm:py-5 sm:bg-primary-purple"
   >
     <button
       (click)="updateMonth(-1)"
@@ -74,7 +74,9 @@
       </li>
     }
   </ul>
-  <ul class="hidden bg-lavender-white grid-cols-7 py-3 w-full | sm:grid">
+  <ul
+    class="hidden bg-lavender-white grid-cols-7 py-1 w-full | sm:grid sm:border-b sm:border-lavender-gray"
+  >
     @for (weekDay of threeLetterWeekDay; track $index) {
       <li
         class="text-primary-purple font-medium tracking-wider text-xl text-center opacity-80"

@@ -1,15 +1,33 @@
 <article class="flex h-full">
   <div
-    class="p-8 grid gap-6 auto-rows-min justify-center items-start"
-    [ngClass]="isEditing() ? 'grid-cols-2' : 'grid-cols-3'"
+    class="p-8 grid gap-6 auto-rows-min justify-center items-start lg:grid-cols-2"
   >
     @for (userId of userIdList(); track $index) {
       <nt-user-box [userId]="userId" class="h-fit" />
     }
   </div>
-  @if (isEditing() !== null) {
-    <div class="w-full | lg:w-small-container">
+  <div
+    class="w-full | lg:w-small-container lg:h-full lg:border-l lg:border-l-lavender-gray"
+  >
+    @if (isEditing()) {
       <nt-user-editing-form />
-    </div>
-  }
+    } @else {
+      <svg
+        class="w-full max-w-64 mx-auto mt-36"
+        viewBox="0 0 21 21"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M10.5 8.75C12.433 8.75 14 7.183 14 5.25C14 3.317 12.433 1.75 10.5 1.75C8.567 1.75 7 3.317 7 5.25C7 7.183 8.567 8.75 10.5 8.75Z"
+          stroke="#DDDAE2"
+        />
+        <path
+          d="M17.4978 15.75C17.5 15.6063 17.5 15.4604 17.5 15.3125C17.5 13.1379 14.366 11.375 10.5 11.375C6.634 11.375 3.5 13.1379 3.5 15.3125C3.5 17.4871 3.5 19.25 10.5 19.25C12.4521 19.25 13.8598 19.1129 14.875 18.868"
+          stroke="#DDDAE2"
+          stroke-linecap="round"
+        />
+      </svg>
+    }
+  </div>
 </article>

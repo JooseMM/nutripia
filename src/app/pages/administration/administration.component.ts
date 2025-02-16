@@ -23,7 +23,7 @@ import { ScheduleComponent } from '../schedule/schedule.component';
 export class AdministrationComponent {
   selectedStyles: string =
     'bg-primary-purple text-white border-b border-charcoal';
-  inClientSection: WritableSignal<boolean> = signal(false);
+  inClientSection: WritableSignal<boolean> = signal(true);
   purple = PRIMARY_HEX;
   userAdminService = inject(UserAdministrationService);
   unsaveChanges: Signal<boolean> = computed(

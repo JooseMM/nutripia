@@ -9,12 +9,11 @@ import {
 import ApiResponse from 'src/models/IApiResponse';
 import { checkExistingToken, UserCredentials } from './utils';
 import AuthenticationState from 'src/models/IAuthenticationState';
-import ResponseState from 'src/models/IApiCallState';
 import AuthResponse from 'src/models/IAuthResponse';
 import { ApiResponseErrorAdapter } from 'src/app/pages/login/adapter/ApiResponseErrorAdapter';
 import { jwtDecodeToken } from 'src/app/pages/login/adapter/jwtTokenDecodeAdapter';
-import User from 'src/models/IUser';
 import NewClient from 'src/models/INewClient';
+import { ResponseTrackerService } from '../response-tracker/response-tracker.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,26 +21,16 @@ import NewClient from 'src/models/INewClient';
 export class AuthenticationService {
   private apiUrl = ` ${API_URL}/auth`;
   private http = inject(HttpClient);
+  private responseTrackerService = inject(ResponseTrackerService);
   // behavior subject for the authentication state
   private authenticationState: BehaviorSubject<AuthenticationState> =
     new BehaviorSubject<AuthenticationState>(checkExistingToken());
   public readonly authenticationState$: Observable<AuthenticationState> =
     this.authenticationState.asObservable();
-  // behavior subject for the response state
-  private responseState: BehaviorSubject<ResponseState> =
-    new BehaviorSubject<ResponseState>({
-      isLoading: false,
-      isComplete: false,
-    });
-  public readonly resposeState$: Observable<ResponseState> =
-    this.responseState.asObservable();
 
   login(credentials: UserCredentials): void {
     // update the state to start the loading animations and interactions
-    this.responseState.next({
-      isLoading: true,
-      isComplete: false,
-    });
+    this.responseTrackerService.setResponseState(true, false);
     this.authenticationState.next({
       ...undefinedAuthenticationState,
     });
@@ -50,10 +39,7 @@ export class AuthenticationService {
       .post<ApiResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
         finalize(() =>
-          this.responseState.next({
-            isLoading: false,
-            isComplete: true,
-          }),
+          this.responseTrackerService.setResponseState(false, true),
         ),
       )
       .subscribe({

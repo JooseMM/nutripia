@@ -16,6 +16,8 @@ import {
 import Appointment from 'src/models/IAppointment';
 import mockDates from './mockData';
 import DayObject from './IDayObject';
+import AppointmentDto from 'src/models/IAppointmentDto';
+import { ResponseTrackerService } from '../response-tracker/response-tracker.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +25,7 @@ import DayObject from './IDayObject';
 export class AppoitmentService {
   private http = inject(HttpClient);
   private URL = `${API_URL}/appointments`;
+  private ResponseTrackerService = inject(ResponseTrackerService);
   private selectedDate: WritableSignal<Date> = signal(this.getCurrentDate());
   private appointments = signal(mockDates);
   private daysOfTheMonth: Signal<DayObject[]> = computed(() =>
@@ -83,27 +86,67 @@ export class AppoitmentService {
       ),
     );
   }
-  updateHour(updateBy: number) {
-    const currentHours = this.selectedDate().getHours() + updateBy;
-    // Date handles hours to wrap around 24, business logic tell us to only have available hours from 9hrs to 20hrs
-    const validOperation =
-      currentHours <= WORK_END_HOUR && currentHours >= WORK_START_HOUR;
-    if (validOperation) {
-      this.selectedDate.update((prev) => {
-        return new Date(
-          prev.getFullYear(),
-          prev.getMonth(),
-          prev.getDate(),
-          currentHours,
-          0,
-          0,
-          0,
-        );
-      });
+  updateHour(updateBy: number): void {
+    const selectedDate = this.selectedDate();
+    const current = this.selectedDate();
+    let newHour = current.getHours() + updateBy;
+    const reservedDates: Date[] = this.getAppointmentsByMonth(
+      this.appointments(),
+      current.getMonth(),
+    ).map((item) => item.date as Date);
+
+    if (newHour > WORK_END_HOUR || newHour < WORK_START_HOUR) {
+      console.log('not valid hour');
+      return;
     }
+    const newSelectedDate = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      selectedDate.getDate(),
+      newHour,
+      0,
+      0,
+      0,
+    );
+    console.log(reservedDates);
+    console.log(reservedDates.includes(newSelectedDate));
+    while (reservedDates.includes(newSelectedDate)) {
+      newHour = newHour + updateBy;
+      newSelectedDate.setTime(
+        newHour < WORK_END_HOUR && newHour > WORK_START_HOUR
+          ? newHour
+          : WORK_START_HOUR,
+      );
+      console.log('loop');
+    }
+
+    this.selectedDate.set(newSelectedDate);
+
+    // Date handles hours to wrap around 24, business logic tell us to only have available hours from 9hrs to 20hrs
   }
-  saveAppointment(): void {
-    // TODO: check the validity of the input to save
+  saveAppointment(isAppointmentOnline: boolean): void {
+    // TODO: add user data to the appointment
+    const newAppointment: AppointmentDto = {
+      isOnline: isAppointmentOnline,
+      date: this.selectedDate(),
+      userId: 'user123',
+    };
+    // for testing purpose
+    this.ResponseTrackerService.setResponseState(true, false);
+    setTimeout(() => {
+      console.log(newAppointment);
+      this.ResponseTrackerService.setResponseState(false, true);
+      this.appointments.update((prev: Appointment[]) => [
+        ...prev,
+        {
+          ...newAppointment,
+          id: 'user09',
+          publicId: 'xk02',
+          isCompleted: false,
+          user: null,
+        },
+      ]);
+    }, 2000);
   }
   private getCurrentDate(): Date {
     const now = new Date();
@@ -123,7 +166,7 @@ export class AppoitmentService {
   ): Appointment[] {
     return appointments.filter(
       (appointments: Appointment) =>
-        (appointments.appointmentDateTime as Date).getMonth() === monthMatch,
+        (appointments.date as Date).getMonth() === monthMatch,
     );
   }
   private getDaysInCurrentMonth(
@@ -143,7 +186,6 @@ export class AppoitmentService {
     const lastDayOfSelectedDays = new Date(year, month + 1, 0).getDate();
     const firstDayOfSelectedMonth = new Date(year, month, 1);
     const lastDayOfPreviousMonth = new Date(year, month, 0).getDate();
-    console.log(appointments);
     /*
      * get the day of the week from sunday (0) to Saturday (6)
      * because our format starts with monday(0) to Sunday(6) we need to
@@ -180,9 +222,7 @@ export class AppoitmentService {
           isSelected: selectedDay === numberDay,
           numberDay: numberDay,
           appointments: appointments.filter((appointments: Appointment) => {
-            return (
-              (appointments.appointmentDateTime as Date).getDate() === numberDay
-            );
+            return (appointments.date as Date).getDate() === numberDay;
           }),
           isDisabled: appointments.length > 8,
           /*

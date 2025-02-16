@@ -3,12 +3,12 @@
     <ul class="w-full h-[80dvh]">
       <li class="w-full">
         <button
-          class="flex justify-center space-x-5 py-4 w-full items-center text-2xl text-primary-purple border border-lavender-gray"
+          class="flex justify-center space-x-5 py-3 w-full items-center text-2xl text-primary-purple border border-lavender-gray"
           [ngClass]="inClientSection() ? '' : selectedStyles"
           (click)="setClientSection(false)"
         >
           <svg
-            width="30"
+            class="w-6"
             viewBox="0 0 21 21"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -47,17 +47,17 @@
               stroke-linecap="round"
             />
           </svg>
-          <span class="text-xl">Agenda</span>
+          <span class="text-base">Agenda</span>
         </button>
       </li>
       <li>
         <button
-          class="flex justify-center space-x-5 py-4 w-full items-center text-2xl text-primary-purple border border-lavender-gray"
+          class="flex justify-center space-x-5 py-3 w-full items-center text-2xl text-primary-purple border border-lavender-gray"
           [ngClass]="inClientSection() ? selectedStyles : ''"
           (click)="setClientSection(true)"
         >
           <svg
-            width="30"
+            class="w-6"
             viewBox="0 0 21 21"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +72,7 @@
               stroke-linecap="round"
             />
           </svg>
-          <span class="text-xl">Clientes</span>
+          <span class="text-base">Clientes</span>
         </button>
       </li>
     </ul>

@@ -24,7 +24,7 @@ module.exports = {
       },
       spacing: {
         "big-container": "70%",
-        "small-container": "30%",
+        "small-container": "35%",
         "mobile-padding": "5vw",
         "desktop-padding": "10vw",
       },
