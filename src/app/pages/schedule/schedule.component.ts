@@ -13,6 +13,8 @@ import { CalendarComponent } from '../calendar/calendar.component';
 import { AppoitmentService } from 'src/app/shared/services/appoitments/appoitments.service';
 import { ResponseTrackerService } from 'src/app/shared/services/response-tracker/response-tracker.service';
 import Appointment from 'src/models/IAppointment';
+import { AuthenticationService } from 'src/app/shared/services/authentication/authentication.service';
+import { ADMIN_ROLE, CLIENT_ROLE } from 'src/app/constants/app-constants';
 
 @Component({
   selector: 'nt-schedule',
@@ -23,6 +25,9 @@ import Appointment from 'src/models/IAppointment';
 export class ScheduleComponent {
   appointmentService = inject(AppoitmentService);
   responseTrackerService = inject(ResponseTrackerService);
+  authenticationService = inject(AuthenticationService);
+  ADMIN_ROLE = ADMIN_ROLE;
+  CLIENT_ROLE = CLIENT_ROLE;
   getLongDate: Signal<string> = computed(() => {
     const selectedDay = this.appointmentService.getSelectedDate().getDate();
     const selectedMonth = this.appointmentService.getSelectedDate().getMonth();
@@ -45,6 +50,9 @@ export class ScheduleComponent {
   selectedClass = 'p-2.5 bg-primary-purple rounded-full';
   isResponseLoading: Signal<boolean> = computed(
     () => this.responseTrackerService.getState().isLoading,
+  );
+  currentRole: Signal<string> = computed(
+    () => this.authenticationService.getAuthenticationState().role,
   );
 
   setAppointmentIsOnline(isOnline: boolean) {

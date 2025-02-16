@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject, finalize, Observable } from 'rxjs';
 import {
   API_URL,
@@ -23,15 +23,16 @@ export class AuthenticationService {
   private http = inject(HttpClient);
   private responseTrackerService = inject(ResponseTrackerService);
   // behavior subject for the authentication state
-  private authenticationState: BehaviorSubject<AuthenticationState> =
-    new BehaviorSubject<AuthenticationState>(checkExistingToken());
-  public readonly authenticationState$: Observable<AuthenticationState> =
-    this.authenticationState.asObservable();
+  private authenticationState: WritableSignal<AuthenticationState> =
+    signal(checkExistingToken());
 
+  getAuthenticationState() {
+    return this.authenticationState();
+  }
   login(credentials: UserCredentials): void {
     // update the state to start the loading animations and interactions
     this.responseTrackerService.setResponseState(true, false);
-    this.authenticationState.next({
+    this.authenticationState.set({
       ...undefinedAuthenticationState,
     });
     // hit the endpoint
@@ -46,33 +47,33 @@ export class AuthenticationService {
         next: (response: ApiResponse) => {
           const data = response.data as AuthResponse;
           const parseToken = jwtDecodeToken(data.token);
-          this.authenticationState.next(parseToken);
+          this.authenticationState.set(parseToken);
           localStorage.setItem(AUTH_TOKEN_NAME, data.token);
         },
         error: (response) => {
           const errorResponse = ApiResponseErrorAdapter(response);
           switch (errorResponse.statusCode) {
             case 401: // Unauthorize, credentials are wrong
-              this.authenticationState.next({
+              this.authenticationState.set({
                 ...undefinedAuthenticationState,
                 error: 'wrongCredentials',
               });
               break;
             case 400: // Bad Request
-              this.authenticationState.next({
+              this.authenticationState.set({
                 ...undefinedAuthenticationState,
                 error: 'wrongCredentials',
               });
               break;
             case 409: // Conflict, email is not verified
-              this.authenticationState.next({
+              this.authenticationState.set({
                 ...undefinedAuthenticationState,
                 error: 'emailIsNotConfirmed',
               });
               break;
             // TODO: handle other possible errors related with server issues
             default:
-              this.authenticationState.next({
+              this.authenticationState.set({
                 ...undefinedAuthenticationState,
               });
           }
@@ -85,6 +86,6 @@ export class AuthenticationService {
   }
   logout() {
     localStorage.removeItem(AUTH_TOKEN_NAME);
-    this.authenticationState.next({ ...undefinedAuthenticationState });
+    this.authenticationState.set({ ...undefinedAuthenticationState });
   }
 }

@@ -8,6 +8,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import {
+  ADMIN_ROLE,
   API_URL,
   MONTH_NAMES,
   WORK_END_HOUR,
@@ -31,7 +32,9 @@ export class AppoitmentService {
   private selectedDate: WritableSignal<Date> = signal(this.getCurrentDate());
   private appointments = signal(mockDates);
   private onEditAppoitment: WritableSignal<Appointment | null> = signal(null);
-  private authenticationState = signal(this.AuthService.authenticationState$);
+  private authenticationState = signal(
+    this.AuthService.getAuthenticationState(),
+  );
   private daysOfTheMonth: Signal<DayObject[]> = computed(() =>
     this.getDaysInCurrentMonth(
       this.selectedDate().getFullYear(),
@@ -167,6 +170,13 @@ export class AppoitmentService {
      * that does not exists in th reservedDates array
      * if not valid hours are find
      */
+    if (this.authenticationState().role === ADMIN_ROLE) {
+      /*
+       * jumping to an available hour is not needed as admin
+       * because they need to see and manage appointments
+       */
+      return newSelectedDate;
+    }
     while (reservedDates.includes(newSelectedDate.getTime())) {
       newHour += updateBy ?? 1;
       if (newHour < WORK_END_HOUR && newHour > WORK_START_HOUR) {

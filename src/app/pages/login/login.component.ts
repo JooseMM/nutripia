@@ -3,9 +3,12 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
+  effect,
   inject,
   OnDestroy,
   OnInit,
+  Signal,
+  WritableSignal,
 } from '@angular/core';
 import {
   FormControl,
@@ -36,11 +39,14 @@ import { ResponseTrackerService } from 'src/app/shared/services/response-tracker
   ],
   templateUrl: './login.component.html',
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent {
   private cdr = inject(ChangeDetectorRef);
   validationErrorObject = validationError;
   router = inject(Router);
-  authenticationState: Subscription = new Subscription();
+  authService = inject(AuthenticationService);
+  authenticationState: Signal<AuthenticationState> = computed(() =>
+    this.authService.getAuthenticationState(),
+  );
   responseTrackingService = inject(ResponseTrackerService);
   isLoading = computed(() => this.responseTrackingService.getState().isLoading);
   // reactive form
@@ -55,6 +61,27 @@ export class LoginComponent implements OnDestroy {
   private authenticationService = inject(AuthenticationService);
   // listen to changes in the auth state
 
+  constructor() {
+    effect(() => {
+      switch (this.authenticationState().error) {
+        case 'wrongCredentials':
+          this.getFormControl('password').setErrors({
+            wrongCredentials: true,
+          });
+          break;
+        case 'emailIsNotConfirmed':
+          this.getFormControl('email').setErrors({
+            emailIsNotConfirmed: true,
+          });
+          break;
+        case '':
+          if (this.authenticationState().role !== '') {
+            this.router.navigate(['/']);
+          }
+          break;
+      }
+    });
+  }
   onSubmit() {
     const credentials = {
       password: this.form.get('password')!.value,
@@ -63,27 +90,6 @@ export class LoginComponent implements OnDestroy {
     // update requestConnectionState for buttons animation
     // call the service to test credentials
     this.authenticationService.login(credentials);
-    this.authenticationState = this.authenticationService.authenticationState$
-      .pipe(finalize(() => this.cdr.markForCheck()))
-      .subscribe({
-        next: (response: AuthenticationState) => {
-          switch (response.error) {
-            case 'wrongCredentials':
-              this.getFormControl('password').setErrors({
-                wrongCredentials: true,
-              });
-              break;
-            case 'emailIsNotConfirmed':
-              this.getFormControl('email').setErrors({
-                emailIsNotConfirmed: true,
-              });
-              break;
-            case '':
-              this.router.navigate(['/']);
-              break;
-          }
-        },
-      });
   }
   isFormEdited(): boolean {
     return this.form.get('email')!.dirty && this.form.get('password')!.dirty;
@@ -103,8 +109,5 @@ export class LoginComponent implements OnDestroy {
   }
   isEmailInvalid(): boolean {
     return this.form.get('email')!.invalid && this.form.get('email')!.touched;
-  }
-  ngOnDestroy(): void {
-    this.authenticationState.unsubscribe();
   }
 }

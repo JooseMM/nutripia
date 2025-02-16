@@ -11,16 +11,16 @@ import { ScheduleComponent } from './pages/schedule/schedule.component';
 export const routes: Routes = [
   { path: 'inicio', component: HomePage },
   { path: 'agenda', component: ScheduleComponent, canActivate: [] },
-  { path: 'login', component: LoginComponent, canActivate: [unknowUserGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [] },
   {
     path: 'subscripcion',
     component: RegisterComponent,
-    canActivate: [unknowUserGuard],
+    canActivate: [],
   },
   {
     path: 'administracion',
     component: AdministrationComponent,
     canActivate: [],
   },
-  { path: '', redirectTo: '/administracion', pathMatch: 'full' },
+  { path: '', redirectTo: '/inicio', pathMatch: 'full' },
 ];
