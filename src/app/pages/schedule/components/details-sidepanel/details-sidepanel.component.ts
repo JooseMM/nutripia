@@ -14,6 +14,7 @@ import { ADMIN_ROLE, CLIENT_ROLE } from 'src/app/constants/app-constants';
 import { AuthenticationService } from 'src/app/shared/services/authentication/authentication.service';
 import { ResponseTrackerService } from 'src/app/shared/services/response-tracker/response-tracker.service';
 import { AppointmentInfoBoxComponent } from './components/appointment-info-box/appointment-info-box.component';
+import Appointment from 'src/models/IAppointment';
 
 @Component({
   selector: 'nt-details-sidepanel',
@@ -38,6 +39,9 @@ export class DetailsSidepanelComponent {
   );
   isResponseLoading: Signal<boolean> = computed(
     () => this.responseTrackerService.getState().isLoading,
+  );
+  onEditAppointment: Signal<Appointment | null> = computed(() =>
+    this.appointmentService.getOnEditAppointment(),
   );
 
   updateHourBy(number: number) {
