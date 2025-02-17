@@ -63,7 +63,7 @@ export class DetailsSidepanelComponent {
     () => this.responseTrackerService.getState().isLoading,
   );
   onEditAppointment: Signal<Appointment | null> = computed(() =>
-    this.appointmentService.getOnEditAppointment(),
+    this.appointmentService.getEditedAppointment(),
   );
   getLongSelectedDate: Signal<string> = computed(() => {
     const date = this.appointmentService.getSelectedDate();
@@ -102,13 +102,12 @@ export class DetailsSidepanelComponent {
   saveAppointment() {
     this.appointmentService.saveAppointment(this.isNewAppointmentOnline());
   }
-  setOnEditAppointment() {
-    //TODO: change this name
+  startEditingAppointment() {
     const appointment = this.appointmentsAtCurrentDate().find(
       (appointment: Appointment) =>
         appointment.id === this.selectedAppointmentId(),
     );
-    this.appointmentService.setOnEditAppointment(appointment!);
+    this.appointmentService.startEditingAppointment(appointment!);
     this.isNewAppointmentOnline.set(appointment!.isOnline);
   }
   setIsNewAppointment(isNew: boolean): void {
@@ -125,7 +124,7 @@ export class DetailsSidepanelComponent {
     return match;
   }
   resetSidePanel(): void {
-    this.appointmentService.setOnEditAppointment(null);
+    this.appointmentService.startEditingAppointment(null);
     this.setIsNewAppointment(false);
     this.selectedAppointmentId.set('');
   }
@@ -137,7 +136,7 @@ export class DetailsSidepanelComponent {
       return this.saveAppointment();
     }
     if (this.selectedAppointmentId()) {
-      return this.setOnEditAppointment();
+      return this.startEditingAppointment();
     }
     this.setIsNewAppointment(true);
   }

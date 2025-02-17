@@ -23,16 +23,16 @@ export class AppoitmentService {
   private ResponseTrackerService = inject(ResponseTrackerService);
   private selectedDate: WritableSignal<Date> = signal(this.getCurrentDate());
   private appointments = signal(mockDates);
-  private onEditAppoitment: WritableSignal<Appointment | null> = signal(null);
+  private editedAppointment: WritableSignal<Appointment | null> = signal(null);
   private authenticationState = signal(
     this.AuthService.getAuthenticationState(),
   );
 
-  getOnEditAppointment() {
-    return this.onEditAppoitment();
+  getEditedAppointment() {
+    return this.editedAppointment();
   }
-  setOnEditAppointment(appointment: Appointment | null): void {
-    this.onEditAppoitment.set(appointment);
+  startEditingAppointment(appointment: Appointment | null): void {
+    this.editedAppointment.set(appointment);
   }
   getSelectedDate(): Date {
     return this.selectedDate();
@@ -55,10 +55,11 @@ export class AppoitmentService {
   }
   updateMonth(updateBy: number): void {
     const newMonth = this.selectedDate().getMonth() + updateBy;
+    const isNewMonthValid = newMonth > -1 && newMonth < 12;
     /*
      * Dont update is the operation is not valid
      */
-    if (newMonth > -1 && newMonth < 12) {
+    if (!isNewMonthValid) {
       return;
     }
     const currentDate = this.selectedDate();
