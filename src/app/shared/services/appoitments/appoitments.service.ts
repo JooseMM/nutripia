@@ -100,7 +100,7 @@ export class AppoitmentService {
     const newAppointment: AppointmentDto = {
       isOnline: isAppointmentOnline,
       date: this.selectedDate(),
-      userId: 'user123',
+      userId: this.authenticationState().id,
     };
     // for testing purpose
     this.ResponseTrackerService.setResponseState(true, false);

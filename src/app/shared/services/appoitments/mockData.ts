@@ -9,7 +9,7 @@ const getMockAppointment = (day: number, hour?: number): Appointment => {
   now.setSeconds(0);
   now.setMilliseconds(0);
   return {
-    id: `id-${now.getDate()}`,
+    id: `id-${now.getTime()}`,
     publicId: 'bs134',
     isCompleted: false,
     date: now,

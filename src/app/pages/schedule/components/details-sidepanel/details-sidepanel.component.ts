@@ -69,10 +69,21 @@ export class DetailsSidepanelComponent {
     const date = this.appointmentService.getSelectedDate();
     return this.getLongDate(date.getDate(), date.getMonth());
   });
-  selectedAppointmentBox: WritableSignal<number> = signal(-1);
+  selectedAppointmentId: WritableSignal<string> = signal('');
   /*
    * own functions
    */
+  constructor() {
+    effect(() => {
+      const match = this.appointmentsAtCurrentDate().find(
+        (appointment: Appointment) =>
+          appointment.id === this.selectedAppointmentId(),
+      );
+      if (!match) {
+        this.selectedAppointmentId.set('');
+      }
+    });
+  }
   getLongDate(day: number, month: number): string {
     return `${day} de ${MONTH_NAMES[month]}`;
   }
@@ -91,14 +102,14 @@ export class DetailsSidepanelComponent {
   saveAppointment() {
     this.appointmentService.saveAppointment(this.isNewAppointmentOnline());
   }
-  selectAppointmentBoxIndex(newIndex: number) {
-    this.selectedAppointmentBox.set(newIndex);
-  }
   setOnEditAppointment() {
-    const index = this.selectedAppointmentBox();
-    const appointment = this.appointmentsAtCurrentDate()[index];
-    this.appointmentService.setOnEditAppointment(appointment);
-    this.isNewAppointmentOnline.set(appointment.isOnline);
+    //TODO: change this name
+    const appointment = this.appointmentsAtCurrentDate().find(
+      (appointment: Appointment) =>
+        appointment.id === this.selectedAppointmentId(),
+    );
+    this.appointmentService.setOnEditAppointment(appointment!);
+    this.isNewAppointmentOnline.set(appointment!.isOnline);
   }
   setIsNewAppointment(isNew: boolean): void {
     this.isNewAppointment.set(isNew);
@@ -116,39 +127,34 @@ export class DetailsSidepanelComponent {
   resetSidePanel(): void {
     this.appointmentService.setOnEditAppointment(null);
     this.setIsNewAppointment(false);
-    this.selectAppointmentBoxIndex(-1);
+    this.selectedAppointmentId.set('');
   }
   getMainButtonLabel(): string {
-    return this.selectedAppointmentBox() !== -1 &&
-      this.selectedAppointmentBox() < this.appointmentsAtCurrentDate().length
-      ? 'Modificar'
-      : 'Reservar';
+    return this.selectedAppointmentId() ? 'Modificar' : 'Reservar';
   }
-  getMainButtonOnClick(): void {
-    const validSelectedBox =
-      this.selectedAppointmentBox() < this.appointmentsAtCurrentDate().length;
+  getMainButtonOnClickHandler(): void {
     if (this.onEditAppointment() || this.isNewAppointment()) {
-      console.log('save');
       return this.saveAppointment();
     }
-    if (validSelectedBox && this.selectedAppointmentBox() !== -1) {
-      console.log('appointment editing');
+    if (this.selectedAppointmentId()) {
       return this.setOnEditAppointment();
-    } else {
-      console.log('new appointment');
-      this.setIsNewAppointment(true);
     }
+    this.setIsNewAppointment(true);
   }
   shouldDisable() {
     const creatingOrModifying =
       this.onEditAppointment() || this.isNewAppointment();
     const isCurrentUserAdmin = this.currentRole() === ADMIN_ROLE;
+    const currentUserId =
+      this.authenticationService.getAuthenticationState().id;
+
     if (!isCurrentUserAdmin) {
-      if (this.onEditAppointment()) {
-        return (
-          this.authenticationService.getAuthenticationState().id !==
-          this.onEditAppointment()?.userId
+      if (!creatingOrModifying && this.selectedAppointmentId()) {
+        const selectedAppointment = this.appointmentsAtCurrentDate().find(
+          (appointment: Appointment) =>
+            appointment.id === this.selectedAppointmentId(),
         );
+        return currentUserId !== selectedAppointment?.userId;
       }
       return false;
     }

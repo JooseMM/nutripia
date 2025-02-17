@@ -5,7 +5,7 @@
     onEditAppointment() ||
     isNewAppointment()
       ? 'mt-16'
-      : 'mt-52'
+      : 'mt-32'
   "
 >
   @if (
@@ -13,25 +13,31 @@
     !onEditAppointment() &&
     !isNewAppointment()
   ) {
-    <h3
-      class="text-primary-purple font-medium lg:py-2"
-      [ngClass]="
-        appointmentsAtCurrentDate().length > 0 ? 'text-xl ' : 'text-2xl'
-      "
-    >
-      {{
-        appointmentsAtCurrentDate().length > 0
-          ? "Lista de Citas"
-          : "¡Citas disponibles!"
-      }}
-    </h3>
+    @if (appointmentsAtCurrentDate().length > 0) {
+      <h3
+        class="text-primary-purple font-medium lg:py-2"
+        [ngClass]="
+          appointmentsAtCurrentDate().length > 0 ? 'text-xl ' : 'text-2xl'
+        "
+      >
+        Lista de Citas
+      </h3>
+    } @else {
+      <div class="mx-auto flex flex-col justify-center w-fit">
+        <img src="assets/icons/free-dates-icon.svg" />
+        <span
+          class="text-2xl tracking-wide text-center text-[#E6E6E6] font-bold"
+          >¡Citas disponibles!</span
+        >
+      </div>
+    }
   }
   @if (!onEditAppointment() && !isNewAppointment()) {
     @for (appointment of appointmentsAtCurrentDate(); track $index) {
-      <div (click)="selectAppointmentBoxIndex($index)">
+      <div (click)="selectedAppointmentId.set(appointment.id)">
         <nt-appointment-info-box
           [appointment]="appointment"
-          [isBoxSelected]="selectedAppointmentBox() === $index"
+          [isBoxSelected]="selectedAppointmentId() === appointment.id"
         />
       </div>
     }
@@ -115,7 +121,7 @@
   <nt-button
     [isPrimary]="true"
     [label]="getMainButtonLabel()"
-    (click)="getMainButtonOnClick()"
+    (click)="getMainButtonOnClickHandler()"
     [isLoading]="isResponseLoading()"
     [isDisabled]="shouldDisable()"
   />
