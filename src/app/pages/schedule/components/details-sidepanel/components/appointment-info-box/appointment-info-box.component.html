@@ -1,22 +1,23 @@
 <div
-  class="flex flex-col text-white rounded-lg items-start bg-primary-purple max-w-96 mx-auto py-4 px-6 outline outline-1 outline-charcoal"
+  class="flex flex-col rounded-lg items-start max-w-96 mx-auto py-4 px-6 outline outline-1 outline-soft-charcoal"
+  [ngClass]="
+    isBoxSelected()
+      ? 'bg-primary-purple text-white'
+      : 'bg-white text-soft-charcoal'
+  "
 >
   <div class="w-full flex justify-between relative">
     <span class="text-xl font-bold tracking-wide p-0 m-0">{{
-      this.getLongDate()
+      getAppointmentLongDate() || longDate()
     }}</span>
-    <button
-      class="rounded-full absolute right-0 p-4 top-0 bg-[#A499BA] lg:hover:outline outline-1 outline-white"
-    >
-      <img src="assets/icons/edit-icon.svg" />
-    </button>
   </div>
   <div class="flex justify-between w-full">
-    <span class="opacity-60 text-lg m-0 p-0"
-      >{{ getTime() }}
+    <span class="text-lg m-0 p-0"
+      >{{ getAppointmentTime() || time() }}
       &nbsp;/&nbsp;
-      {{ isAppointmentOnline() ? "Teleconsulta" : "Presencial" }}
-      {{ getDateOwner() }}
+      {{
+        (appointment()?.isOnline ?? isOnline()) ? "Teleconsulta" : "Presencial"
+      }}
     </span>
   </div>
 </div>

@@ -16,7 +16,7 @@ module.exports = {
         "white-lavender": "#F3F2F6", // box background
         "dark-slate-grape": "#5F5373",
         charcoal: "#313131", // font color
-        "soft-charcoal": "#474747",
+        "soft-charcoal": "#5A5A5A",
         "lighter-charcoal": "#737373",
         "wrong-input": "#EF6868",
         red: "#BA6874",

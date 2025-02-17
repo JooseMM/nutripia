@@ -65,7 +65,6 @@ export class UserAdministrationService {
     const toChange: User[] = this.usersArray().filter(
       (user: User) => user.markedForChange,
     );
-    console.log(toChange);
     this.usersArray.update((prev) =>
       prev.map((user: User) => {
         if (user.markedForChange) {

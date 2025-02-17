@@ -1,8 +1,25 @@
-<div class="hidden text-center | lg:mt-24 lg:block">
-  <nt-appointment-info-box />
+<div class="hidden text-center | lg:mt-24 lg:space-y-3 lg:block">
+  @if (!onEditAppointment() && !isNewAppointment()) {
+    @for (appointment of appointmentsAtCurrentDate(); track $index) {
+      <div (click)="selectAppointmentBoxIndex($index)">
+        <nt-appointment-info-box
+          [appointment]="appointment"
+          [isBoxSelected]="selectedAppointmentBox() === $index"
+        />
+      </div>
+    }
+  } @else {
+    <nt-appointment-info-box
+      [longDate]="getLongSelectedDate()"
+      [time]="getSelectedDateTime()"
+      [appointment]="onEditAppointment() ?? null"
+      [isBoxSelected]="true"
+      [isOnline]="isNewAppointmentOnline()"
+    />
+  }
 </div>
 <!-- Hour selection -->
-@if (onEditAppointment()) {
+@if (onEditAppointment() || isNewAppointment()) {
   <div class="space-y-3 mt-10 flex flex-col items-center">
     <h3 class="text-lg text-primary-purple tracking-wide">
       Seleccione una hora
@@ -16,7 +33,7 @@
       </button>
       <span
         class="py-2 px-6 text-lg text-primary-purple border border-charcoal rounded-md"
-        >{{ getTime() }}</span
+        >{{ getSelectedDateTime() }}</span
       >
       <button
         (click)="updateHourBy(+1)"
@@ -39,7 +56,7 @@
         <span class="border border-primary-purple rounded-full p-1 flex">
           <span
             [ngClass]="
-              isAppointmentOnline()
+              isNewAppointmentOnline()
                 ? 'p-2.5 bg-white rounded-full'
                 : 'p-2.5 bg-primary-purple rounded-full'
             "
@@ -54,9 +71,9 @@
         <span class="border border-primary-purple rounded-full p-1 flex">
           <span
             [ngClass]="
-              isAppointmentOnline()
-                ? 'p-2.5 bg-white rounded-full'
-                : 'p-2.5 bg-primary-purple rounded-full'
+              isNewAppointmentOnline()
+                ? 'p-2.5 bg-primary-purple rounded-full'
+                : 'p-2.5 bg-white rounded-full'
             "
           ></span>
         </span>
@@ -64,14 +81,29 @@
       </button>
     </div>
   </div>
+}
+@if (appointmentsAtCurrentDate().length || isNewAppointment()) {
   <!-- buttons -->
   <div class="flex space-x-6 items-center justify-center mt-8 mb-10">
     <nt-button
       [isPrimary]="true"
-      [label]="currentRole() === ADMIN_ROLE ? 'Actualizar' : 'Reservar'"
-      (click)="saveAppointment()"
+      [label]="
+        selectedAppointmentBox() !== -1 &&
+        selectedAppointmentBox() < appointmentsAtCurrentDate().length
+          ? 'Modificar'
+          : 'Reservar'
+      "
+      (click)="
+        selectedAppointmentBox() !== -1 &&
+        selectedAppointmentBox() < appointmentsAtCurrentDate().length
+          ? setOnEditAppointment()
+          : setIsNewAppointment(true)
+      "
       [isLoading]="isResponseLoading()"
+      [isDisabled]="
+        (onEditAppointment() || isNewAppointment()) && isDateTaken()
+      "
     />
-    <button class="text-charcoal">Cancelar</button>
+    <button class="text-charcoal" (click)="resetSidePanel()">Cancelar</button>
   </div>
 }

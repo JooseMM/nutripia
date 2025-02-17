@@ -1,12 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import {
-  computed,
-  inject,
-  Injectable,
-  Signal,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import {
   ADMIN_ROLE,
   API_URL,
@@ -16,7 +9,6 @@ import {
 } from 'src/app/constants/app-constants';
 import Appointment from 'src/models/IAppointment';
 import mockDates from './mockData';
-import DayObject from './IDayObject';
 import AppointmentDto from 'src/models/IAppointmentDto';
 import { ResponseTrackerService } from '../response-tracker/response-tracker.service';
 import { AuthenticationService } from '../authentication/authentication.service';
@@ -39,15 +31,8 @@ export class AppoitmentService {
   getOnEditAppointment() {
     return this.onEditAppoitment();
   }
-  setOnEditAppointment(): void {
-    const appointmentsArr = this.appointments();
-    this.onEditAppoitment.set(
-      appointmentsArr.find(
-        (appointment: Appointment) =>
-          (appointment.date as Date).getTime() ===
-          this.selectedDate().getTime(),
-      )!,
-    );
+  setOnEditAppointment(appointment: Appointment | null): void {
+    this.onEditAppoitment.set(appointment);
   }
   getSelectedDate(): Date {
     return this.selectedDate();
@@ -55,35 +40,17 @@ export class AppoitmentService {
   getAppointments(): Appointment[] {
     return this.appointments();
   }
-  getMonthNameOf(monthIndex: number): string {
-    return MONTH_NAMES[monthIndex];
-  }
   updateSelectedDay(newDay: number) {
-    const previousDate = this.selectedDate();
-    /*
-     * get an array of numbers that represents the amount of time
-     * that has pass since the EPOCH to be able to compare dates
-     */
-    const reservedDates: number[] = this.getAppointmentsByMonth(
-      this.appointments(),
-      previousDate.getMonth(),
-    ).map((item) => (item.date as Date).getTime());
-
-    const newDateToCheck = new Date(
-      previousDate.getFullYear(),
-      previousDate.getMonth(),
-      newDay,
-      WORK_START_HOUR,
-      0,
-      0,
-    );
-
-    this.selectedDate.set(
-      this.getNearestAvailableHour(
-        newDateToCheck,
-        reservedDates,
-        previousDate.getHours(),
-      ),
+    this.selectedDate.update(
+      (prev) =>
+        new Date(
+          prev.getFullYear(),
+          prev.getMonth(),
+          newDay,
+          WORK_START_HOUR,
+          0,
+          0,
+        ),
     );
   }
   updateMonth(updateBy: number): void {
@@ -127,52 +94,17 @@ export class AppoitmentService {
       return;
     }
     this.selectedDate.set(
-      this.getNearestAvailableHour(
-        selectedDate,
-        reservedDates,
+      new Date(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
         newHour,
-        updateBy,
+        0,
+        0,
+        0,
       ),
     );
     // Date handles hours to wrap around 24, business logic tell us to only have available hours from 9hrs to 20hrs
-  }
-  getNearestAvailableHour(
-    selectedDate: Date,
-    reservedDates: number[],
-    newHour: number,
-    updateBy?: number,
-  ): Date {
-    const newSelectedDate = new Date(
-      selectedDate.getFullYear(),
-      selectedDate.getMonth(),
-      selectedDate.getDate(),
-      newHour,
-      0,
-      0,
-      0,
-    );
-    /*
-     * a loop that will not stop until it finds an hour
-     * that does not exists in th reservedDates array
-     * if not valid hours are find
-     */
-    if (this.authenticationState().role === ADMIN_ROLE) {
-      /*
-       * jumping to an available hour is not needed as admin
-       * because they need to see and manage appointments
-       */
-      return newSelectedDate;
-    }
-    while (reservedDates.includes(newSelectedDate.getTime())) {
-      newHour += updateBy ?? 1;
-      if (newHour < WORK_END_HOUR && newHour > WORK_START_HOUR) {
-        newSelectedDate.setHours(newHour);
-      } else {
-        newSelectedDate.setHours(WORK_START_HOUR);
-        updateBy = 1;
-      }
-    }
-    return newSelectedDate;
   }
   saveAppointment(isAppointmentOnline: boolean): void {
     // TODO: add user data to the appointment
@@ -184,7 +116,6 @@ export class AppoitmentService {
     // for testing purpose
     this.ResponseTrackerService.setResponseState(true, false);
     setTimeout(() => {
-      console.log(newAppointment);
       this.ResponseTrackerService.setResponseState(false, true);
       this.appointments.update((prev: Appointment[]) => [
         ...prev,

@@ -1,47 +1,50 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  inject,
-  signal,
-  Signal,
-  WritableSignal,
+  input,
 } from '@angular/core';
-import { AppoitmentService } from 'src/app/shared/services/appoitments/appoitments.service';
+import { MONTH_NAMES } from 'src/app/constants/app-constants';
 import Appointment from 'src/models/IAppointment';
 
 @Component({
   selector: 'nt-appointment-info-box',
-  imports: [],
+  imports: [NgClass],
   templateUrl: './appointment-info-box.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppointmentInfoBoxComponent {
-  appointmentService = inject(AppoitmentService);
-  isAppointmentOnline: WritableSignal<boolean> = signal(false);
-  getTime: Signal<string> = computed(() =>
-    this.appointmentService
-      .getSelectedDate()
-      .toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+  /*
+   * input fields
+   */
+  longDate = input<string>();
+  time = input<string>();
+  isOnline = input<boolean>();
+  appointment = input<Appointment | null>(null);
+  class = input<string>();
+  isBoxSelected = input<boolean>();
+  isBeingEdited = computed(
+    () => this.appointment !== null && this.longDate() && this.time(),
   );
-  getLongDate: Signal<string> = computed(() => {
-    const selectedDay = this.appointmentService.getSelectedDate().getDate();
-    const selectedMonth = this.appointmentService.getSelectedDate().getMonth();
-    return (
-      selectedDay +
-      ' de ' +
-      this.appointmentService.getMonthNameOf(selectedMonth)
-    );
-  });
-  getDateOwner() {
-    const currentSelectedDate = this.appointmentService.getSelectedDate();
-    const appointment = this.appointmentService
-      .getAppointments()
-      .find(
-        (appointment: Appointment) =>
-          (appointment.date as Date).getTime() ===
-          currentSelectedDate.getTime(),
-      );
-    return appointment?.user?.fullName;
+  /*
+   * own functions
+   */
+  getAppointmentLongDate(): string | null {
+    if (this.appointment() === null) {
+      return null;
+    }
+    const date = this.appointment()?.date as Date;
+    return `${date.getDate()} de ${MONTH_NAMES[date.getMonth()]}`;
+  }
+  getAppointmentTime(): string | null {
+    if (this.appointment() === null) {
+      return null;
+    }
+    const date = this.appointment()?.date as Date;
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 }

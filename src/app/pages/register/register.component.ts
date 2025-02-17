@@ -80,7 +80,6 @@ export class RegisterComponent {
         },
         error: (rawResponse) => {
           const response = rawResponse.error as ApiResponse;
-          console.log(response);
           switch (response.statusCode) {
             case 409: // Conflict status code, the email already exists in db
               // insert the validator error for the control to show

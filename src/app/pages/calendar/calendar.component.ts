@@ -6,6 +6,7 @@ import {
   Signal,
 } from '@angular/core';
 import {
+  MONTH_NAMES,
   SINGLE_LETTER_WEEK_DAY,
   THREE_LETTER_WEEKDAY,
 } from 'src/app/constants/app-constants';
@@ -37,9 +38,9 @@ export class CalendarComponent {
       this.selectedDate().getDate(),
     ),
   );
-  getMonthName: Signal<string> = computed(() =>
-    this.appointmentService.getMonthNameOf(this.selectedDate().getMonth()),
-  );
+  getMonthName(): string {
+    return MONTH_NAMES[this.selectedDate().getMonth()];
+  }
   updateMonth(updateBy: number) {
     this.appointmentService.updateMonth(updateBy);
   }
