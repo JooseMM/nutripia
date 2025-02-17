@@ -13,6 +13,7 @@ export const chileanRutValidator = new RegExp(
 );
 export const PRIMARY_HEX = '#8878A5';
 export const undefinedAuthenticationState: AuthenticationState = {
+  id: '',
   email: '',
   fullName: '',
   isEmailVerified: false,

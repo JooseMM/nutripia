@@ -100,10 +100,10 @@ export class DetailsSidepanelComponent {
     this.appointmentService.setOnEditAppointment(appointment);
     this.isNewAppointmentOnline.set(appointment.isOnline);
   }
-  setIsNewAppointment(isNew: boolean) {
+  setIsNewAppointment(isNew: boolean): void {
     this.isNewAppointment.set(isNew);
   }
-  isDateTaken() {
+  isDateTaken(): boolean {
     const current = this.appointmentService.getSelectedDate().getTime();
     let match = false;
     this.appointmentsAtCurrentDate().forEach((appointment: Appointment) => {
@@ -113,9 +113,48 @@ export class DetailsSidepanelComponent {
     });
     return match;
   }
-  resetSidePanel() {
+  resetSidePanel(): void {
     this.appointmentService.setOnEditAppointment(null);
     this.setIsNewAppointment(false);
     this.selectAppointmentBoxIndex(-1);
+  }
+  getMainButtonLabel(): string {
+    return this.selectedAppointmentBox() !== -1 &&
+      this.selectedAppointmentBox() < this.appointmentsAtCurrentDate().length
+      ? 'Modificar'
+      : 'Reservar';
+  }
+  getMainButtonOnClick(): void {
+    const validSelectedBox =
+      this.selectedAppointmentBox() < this.appointmentsAtCurrentDate().length;
+    if (this.onEditAppointment() || this.isNewAppointment()) {
+      console.log('save');
+      return this.saveAppointment();
+    }
+    if (validSelectedBox && this.selectedAppointmentBox() !== -1) {
+      console.log('appointment editing');
+      return this.setOnEditAppointment();
+    } else {
+      console.log('new appointment');
+      this.setIsNewAppointment(true);
+    }
+  }
+  shouldDisable() {
+    const creatingOrModifying =
+      this.onEditAppointment() || this.isNewAppointment();
+    const isCurrentUserAdmin = this.currentRole() === ADMIN_ROLE;
+    if (!isCurrentUserAdmin) {
+      if (this.onEditAppointment()) {
+        return (
+          this.authenticationService.getAuthenticationState().id !==
+          this.onEditAppointment()?.userId
+        );
+      }
+      return false;
+    }
+    if (creatingOrModifying && this.isDateTaken()) {
+      return true;
+    }
+    return false;
   }
 }

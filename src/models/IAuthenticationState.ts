@@ -1,4 +1,5 @@
 export default interface AuthenticationState {
+  id: string;
   email: string;
   fullName: string;
   isEmailVerified: boolean;

@@ -1,4 +1,31 @@
-<div class="hidden text-center | lg:mt-24 lg:space-y-3 lg:block">
+<div
+  class="hidden text-center | lg:space-y-3 lg:block"
+  [ngClass]="
+    appointmentsAtCurrentDate().length > 0 ||
+    onEditAppointment() ||
+    isNewAppointment()
+      ? 'mt-16'
+      : 'mt-52'
+  "
+>
+  @if (
+    appointmentsAtCurrentDate.length === 0 &&
+    !onEditAppointment() &&
+    !isNewAppointment()
+  ) {
+    <h3
+      class="text-primary-purple font-medium lg:py-2"
+      [ngClass]="
+        appointmentsAtCurrentDate().length > 0 ? 'text-xl ' : 'text-2xl'
+      "
+    >
+      {{
+        appointmentsAtCurrentDate().length > 0
+          ? "Lista de Citas"
+          : "¡Citas disponibles!"
+      }}
+    </h3>
+  }
   @if (!onEditAppointment() && !isNewAppointment()) {
     @for (appointment of appointmentsAtCurrentDate(); track $index) {
       <div (click)="selectAppointmentBoxIndex($index)">
@@ -82,28 +109,21 @@
     </div>
   </div>
 }
-@if (appointmentsAtCurrentDate().length || isNewAppointment()) {
-  <!-- buttons -->
-  <div class="flex space-x-6 items-center justify-center mt-8 mb-10">
-    <nt-button
-      [isPrimary]="true"
-      [label]="
-        selectedAppointmentBox() !== -1 &&
-        selectedAppointmentBox() < appointmentsAtCurrentDate().length
-          ? 'Modificar'
-          : 'Reservar'
-      "
-      (click)="
-        selectedAppointmentBox() !== -1 &&
-        selectedAppointmentBox() < appointmentsAtCurrentDate().length
-          ? setOnEditAppointment()
-          : setIsNewAppointment(true)
-      "
-      [isLoading]="isResponseLoading()"
-      [isDisabled]="
-        (onEditAppointment() || isNewAppointment()) && isDateTaken()
-      "
-    />
+
+<!-- buttons -->
+<div class="flex space-x-6 items-center justify-center mt-8 mb-10">
+  <nt-button
+    [isPrimary]="true"
+    [label]="getMainButtonLabel()"
+    (click)="getMainButtonOnClick()"
+    [isLoading]="isResponseLoading()"
+    [isDisabled]="shouldDisable()"
+  />
+  @if (
+    appointmentsAtCurrentDate.length > 0 ||
+    onEditAppointment() ||
+    isNewAppointment()
+  ) {
     <button class="text-charcoal" (click)="resetSidePanel()">Cancelar</button>
-  </div>
-}
+  }
+</div>

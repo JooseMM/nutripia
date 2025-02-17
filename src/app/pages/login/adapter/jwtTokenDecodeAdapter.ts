@@ -21,6 +21,7 @@ export const authenticationStateAdapter = (
   token: JwtPayload & rawDecodedToken,
 ): AuthenticationState => {
   return {
+    id: token.sub!,
     email: token.email,
     fullName: token.name,
     isEmailVerified: parseBoolean(token.email_verified),

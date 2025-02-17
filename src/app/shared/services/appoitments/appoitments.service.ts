@@ -55,11 +55,10 @@ export class AppoitmentService {
   }
   updateMonth(updateBy: number): void {
     const newMonth = this.selectedDate().getMonth() + updateBy;
-    const isOperationValid = newMonth > -1 && newMonth < 12;
     /*
      * Dont update is the operation is not valid
      */
-    if (!isOperationValid) {
+    if (newMonth > -1 && newMonth < 12) {
       return;
     }
     const currentDate = this.selectedDate();
@@ -76,17 +75,7 @@ export class AppoitmentService {
   }
   updateHour(updateBy: number): void {
     const selectedDate = this.selectedDate();
-    const current = this.selectedDate();
-    let newHour = current.getHours() + updateBy;
-    /*
-     * get an array of numbers that represents the amount of time
-     * that has pass since the EPOCH to be able to compare dates
-     */
-    const reservedDates: number[] = this.getAppointmentsByMonth(
-      this.appointments(),
-      current.getMonth(),
-    ).map((item) => (item.date as Date).getTime());
-
+    let newHour = selectedDate.getHours() + updateBy;
     /*
      * check if the new hour is between the desire work time
      */
