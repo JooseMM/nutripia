@@ -13,6 +13,9 @@ export class ResponseTrackerService {
   getState() {
     return this.responseState();
   }
+  resetState() {
+    this.setResponseState(false, false);
+  }
   setResponseState(isLoadingState: boolean, isCompleteState: boolean): void {
     this.responseState.set({
       isLoading: isLoadingState,

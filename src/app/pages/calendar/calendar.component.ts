@@ -54,7 +54,7 @@ export class CalendarComponent {
       return 'bg-primary-purple text-white';
     } else if (day.isSelected) {
       // selected box
-      return 'ring ring-inset ring-2 ring-lavender-gray';
+      return 'ring ring-inset ring-2 ring-soft-charcoal';
     } else if (index === length - 1) {
       // last box have no border
       return 'border-none';

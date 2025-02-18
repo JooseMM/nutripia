@@ -20,7 +20,7 @@
           appointmentsAtCurrentDate().length > 0 ? 'text-xl ' : 'text-2xl'
         "
       >
-        Lista de Citas
+        Lista de Reservas
       </h3>
     } @else {
       <div class="mx-auto flex flex-col justify-center w-fit">
@@ -127,14 +127,15 @@
     [isPrimary]="true"
     [label]="getMainButtonLabel()"
     (click)="getMainButtonOnClickHandler()"
-    [isLoading]="isResponseLoading()"
+    [isLoading]="responseState().isLoading"
     [isDisabled]="shouldDisable()"
   />
   @if (
     appointmentsAtCurrentDate.length > 0 ||
     onEditAppointment() ||
-    isNewAppointment()
+    isNewAppointment() ||
+    selectedAppointmentId()
   ) {
-    <button class="text-charcoal" (click)="resetSidePanel()">Cancelar</button>
+    <button class="text-charcoal" (click)="reset()">Cancelar</button>
   }
 </div>

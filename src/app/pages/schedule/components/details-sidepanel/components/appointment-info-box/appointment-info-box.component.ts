@@ -3,9 +3,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
 } from '@angular/core';
-import { MONTH_NAMES } from 'src/app/constants/app-constants';
+import { ADMIN_ROLE, MONTH_NAMES } from 'src/app/constants/app-constants';
+import { AppoitmentService } from 'src/app/shared/services/appoitments/appoitments.service';
+import { AuthenticationService } from 'src/app/shared/services/authentication/authentication.service';
 import Appointment from 'src/models/IAppointment';
 
 @Component({
@@ -16,6 +19,11 @@ import Appointment from 'src/models/IAppointment';
 })
 export class AppointmentInfoBoxComponent {
   /*
+   * dependencies
+   */
+  authService = inject(AuthenticationService);
+  appointmentService = inject(AppoitmentService);
+  /*
    * input fields
    */
   longDate = input<string>();
@@ -24,9 +32,13 @@ export class AppointmentInfoBoxComponent {
   appointment = input<Appointment | null>(null);
   class = input<string>();
   isBoxSelected = input<boolean>();
+  /*
+   * signals
+   */
   isBeingEdited = computed(
     () => this.appointment !== null && this.longDate() && this.time(),
   );
+  currentUser = computed(() => this.authService.getAuthenticationState());
   /*
    * own functions
    */
@@ -36,6 +48,23 @@ export class AppointmentInfoBoxComponent {
     }
     const date = this.appointment()?.date as Date;
     return `${date.getDate()} de ${MONTH_NAMES[date.getMonth()]}`;
+  }
+  isAppointmentOwner() {
+    return this.appointment()?.userId === this.currentUser().id;
+  }
+  isUserAdmin() {
+    return this.currentUser().role === ADMIN_ROLE;
+  }
+  isDateTaken() {
+    const current = this.appointmentService.getSelectedDate().getTime();
+    const appointmentList = this.appointmentService.getAppointments();
+    let match = false;
+    appointmentList.forEach((appointment: Appointment) => {
+      if ((appointment.date as Date).getTime() === current) {
+        match = true;
+      }
+    });
+    return match;
   }
   getAppointmentTime(): string | null {
     if (this.appointment() === null) {

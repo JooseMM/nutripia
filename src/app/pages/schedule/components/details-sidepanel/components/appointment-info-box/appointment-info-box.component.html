@@ -13,7 +13,7 @@
       >{{ getAppointmentLongDate() || longDate() }}</span
     >
     @if (appointment() && longDate()) {
-      <img src="assets/icons/arrow-left-icon.svg" class="mx-4" />
+      <img src="assets/icons/skinny-arrow-left-icon.svg" class="mx-4" />
       <span
         class="text-xl font-semibold tracking-wide p-0 m-0 | lg:flex lg:items-center lg:justify-center"
         >{{ longDate() }}</span
@@ -27,17 +27,37 @@
       >{{ getAppointmentTime() || time() }}
     </span>
     @if (appointment() && longDate()) {
-      <img src="assets/icons/arrow-left-icon.svg" class="mx-4" />
+      <img src="assets/icons/skinny-arrow-left-icon.svg" class="mx-4" />
       <span>{{ time() }}</span>
     } @else {
-      <span class="mx-2">/</span>
-      <span>
-        {{
-          (isOnline() ?? appointment()?.isOnline)
-            ? "Teleconsulta"
-            : "Presencial"
-        }}
-      </span>
+      @if (isUserAdmin() || isAppointmentOwner()) {
+        <span class="mx-2">/</span>
+        <span>
+          {{
+            (isOnline() ?? appointment()?.isOnline)
+              ? "Teleconsulta"
+              : "Presencial"
+          }}
+        </span>
+      } @else if (appointment() || isDateTaken()) {
+        <svg
+          ngClass="w-4 mx-2"
+          viewBox="0 0 46 60"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M8 22.5V15C8 6.71572 14.7157 0 23 0C31.2841 0 38 6.71572 38 15V22.5H45.5V60H0.5V22.5H8ZM15.5 15C15.5 10.8579 18.8579 7.5 23 7.5C27.1421 7.5 30.5 10.8579 30.5 15V22.5H15.5V15ZM19.25 48.75V33.75H26.75V48.75H19.25Z"
+            [attr.fill]="isBoxSelected() ? 'white' : '#5A5A5A'"
+          />
+        </svg>
+        <span> Hora Reservada</span>
+      } @else {
+        <img src="assets/icons/add-icon.svg" class="mx-2 w-5" />
+        <span>Nueva Reserva</span>
+      }
     }
   </div>
 </div>

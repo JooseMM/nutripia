@@ -20,6 +20,7 @@ import { AuthenticationService } from 'src/app/shared/services/authentication/au
 import { ResponseTrackerService } from 'src/app/shared/services/response-tracker/response-tracker.service';
 import { AppointmentInfoBoxComponent } from './components/appointment-info-box/appointment-info-box.component';
 import Appointment from 'src/models/IAppointment';
+import ResponseState from 'src/models/IApiCallState';
 
 @Component({
   selector: 'nt-details-sidepanel',
@@ -59,8 +60,8 @@ export class DetailsSidepanelComponent {
   currentRole: Signal<string> = computed(
     () => this.authenticationService.getAuthenticationState().role,
   );
-  isResponseLoading: Signal<boolean> = computed(
-    () => this.responseTrackerService.getState().isLoading,
+  responseState: Signal<ResponseState> = computed(() =>
+    this.responseTrackerService.getState(),
   );
   onEditAppointment: Signal<Appointment | null> = computed(() =>
     this.appointmentService.getEditedAppointment(),
@@ -82,6 +83,12 @@ export class DetailsSidepanelComponent {
       if (!match) {
         this.selectedAppointmentId.set('');
       }
+      if (
+        this.responseState().isComplete &&
+        (this.onEditAppointment() || this.isNewAppointment())
+      ) {
+        this.reset();
+      }
     });
   }
   getLongDate(day: number, month: number): string {
@@ -101,7 +108,6 @@ export class DetailsSidepanelComponent {
   }
   saveAppointment() {
     this.appointmentService.saveChanges(this.isNewAppointmentOnline());
-    this.appointmentService.startEditingAppointment(null);
   }
   startEditingAppointment() {
     const appointment = this.appointmentsAtCurrentDate().find(
@@ -124,13 +130,20 @@ export class DetailsSidepanelComponent {
     });
     return match;
   }
-  resetSidePanel(): void {
+  reset(): void {
     this.appointmentService.startEditingAppointment(null);
     this.setIsNewAppointment(false);
     this.selectedAppointmentId.set('');
+    this.responseTrackerService.resetState();
   }
   getMainButtonLabel(): string {
-    return this.selectedAppointmentId() ? 'Modificar' : 'Reservar';
+    if (this.selectedAppointmentId()) {
+      return this.onEditAppointment() ? 'Actualizar' : 'Modificar';
+    } else if (this.isNewAppointment()) {
+      return 'Reservar';
+    } else {
+      return 'Nueva Reserva';
+    }
   }
   getMainButtonOnClickHandler(): void {
     if (this.onEditAppointment() || this.isNewAppointment()) {
@@ -156,11 +169,11 @@ export class DetailsSidepanelComponent {
         );
         return currentUserId !== selectedAppointment?.userId;
       }
-      return false;
     }
     if (creatingOrModifying && this.isDateTaken()) {
       return true;
     }
+
     return false;
   }
 }
