@@ -20,44 +20,57 @@
       >
     }
   </div>
-  <div class="flex w-full">
+  <div class="flex w-full justify-between">
     <span
       class="m-0 p-0"
-      [ngClass]="appointment() && longDate() ? 'opacity-70' : ''"
+      [ngClass]="appointment() && longDate() ? 'opacity-80' : ''"
       >{{ getAppointmentTime() || time() }}
     </span>
-    @if (appointment() && longDate()) {
-      <img src="assets/icons/skinny-arrow-left-icon.svg" class="mx-4" />
-      <span>{{ time() }}</span>
-    } @else {
-      @if (isUserAdmin() || isAppointmentOwner()) {
-        <span class="mx-2">/</span>
-        <span>
-          {{
-            (isOnline() ?? appointment()?.isOnline)
-              ? "Teleconsulta"
-              : "Presencial"
-          }}
-        </span>
-      } @else if (appointment() || isDateTaken()) {
-        <svg
-          ngClass="w-4 mx-2"
-          viewBox="0 0 46 60"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M8 22.5V15C8 6.71572 14.7157 0 23 0C31.2841 0 38 6.71572 38 15V22.5H45.5V60H0.5V22.5H8ZM15.5 15C15.5 10.8579 18.8579 7.5 23 7.5C27.1421 7.5 30.5 10.8579 30.5 15V22.5H15.5V15ZM19.25 48.75V33.75H26.75V48.75H19.25Z"
-            [attr.fill]="isBoxSelected() ? 'white' : '#5A5A5A'"
-          />
-        </svg>
-        <span> Hora Reservada</span>
+    <div class="flex">
+      @if (appointment() && longDate()) {
+        <img src="assets/icons/skinny-arrow-left-icon.svg" class="mx-4" />
+        <span>{{ time() }}</span>
       } @else {
-        <img src="assets/icons/add-icon.svg" class="mx-2 w-5" />
-        <span>Nueva Reserva</span>
+        @if (isUserAdmin() || isAppointmentOwner()) {
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 54 57"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19.5 0L15.75 0.9375V3.75H19.5V0ZM19.5 3.75V7.5H15.75V3.75H15.7275C11.0063 3.8025 7.5525 3.6375 4.7325 5.19C3.3225 5.97 2.20125 7.29 1.5825 8.93625C0.9675 10.5787 0.75 12.5362 0.75 15V45C0.75 47.4638 0.9675 49.4175 1.5825 51.0637C2.20125 52.71 3.3225 54.0187 4.7325 54.7987C7.55625 56.355 11.01 56.1938 15.7275 56.25H38.2725C42.99 56.1938 46.44 56.355 49.2638 54.7987C50.7247 53.9702 51.8398 52.6449 52.4062 51.0637C53.025 49.4175 53.25 47.3512 53.25 45V15C53.25 12.5325 53.025 10.5787 52.4062 8.93625C51.8384 7.35399 50.7239 6.02669 49.2638 5.19375C46.44 3.63375 42.99 3.80625 38.2725 3.75H38.25V7.5H34.5V3.75H19.5ZM34.5 3.75H38.25V0L34.5 0.9375V3.75ZM15.7725 18.75H38.25C42.975 18.8025 46.0763 18.975 47.4488 19.7288C48.135 20.1113 48.5325 20.5275 48.8962 21.5025C49.2637 22.4775 49.4962 26.25 49.4962 26.25V45C49.4962 47.22 49.2637 48.7688 48.8962 49.7438C48.5325 50.7188 48.135 51.1387 47.4488 51.5175C46.0763 52.275 42.9712 52.4438 38.25 52.5H15.75C11.025 52.4438 7.92375 52.275 6.5475 51.5175C5.86125 51.1387 5.46375 50.7188 5.1 49.7438C4.7325 48.7688 4.5 47.22 4.5 45V26.25C4.5 24.0263 4.7325 22.4775 5.1 21.5025C5.46375 20.5275 5.86125 20.1113 6.5475 19.7288C7.92375 18.9713 11.0325 18.8025 15.7725 18.75Z"
+              [attr.fill]="isBoxSelected() ? 'white' : '#808080'"
+            />
+          </svg>
+          <span class="ml-2">
+            {{
+              (isOnline() ?? appointment()?.isOnline)
+                ? "Teleconsulta"
+                : "Presencial"
+            }}
+          </span>
+        } @else if (appointment() || isDateTaken()) {
+          <svg
+            ngClass="w-4 mx-2"
+            viewBox="0 0 46 60"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M8 22.5V15C8 6.71572 14.7157 0 23 0C31.2841 0 38 6.71572 38 15V22.5H45.5V60H0.5V22.5H8ZM15.5 15C15.5 10.8579 18.8579 7.5 23 7.5C27.1421 7.5 30.5 10.8579 30.5 15V22.5H15.5V15ZM19.25 48.75V33.75H26.75V48.75H19.25Z"
+              [attr.fill]="isBoxSelected() ? 'white' : '#5A5A5A'"
+            />
+          </svg>
+          <span> Hora Reservada</span>
+        } @else {
+          <img src="assets/icons/add-icon.svg" class="mx-2 w-5" />
+          <span>Disponible</span>
+        }
       }
-    }
+    </div>
   </div>
 </div>
