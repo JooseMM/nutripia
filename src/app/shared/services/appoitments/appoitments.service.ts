@@ -96,13 +96,34 @@ export class AppoitmentService {
     );
     // Date handles hours to wrap around 24, business logic tell us to only have available hours from 9hrs to 20hrs
   }
-  saveAppointment(isAppointmentOnline: boolean): void {
+  saveChanges(isAppointmentOnline: boolean): void {
     // TODO: add user data to the appointment
     const newAppointment: AppointmentDto = {
       isOnline: isAppointmentOnline,
       date: this.selectedDate(),
       userId: this.authenticationState().id,
     };
+    if (this.editedAppointment()) {
+      const updatedAppointment: AppointmentDto = {
+        ...this.editedAppointment(),
+        date: this.selectedDate(),
+        userId: this.editedAppointment()?.userId!,
+        isOnline: isAppointmentOnline,
+      };
+      //for testing
+      setTimeout(
+        () =>
+          this.appointments.update((prev) =>
+            prev.map((appointment) => {
+              if (appointment.id === this.editedAppointment()?.id) {
+                appointment = { ...appointment, ...updatedAppointment };
+              }
+              return appointment;
+            }),
+          ),
+        2000,
+      );
+    }
     // for testing purpose
     this.ResponseTrackerService.setResponseState(true, false);
     setTimeout(() => {

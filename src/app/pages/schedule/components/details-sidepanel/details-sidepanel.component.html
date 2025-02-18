@@ -34,7 +34,10 @@
   }
   @if (!onEditAppointment() && !isNewAppointment()) {
     @for (appointment of appointmentsAtCurrentDate(); track $index) {
-      <div (click)="selectedAppointmentId.set(appointment.id)">
+      <div
+        class="lg:hover:cursor-pointer lg:w-full lg:max-w-96 lg:mx-auto"
+        (click)="selectedAppointmentId.set(appointment.id)"
+      >
         <nt-appointment-info-box
           [appointment]="appointment"
           [isBoxSelected]="selectedAppointmentId() === appointment.id"
@@ -42,13 +45,15 @@
       </div>
     }
   } @else {
-    <nt-appointment-info-box
-      [longDate]="getLongSelectedDate()"
-      [time]="getSelectedDateTime()"
-      [appointment]="onEditAppointment() ?? null"
-      [isBoxSelected]="true"
-      [isOnline]="isNewAppointmentOnline()"
-    />
+    <div class="lg:w-full lg:max-w-96 lg:mx-auto">
+      <nt-appointment-info-box
+        [longDate]="getLongSelectedDate()"
+        [time]="getSelectedDateTime()"
+        [appointment]="onEditAppointment() ?? null"
+        [isBoxSelected]="true"
+        [isOnline]="isNewAppointmentOnline()"
+      />
+    </div>
   }
 </div>
 <!-- Hour selection -->

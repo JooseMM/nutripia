@@ -100,7 +100,8 @@ export class DetailsSidepanelComponent {
     this.isNewAppointmentOnline.set(isOnline);
   }
   saveAppointment() {
-    this.appointmentService.saveAppointment(this.isNewAppointmentOnline());
+    this.appointmentService.saveChanges(this.isNewAppointmentOnline());
+    this.appointmentService.startEditingAppointment(null);
   }
   startEditingAppointment() {
     const appointment = this.appointmentsAtCurrentDate().find(
