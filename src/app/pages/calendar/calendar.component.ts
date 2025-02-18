@@ -14,9 +14,10 @@ import { AppoitmentService } from 'src/app/shared/services/appoitments/appoitmen
 import DayObject from 'src/app/shared/services/appoitments/IDayObject';
 import { NgClass } from '@angular/common';
 import Appointment from 'src/models/IAppointment';
+import { ChangeMonthButtonComponent } from './components/change-month-button/change-month-button.component';
 @Component({
   selector: 'nt-calendar',
-  imports: [NgClass],
+  imports: [NgClass, ChangeMonthButtonComponent],
   templateUrl: './calendar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
