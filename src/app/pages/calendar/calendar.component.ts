@@ -124,13 +124,16 @@ export class CalendarComponent {
       { length: lastDayOfSelectedDays },
       (_, index) => {
         const numberDay = index + 1;
+        const currentAppointments = appointments.filter(
+          (appointments: Appointment) => {
+            return (appointments.date as Date).getDate() === index + 1;
+          },
+        );
         return {
           isSelected: selectedDay === numberDay,
           numberDay: numberDay,
-          appointments: appointments.filter((appointments: Appointment) => {
-            return (appointments.date as Date).getDate() === numberDay;
-          }),
-          isDisabled: appointments.length > 8,
+          appointments: currentAppointments,
+          isDisabled: currentAppointments.length >= 8,
           /*
            * if there is more than 8 appointments in a day
            * new appointments will not be allowed

@@ -173,6 +173,9 @@ export class DetailsSidepanelComponent {
     if (creatingOrModifying && this.isDateTaken()) {
       return true;
     }
+    if (this.appointmentsAtCurrentDate().length >= 8) {
+      return true;
+    }
 
     return false;
   }
