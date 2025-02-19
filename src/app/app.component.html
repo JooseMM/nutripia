@@ -20,7 +20,7 @@
           <a
             class="lg:hover:text-charcoal"
             routerLink="/inicio"
-            routerLinkActive=""
+            routerLinkActive="text-charcoal"
             (click)="toggleMenu()"
             ariaCurrentWhenActive="page"
             >Inicio</a
@@ -50,6 +50,18 @@
             >Sobre Mi</a
           >
         </li>
+        @if (currentUserRole() === ADMIN_ROLE) {
+          <li>
+            <a
+              class="lg:hidden lg:hover:text-charcoal lg:hover:cursor-pointer"
+              routerLink="/administracion/clientes"
+              routerLinkActive="text-charcoal"
+              (click)="toggleMenu()"
+              ariaCurrentWhenActive="page"
+              >Clientes</a
+            >
+          </li>
+        }
       </ul>
     </li>
     <li>
@@ -66,8 +78,8 @@
             <li>
               <nt-button
                 [isPrimary]="true"
-                label="Administrar"
-                href="/administracion/clientes"
+                label="Agenda"
+                href="/administracion/agenda"
               />
             </li>
           }

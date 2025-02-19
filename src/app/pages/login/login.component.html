@@ -16,7 +16,7 @@
     </div>
   </div>
   <form
-    class="flex flex-col w-full max-w-80 | lg:w-small-container lg:max-w-none lg:px-4 lg:items-center lg:py-10 lg:h-full lg:border-l lg:border-l-lavender-gray"
+    class="flex flex-col w-full max-w-[400px] mx-auto | lg:w-small-container lg:max-w-none lg:px-8 lg:items-center lg:py-10 lg:h-full lg:border-l lg:border-l-lavender-gray"
     [formGroup]="form"
     (ngSubmit)="onSubmit()"
   >
@@ -24,7 +24,7 @@
       label="Correo Electronico"
       type="text"
       id="email"
-      class="w-full max-w-72"
+      class="w-full"
       [control]="getFormControl('email')"
       [validationErrorObject]="validationErrorObject.email"
       placeholder="Ejem: pia@ulloa.com"
@@ -33,12 +33,12 @@
       label="Contraseña"
       type="password"
       id="password"
-      class="w-full max-w-72 mt-3"
+      class="w-full mt-3"
       [control]="getFormControl('password')"
       [validationErrorObject]="validationErrorObject.password"
       placeholder="Escribe tu contraseña aca"
     />
-    <a class="w-full max-w-72" href="/">¿Olvidaste tu contraseña?</a>
+    <a class="w-full" href="/">¿Olvidaste tu contraseña?</a>
     <!-- the width and height is fixed to to avoid having layout shift while calling the backend -->
     <nt-button
       [isPrimary]="true"
