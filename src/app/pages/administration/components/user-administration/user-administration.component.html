@@ -1,33 +1,16 @@
 <section class="flex-col flex w-full h-full | lg:flex-row">
   <div
-    class="p-8 grid w-full gap-6 auto-rows-min justify-center items-start lg:grid-cols-2 | lg:w-big-container"
+    class="p-8 grid w-full gap-6 auto-rows-min justify-center items-start | md:grid-cols-2 md:w-fit md:mx-auto | lg:mx-0 lg:w-auto lg:gap-4 lg:p-4 lg:grid-cols-1 min-[1820px]:grid-cols-2 | xl:p-8"
   >
     @for (userId of userIdList(); track $index) {
-      <nt-user-box [userId]="userId" class="h-fit" />
+      <nt-user-box [userId]="userId" class="h-fit w-fit" />
     }
   </div>
   <div
-    class="w-full hidden | lg:block lg:w-small-container lg:h-full lg:border-l lg:border-l-lavender-gray"
+    class="w-full pb-14 pt-8 border-t border-lavender-gray | lg:w-[380px] lg:p-0 lg:h-full lg:border-l lg:border-l-lavender-gray | min-[1380px]:w-[600px]"
   >
     @if (isEditing()) {
-      <nt-user-editing-form />
-    } @else {
-      <svg
-        class="w-full max-w-48 mx-auto mt-44 | lg:block"
-        viewBox="0 0 21 21"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M10.5 8.75C12.433 8.75 14 7.183 14 5.25C14 3.317 12.433 1.75 10.5 1.75C8.567 1.75 7 3.317 7 5.25C7 7.183 8.567 8.75 10.5 8.75Z"
-          stroke="#DDDAE2"
-        />
-        <path
-          d="M17.4978 15.75C17.5 15.6063 17.5 15.4604 17.5 15.3125C17.5 13.1379 14.366 11.375 10.5 11.375C6.634 11.375 3.5 13.1379 3.5 15.3125C3.5 17.4871 3.5 19.25 10.5 19.25C12.4521 19.25 13.8598 19.1129 14.875 18.868"
-          stroke="#DDDAE2"
-          stroke-linecap="round"
-        />
-      </svg>
+      <nt-user-editing-form class="mx-auto w-full" />
     }
   </div>
 </section>

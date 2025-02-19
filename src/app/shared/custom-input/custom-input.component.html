@@ -1,9 +1,14 @@
-<div class="flex flex-col text-left w-full">
-  <label class="font-medium text-primary-purple mb-2 ml-4" for="id()">{{
+<div
+  class="flex flex-col text-left w-full"
+  [ngClass]="
+    type() === 'number' ? 'items-center lg:items-start' : 'items-start'
+  "
+>
+  <label class="font-medium text-primary-purple mb-2 ml-4 w-fit" for="id()">{{
     label()
   }}</label>
   @if (type() === "number") {
-    <div class="flex w-full space-x-4">
+    <div class="flex w-full space-x-4 justify-center | lg:justify-start">
       <nt-button
         [isPrimary]="true"
         class="h-[42px] w-16 lg:p-0 items-center text-2xl | lg:text-3xl"

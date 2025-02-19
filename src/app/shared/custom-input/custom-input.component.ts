@@ -1,17 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  inject,
-  input,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, inject, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../button/button.component';
 import { ValidationError } from 'src/models/IValidationError';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'nt-custom-input',
-  imports: [ReactiveFormsModule, ButtonComponent],
+  imports: [ReactiveFormsModule, NgClass, ButtonComponent],
   templateUrl: './custom-input.component.html',
 })
 export class CustomInputComponent {

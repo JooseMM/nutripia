@@ -11,10 +11,11 @@ import {
 import { PaymentSwitcherComponent } from '../../payment-switcher/payment-switcher.component';
 import { UserAdministrationService } from '../services/user-administration.service';
 import User from 'src/models/IUser';
+import { ButtonComponent } from '../../../../../shared/button/button.component';
 
 @Component({
   selector: 'nt-user-box',
-  imports: [NgClass, PaymentSwitcherComponent],
+  imports: [NgClass, PaymentSwitcherComponent, ButtonComponent],
   templateUrl: './user-box.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -39,7 +40,7 @@ export class UserBoxComponent {
       'bg-primary-purple border-charcoal': this.user()!.hasPaid,
       'border-red-dark bg-red': !this.user()!.hasPaid,
       'h-20 py-[0.75rem] px-6': !this.isBoxOpen(),
-      'h-auto px-5 pt-1 pb-5': this.isBoxOpen(),
+      'h-auto flex-col px-5 pt-1 pb-5 | lg:block': this.isBoxOpen(),
     };
   }
   getUserAge() {
