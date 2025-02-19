@@ -1,18 +1,45 @@
 <button
   (click)="toggleHadPaid()"
-  class="w-40 h-12 px-1.5 background-switcher flex items-center border rounded-full | lg:hover:cursor-pointer"
+  class="h-12 w-28 px-1.5 background-switcher flex items-center border rounded-full | lg:w-40 lg:hover:cursor-pointer"
   [ngClass]="
     userPaid() ? 'bg-[#A396BA] border-white' : 'bg-[#9A5761] border-[#703C43]'
   "
 >
   <div
-    class="font-medium h-9 bg-white transition-all duration-300 flex w-24 justify-center items-center px-6 rounded-full border"
+    class="font-medium w-[55] h-9 bg-white transition-all duration-300 flex justify-center px-4 items-center rounded-full border | lg:w-24 lg:px-6"
     [ngClass]="
       userPaid()
         ? 'text-primary-purple border-[#413232] translate-x-0'
-        : 'text-red border-[#59262E] translate-x-[49px]'
+        : 'text-red border-[#59262E] translate-x-11 | lg:translate-x-[49px]'
     "
   >
-    <span>{{ userPaid() ? "Ok" : "Demora" }}</span>
+    <span class="hidden">{{ userPaid() ? "Ok" : "Demora" }}</span>
+    @if (userPaid()) {
+      <svg
+        class="stroke-primary-purple w-5 h-auto"
+        viewBox="0 0 21 17"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M2 10.7662L6.69561 14.2878C7.33314 14.766 8.23624 14.645 8.72554 14.0161L18.0713 2"
+          stroke-width="4"
+          stroke-linecap="round"
+        />
+      </svg>
+    } @else {
+      <svg
+        class="stroke-red fill-red w-5 h-auto"
+        viewBox="0 0 13 13"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M8.17329 5.83743L7.51043 6.50032L8.17329 7.16322L11.9481 10.9382L10.9383 11.948L7.16288 8.17306L6.5 7.51026L5.83713 8.17306L2.06199 11.9478L1.05198 10.9382L4.8273 7.16328L5.49027 6.50038L4.82736 5.83743L1.05201 2.06189L2.06257 1.05222L5.83702 4.82748L6.49995 5.49055L7.16293 4.82753L10.9383 1.05202L11.9481 2.06241L8.17329 5.83743ZM2.25782 12.1435L2.25763 12.1433C2.25774 12.1434 2.25786 12.1435 2.25797 12.1437L2.25782 12.1435ZM2.25862 0.856343C2.25852 0.856445 2.25842 0.856548 2.25831 0.856651L2.25862 0.856343Z"
+          fill="#925B64"
+          stroke-width="1.875"
+        />
+      </svg>
+    }
   </div>
 </button>

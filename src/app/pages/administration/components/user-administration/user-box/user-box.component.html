@@ -1,6 +1,6 @@
 <div
   (dblclick)="toggleExpandableBox()"
-  class="rounded-xl transition-all duration-300 ease-in-out cursor-pointer text-white border w-[500px]"
+  class="rounded-xl transition-all flex duration-300 ease-in-out cursor-pointer text-white border w-[300px] | lg:block lg:w-[500px]"
   [ngClass]="getStyles()"
 >
   @if (this.isBoxOpen()) {
@@ -50,23 +50,22 @@
       </ul>
     </div>
   } @else {
-    <div>
-      <ul class="flex items-center justify-between">
-        <li class="flex flex-col">
-          <span class="text-lg font-bold tracking-wide"
-            >{{ user()!.fullName }}
-          </span>
-          <div class="flex flex-row space-x-3 items-center opacity-85">
-            <img src="assets/icons/dollar-icon.svg" width="20" height="20" />
-            <span>{{
-              user()!.hasPaid ? "Pago al dia" : "Pago con demora"
-            }}</span>
-          </div>
-        </li>
-        <li>
-          <nt-payment-switcher [userId]="userId()" />
-        </li>
-      </ul>
-    </div>
+    <ul class="flex w-full items-center justify-between">
+      <li class="flex flex-col justify-center">
+        <span class="text-base font-bold tracking-wide | lg:text-lg"
+          >{{ user()!.fullName }}
+        </span>
+        <div class="flex flex-row space-x-3 items-center opacity-85">
+          <img src="assets/icons/dollar-icon.svg" width="20" height="20" />
+          <span class="hidden | lg:block">{{
+            user()!.hasPaid ? "Pago al dia" : "Pago con demora"
+          }}</span>
+          <span class="lg:hidden">{{ user()!.hasPaid ? "Ok" : "Demora" }}</span>
+        </div>
+      </li>
+      <li>
+        <nt-payment-switcher [userId]="userId()" />
+      </li>
+    </ul>
   }
 </div>

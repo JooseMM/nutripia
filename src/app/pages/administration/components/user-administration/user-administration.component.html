@@ -1,4 +1,4 @@
-<section class="flex w-full h-full">
+<section class="flex-col flex w-full h-full | lg:flex-row">
   <div
     class="p-8 grid w-full gap-6 auto-rows-min justify-center items-start lg:grid-cols-2 | lg:w-big-container"
   >
@@ -7,13 +7,13 @@
     }
   </div>
   <div
-    class="w-full | lg:w-small-container lg:h-full lg:border-l lg:border-l-lavender-gray"
+    class="w-full hidden | lg:block lg:w-small-container lg:h-full lg:border-l lg:border-l-lavender-gray"
   >
     @if (isEditing()) {
       <nt-user-editing-form />
     } @else {
       <svg
-        class="w-full max-w-48 mx-auto mt-44"
+        class="w-full max-w-48 mx-auto mt-44 | lg:block"
         viewBox="0 0 21 21"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
