@@ -4,8 +4,8 @@
     appointmentsAtCurrentDate().length > 0 ||
     onEditAppointment() ||
     isNewAppointment()
-      ? 'mt-16'
-      : 'mt-28'
+      ? 'mt-10'
+      : 'mt-36'
   "
 >
   @if (
@@ -23,13 +23,10 @@
         Lista de Reservas
       </h3>
     } @else {
-      <div class="mx-auto flex flex-col justify-center w-fit">
-        <img src="assets/icons/free-dates-icon.svg" class="max-w-48 mx-auto" />
-        <span
-          class="text-3xl tracking-wide text-center text-[#E6E6E6] mt-4 font-bold"
-          >¡Citas disponibles!</span
-        >
-      </div>
+      <img
+        src="assets/icons/free-dates-icon.svg"
+        class="w-full max-w-60 mx-auto"
+      />
     }
   }
   @if (!onEditAppointment() && !isNewAppointment()) {

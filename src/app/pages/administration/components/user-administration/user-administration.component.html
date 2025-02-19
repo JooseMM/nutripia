@@ -1,6 +1,6 @@
-<article class="flex h-full">
+<section class="flex w-full h-full">
   <div
-    class="p-8 grid gap-6 auto-rows-min justify-center items-start lg:grid-cols-2"
+    class="p-8 grid w-full gap-6 auto-rows-min justify-center items-start lg:grid-cols-2 | lg:w-big-container"
   >
     @for (userId of userIdList(); track $index) {
       <nt-user-box [userId]="userId" class="h-fit" />
@@ -30,4 +30,4 @@
       </svg>
     }
   </div>
-</article>
+</section>

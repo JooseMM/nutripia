@@ -5,37 +5,59 @@ import {
   computed,
   inject,
   Signal,
-  signal,
-  WritableSignal,
 } from '@angular/core';
-import { PRIMARY_HEX } from 'src/app/constants/app-constants';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ADMIN_ROLE } from 'src/app/constants/app-constants';
 import { UserAdministrationService } from './components/user-administration/services/user-administration.service';
-import { UserAdministrationComponent } from './components/user-administration/user-administration.component';
 import User from 'src/models/IUser';
-import { ScheduleComponent } from '../schedule/schedule.component';
+import { AuthenticationService } from 'src/app/shared/services/authentication/authentication.service';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+  NavigationEnd,
+} from '@angular/router';
+import { ScheduleSidebarIconComponent } from './components/schedule-sidebar-icon/schedule-sidebar-icon.component';
+import { UserAdministrationIconComponent } from './components/user-administration-icon/user-administration-icon.component';
 
 @Component({
   selector: 'nt-administration',
-  imports: [NgClass, UserAdministrationComponent, ScheduleComponent],
+  imports: [
+    NgClass,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    ScheduleSidebarIconComponent,
+    UserAdministrationIconComponent,
+  ],
   templateUrl: './administration.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdministrationComponent {
+  authService = inject(AuthenticationService);
+  userAdminService = inject(UserAdministrationService);
+  routerService = inject(Router);
+  isCurrentUserAdmin = computed(
+    () => this.authService.getAuthenticationState().role === ADMIN_ROLE,
+  );
   selectedStyles: string =
     'bg-primary-purple text-white border-b border-charcoal';
-  inClientSection: WritableSignal<boolean> = signal(true);
-  purple = PRIMARY_HEX;
-  userAdminService = inject(UserAdministrationService);
   unsaveChanges: Signal<boolean> = computed(
     () =>
       !!this.userAdminService
         .getAllUsers()
         .find((user: User) => user.markedForChange),
   );
+  onRouterChange = toSignal(this.routerService.events);
+  isScheduleRouteActive: Signal<boolean> = computed(() => {
+    if (this.onRouterChange() instanceof NavigationEnd) {
+      return (this.onRouterChange() as NavigationEnd).url.includes('agenda');
+    } else {
+      return false;
+    }
+  });
 
-  setClientSection(inClient: boolean) {
-    this.inClientSection.set(inClient);
-  }
   saveChanges() {
     this.userAdminService.saveChanges();
   }

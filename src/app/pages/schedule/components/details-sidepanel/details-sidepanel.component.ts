@@ -142,7 +142,7 @@ export class DetailsSidepanelComponent {
     } else if (this.isNewAppointment()) {
       return 'Reservar';
     } else {
-      return 'Nueva Reserva';
+      return '¡Reserva tu cita!';
     }
   }
   getMainButtonOnClickHandler(): void {

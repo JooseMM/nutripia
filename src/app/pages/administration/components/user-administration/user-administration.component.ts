@@ -6,7 +6,6 @@ import {
   Signal,
 } from '@angular/core';
 import { UserBoxComponent } from './user-box/user-box.component';
-import { NgClass } from '@angular/common';
 import { UserAdministrationService } from './services/user-administration.service';
 import { UserEditingFormComponent } from './user-editing-form/user-editing-form.component';
 
