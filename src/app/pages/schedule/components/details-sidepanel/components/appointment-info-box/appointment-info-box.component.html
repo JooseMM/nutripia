@@ -6,21 +6,31 @@
       : 'bg-white text-soft-charcoal'
   "
 >
-  <div class="w-full flex">
+  <div
+    class="w-full flex mx-auto"
+    [ngClass]="appointment() && longDate() ? 'w-fit lg:w-full' : 'w-full'"
+  >
     <span
-      class="text-xl font-semibold tracking-wide p-0 m-0 | lg:flex lg:items-center lg:justify-center"
-      [ngClass]="appointment() && longDate() ? 'opacity-70' : ''"
+      class="text-left font-semibold tracking-wide p-0 m-0 | lg:text-xl lg:flex lg:items-center lg:justify-center"
+      [ngClass]="
+        appointment() && longDate() ? 'opacity-70 text-base' : 'text-lg'
+      "
       >{{ getAppointmentLongDate() || longDate() }}</span
     >
     @if (appointment() && longDate()) {
       <img src="assets/icons/skinny-arrow-left-icon.svg" class="mx-4" />
       <span
-        class="text-xl font-semibold tracking-wide p-0 m-0 | lg:flex lg:items-center lg:justify-center"
+        class="text-right text-base font-semibold tracking-wide p-0 m-0 | lg:text-xl lg:flex lg:items-center lg:justify-center"
         >{{ longDate() }}</span
       >
     }
   </div>
-  <div class="flex w-full justify-between">
+  <div
+    class="flex w-full mx-auto"
+    [ngClass]="
+      appointment() && longDate() ? 'w-fit lg:w-full' : 'justify-between w-full'
+    "
+  >
     <span
       class="m-0 p-0"
       [ngClass]="appointment() && longDate() ? 'opacity-80' : ''"
@@ -31,7 +41,7 @@
         <img src="assets/icons/skinny-arrow-left-icon.svg" class="mx-4" />
         <span>{{ time() }}</span>
       } @else {
-        @if (isUserAdmin() || isAppointmentOwner()) {
+        @if (isAppointmentOwner()) {
           <svg
             width="20"
             height="20"
@@ -53,7 +63,7 @@
           </span>
         } @else if (appointment() || isDateTaken()) {
           <svg
-            ngClass="w-4 mx-2"
+            class="w-4 mx-2"
             viewBox="0 0 46 60"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

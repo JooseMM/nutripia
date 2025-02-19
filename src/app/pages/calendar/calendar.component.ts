@@ -48,28 +48,28 @@ export class CalendarComponent {
   getBoxDayClass(index: number, day: DayObject, length: number) {
     if (day.appointments.length > 0 && day.isSelected) {
       // box with appointments and selected
-      return 'bg-primary-purple text-white ring ring-inset ring-4 ring-[#6C6180]';
+      return 'bg-primary-purple text-white ring ring-inset ring-3 ring-[#6C6180]';
     } else if (day.appointments.length > 0) {
       // box with appointments
-      return 'bg-primary-purple text-white';
+      return 'bg-primary-purple text-white ring ring-1 ring-inset ring-soft-charcoal | sm:"ring-none';
     } else if (day.isSelected) {
       // selected box
-      return 'ring ring-inset ring-2 ring-soft-charcoal';
+      return 'ring ring-inset ring-1 ring-primary-purple sm:ring-soft-charcoal';
     } else if (index === length - 1) {
       // last box have no border
       return 'border-none';
     } else if (index > length - 8 && index < length - 1) {
       // last 6 boxes not counting the very last
-      return 'border-r';
+      return 'sm:border-r';
     } else if (index < 6) {
       // first boxes
-      return 'border-r border-b';
+      return 'sm:border-r sm:border-b';
     } else if ([6, 13, 20, 27, 34, 41].includes(index)) {
       // last column only
-      return 'border-b';
+      return 'sm:border-b';
     } else {
       // default box
-      return 'border-r border-b';
+      return 'sm:border-r sm:border-b';
     }
   }
   newDaySelected(day: number) {

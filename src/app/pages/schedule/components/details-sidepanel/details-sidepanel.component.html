@@ -1,11 +1,11 @@
 <div
-  class="hidden text-center | lg:space-y-3 lg:block"
+  class="text-center px-6 space-y-4 | lg:space-y-3 lg:px-0 lg:block"
   [ngClass]="
     appointmentsAtCurrentDate().length > 0 ||
     onEditAppointment() ||
     isNewAppointment()
       ? 'mt-10'
-      : 'mt-36'
+      : 'mt-0 | lg:mt-36'
   "
 >
   @if (
@@ -15,7 +15,7 @@
   ) {
     @if (appointmentsAtCurrentDate().length > 0) {
       <h3
-        class="text-primary-purple font-medium lg:py-2"
+        class="text-primary-purple font-medium my-4 lg:my-2"
         [ngClass]="
           appointmentsAtCurrentDate().length > 0 ? 'text-xl ' : 'text-2xl'
         "
@@ -25,14 +25,14 @@
     } @else {
       <img
         src="assets/icons/free-dates-icon.svg"
-        class="w-full max-w-60 mx-auto"
+        class="hidden w-full max-w-60 mx-auto | lg:block"
       />
     }
   }
   @if (!onEditAppointment() && !isNewAppointment()) {
     @for (appointment of appointmentsAtCurrentDate(); track $index) {
       <div
-        class="lg:hover:cursor-pointer lg:w-full lg:max-w-96 lg:mx-auto"
+        class="w-full max-w-96 mx-auto | lg:hover:cursor-pointer"
         (click)="selectedAppointmentId.set(appointment.id)"
       >
         <nt-appointment-info-box
@@ -42,7 +42,7 @@
       </div>
     }
   } @else {
-    <div class="lg:w-full lg:max-w-96 lg:mx-auto">
+    <div class="w-full max-w-96 mx-auto">
       <nt-appointment-info-box
         [longDate]="getLongSelectedDate()"
         [time]="getSelectedDateTime()"

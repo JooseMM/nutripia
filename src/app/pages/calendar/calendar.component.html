@@ -48,7 +48,7 @@
   >
     @for (day of daysOfTheMonth(); track $index) {
       <li
-        class="w-full text-primary-purple pr-2 pb-1 h-[70px] | sm:border-lavender-gray sm:flex sm:items-end sm:justify-end sm:text-right lg:hover:cursor-pointer"
+        class="w-full rounded-md text-primary-purple h-[65px] pt-1 | sm:h-[70px] sm:pt-0 sm:pr-2 sm:pb-1 sm:rounded-none sm:border-lavender-gray sm:flex sm:items-end sm:justify-end sm:text-right lg:hover:cursor-pointer"
         (click)="day.isDisabled ? null : newDaySelected(day.numberDay)"
         [ngClass]="getBoxDayClass($index, day, daysOfTheMonth().length)"
       >
