@@ -5,10 +5,7 @@ import {
   computed,
   effect,
   inject,
-  OnDestroy,
-  OnInit,
   Signal,
-  WritableSignal,
 } from '@angular/core';
 import {
   FormControl,
@@ -18,29 +15,20 @@ import {
 } from '@angular/forms';
 import { ButtonComponent } from '../../shared/button/button.component';
 import { AuthenticationService } from '../../shared/services/authentication/authentication.service';
-import { LogoComponent } from '../../shared/logo/logo.component';
-import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative-icon.component';
 import { Router } from '@angular/router';
 import { CustomInputComponent } from '../../shared/custom-input/custom-input.component';
 import { validationError } from './validators';
 import { letterSpaceSymbolsAndNumbers } from 'src/app/constants/app-constants';
-import { finalize, Subscription } from 'rxjs';
 import AuthenticationState from 'src/models/IAuthenticationState';
 import { ResponseTrackerService } from 'src/app/shared/services/response-tracker/response-tracker.service';
 
 @Component({
   selector: 'nt-login',
-  imports: [
-    ReactiveFormsModule,
-    ButtonComponent,
-    LogoComponent,
-    DecorativeIconComponent,
-    CustomInputComponent,
-  ],
+  imports: [ReactiveFormsModule, ButtonComponent, CustomInputComponent],
   templateUrl: './login.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
-  private cdr = inject(ChangeDetectorRef);
   validationErrorObject = validationError;
   router = inject(Router);
   authService = inject(AuthenticationService);
@@ -76,7 +64,7 @@ export class LoginComponent {
           break;
         case '':
           if (this.authenticationState().role !== '') {
-            this.router.navigate(['/']);
+            this.router.navigate(['/administracion/agenda']);
           }
           break;
       }

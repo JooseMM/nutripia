@@ -5,6 +5,6 @@ export default interface NewClient {
   yearOfBirth: number;
   phoneNumber: string;
   email: string;
-  previousDiagnostics: string;
+  previousDiagnostic: string;
   goals: string;
 }

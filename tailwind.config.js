@@ -31,6 +31,8 @@ module.exports = {
       backgroundImage: {
         "check-icon": "url('assets/icons/check-icon.svg')",
         "uncheck-icon": "url('assets/icons/uncheck-icon.svg')",
+        "login-image": "url('assets/images/login-bg.png')",
+        "register-image": "url('assets/images/register-bg.png')",
       },
     },
   },

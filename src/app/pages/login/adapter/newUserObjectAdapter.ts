@@ -20,7 +20,7 @@ export const newUserObjectAdapter = (rawForm: RawFormType): NewClient => {
     rut: rawForm.rut,
     phoneNumber: rawForm.phoneNumber,
     password: rawForm.passwordGroup.password,
-    previousDiagnostics: rawForm.previousDiagnostics,
+    previousDiagnostic: rawForm.previousDiagnostics,
     goals: rawForm.goals,
   };
 };

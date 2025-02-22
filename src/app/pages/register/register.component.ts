@@ -1,6 +1,4 @@
-import { Component, computed, inject, signal, Signal } from '@angular/core';
-import { LogoComponent } from '../../shared/logo/logo.component';
-import { DecorativeIconComponent } from '../../shared/decorative-icon/decorative-icon.component';
+import { Component, inject, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,7 +6,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthenticationService } from '../../shared/services/authentication/authentication.service';
-import ApiConnectionState from 'src/models/IApiCallState';
 import { Router } from '@angular/router';
 import { ButtonComponent } from 'src/app/shared/button/button.component';
 import { CustomInputComponent } from '../../shared/custom-input/custom-input.component';
@@ -23,13 +20,7 @@ import NewClient from 'src/models/INewClient';
 
 @Component({
   selector: 'nt-register',
-  imports: [
-    ReactiveFormsModule,
-    ButtonComponent,
-    LogoComponent,
-    DecorativeIconComponent,
-    CustomInputComponent,
-  ],
+  imports: [ReactiveFormsModule, ButtonComponent, CustomInputComponent],
   templateUrl: './register.component.html',
 })
 export class RegisterComponent {
@@ -76,7 +67,9 @@ export class RegisterComponent {
       .pipe(finalize(() => this.httpResponseIsLoading.set(false)))
       .subscribe({
         next: (response) => {
-          console.log(response);
+          if (response.isSuccess) {
+            this.router.navigate(['/pre-confirmacion']);
+          }
         },
         error: (rawResponse) => {
           const response = rawResponse.error as ApiResponse;
@@ -97,6 +90,7 @@ export class RegisterComponent {
               // TODO: add all other feedback for the api response
               break;
           }
+          console.log(response);
         },
       });
   }

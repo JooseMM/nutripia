@@ -1,0 +1,18 @@
+<section class="h-[80dvh] flex flex-col items-center py-20">
+  <h1 class="text-5xl text-primary-purple font-black">¡Casi terminamos!</h1>
+  <p class="max-w-[450px] text-2xl my-5 text-center text-[#313131]">
+    Para completar el registro de tu usuario haz clic en el enlace de abajo
+  </p>
+  @if (result() === null) {
+    <nt-button
+      [isPrimary]="true"
+      label="Confirmar Correo"
+      (click)="tryToConfirmEmail()"
+      [isLoading]="isLoading()"
+    />
+  } @else {
+    <h2 class="text-4xl font-black text-[#313131] mt-2">
+      ¡Confirmación Exitosa!
+    </h2>
+  }
+</section>

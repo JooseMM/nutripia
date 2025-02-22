@@ -1,22 +1,11 @@
 <section
-  class="flex flex-col text-primary-purple px-mobile-padding items-center h-dvh py-8 | lg:px-0 lg:h-[800px] lg:items-start lg:flex-row lg:py-0"
+  class="flex flex-col text-primary-purple px-mobile-padding items-center h-dvh py-8 | lg:px-0 lg:h-[91dvh] lg:items-start lg:flex-row lg:py-0"
 >
   <div
-    class="hidden | lg:flex flex-col space-y-8 items-center h-full w-big-container mt-52"
-  >
-    <nt-logo class="lg:text-6xl" />
-    <div class="flex space-x-8">
-      <nt-decorative-icon type="fish" color="#D6D6D6" />
-      <nt-decorative-icon type="chicken" color="#D6D6D6" />
-      <nt-decorative-icon type="banana" color="#D6D6D6" />
-      <nt-decorative-icon type="apple" color="#D6D6D6" />
-      <nt-decorative-icon type="brocoli" color="#D6D6D6" />
-      <nt-decorative-icon type="banana" color="#D6D6D6" />
-      <nt-decorative-icon type="fish" color="#D6D6D6" />
-    </div>
-  </div>
+    class="hidden | lg:flex flex-col h-[80dvh] rounded-2xl m-10 bg-login-image bg-cover bg-no-repeat bg-center items-center justify-center overflow-hidden p-8 w-big-container"
+  ></div>
   <form
-    class="flex flex-col w-full max-w-[400px] mx-auto | lg:w-small-container lg:max-w-none lg:px-8 lg:items-center lg:py-10 lg:h-full lg:border-l lg:border-l-lavender-gray"
+    class="flex flex-col w-full max-w-[400px] mx-auto | lg:h-full lg:w-small-container lg:max-w-none lg:px-8 lg:items-center lg:py-10 lg:border-l lg:border-l-lavender-gray"
     [formGroup]="form"
     (ngSubmit)="onSubmit()"
   >

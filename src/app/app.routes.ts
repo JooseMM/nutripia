@@ -8,6 +8,8 @@ import { unknowUserGuard } from './guards/unknow-user.guard';
 import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { UserAdministrationComponent } from './pages/administration/components/user-administration/user-administration.component';
 import { clientOrAdminGuard } from './guards/client-or-admin.guard';
+import { EmailConfirmationPageComponent } from './pages/email-confirmation-page/email-confirmation-page.component';
+import { BeforeConfirmationComponent } from './pages/before-confirmation/before-confirmation.component';
 
 export const routes: Routes = [
   { path: 'inicio', component: HomePage },
@@ -33,6 +35,14 @@ export const routes: Routes = [
         canActivate: [adminGuard],
       },
     ],
+  },
+  {
+    path: 'confirmacion/:userId/:token',
+    component: EmailConfirmationPageComponent,
+  },
+  {
+    path: 'pre-confirmacion',
+    component: BeforeConfirmationComponent,
   },
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
 ];

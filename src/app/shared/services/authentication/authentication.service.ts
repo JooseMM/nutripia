@@ -14,6 +14,7 @@ import { ApiResponseErrorAdapter } from 'src/app/pages/login/adapter/ApiResponse
 import { jwtDecodeToken } from 'src/app/pages/login/adapter/jwtTokenDecodeAdapter';
 import NewClient from 'src/models/INewClient';
 import { ResponseTrackerService } from '../response-tracker/response-tracker.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,6 @@ export class AuthenticationService {
   private apiUrl = ` ${API_URL}/auth`;
   private http = inject(HttpClient);
   private responseTrackerService = inject(ResponseTrackerService);
-  // behavior subject for the authentication state
   private authenticationState: WritableSignal<AuthenticationState> =
     signal(checkExistingToken());
 
@@ -82,7 +82,13 @@ export class AuthenticationService {
       });
   }
   register(newUser: NewClient) {
-    return this.http.post<ApiResponse>(`${this.apiUrl}/register`, newUser);
+    return this.http
+      .post<ApiResponse>(`${this.apiUrl}/register`, newUser)
+      .pipe(
+        finalize(() =>
+          this.responseTrackerService.setResponseState(true, false),
+        ),
+      );
   }
   logout() {
     localStorage.removeItem(AUTH_TOKEN_NAME);

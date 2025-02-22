@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   inject,
+  OnInit,
   Signal,
 } from '@angular/core';
 import {
@@ -43,6 +44,7 @@ export class AppComponent {
   cdr = inject(ChangeDetectorRef);
   router = inject(Router);
   scrollApi = inject(ViewportScroller);
+  test = inject(AuthenticationService);
   authenticationService = inject(AuthenticationService);
   title = 'nutripia-app';
   protected isMenuOpen = false;
