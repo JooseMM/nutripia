@@ -29,30 +29,6 @@ export class UserAdministrationService {
   setOnEditingUserId(newUserId: string | null): void {
     this.onEditingUserId.set(newUserId);
   }
-  TryToConfirmEmail(userId: string, token: string): boolean {
-    // decode both params
-    const requestBody = {
-      userId: decodeURIComponent(userId),
-      confirmationToken: decodeURIComponent(token),
-    };
-    let isEmailConfirmed = false;
-    this.responseTrackerService.setResponseState(true, false);
-    this.http
-      .post<ApiResponse>(this.URL, requestBody)
-      .pipe(
-        finalize(() =>
-          this.responseTrackerService.setResponseState(false, true),
-        ),
-      )
-      .subscribe({
-        next: (response: ApiResponse) => {
-          if (response.isSuccess) {
-            isEmailConfirmed = true;
-          }
-        },
-      });
-    return isEmailConfirmed;
-  }
   updateUser(newUserData: User): void {
     this.usersArray.update((prev) => {
       return prev.map((user: User) => {

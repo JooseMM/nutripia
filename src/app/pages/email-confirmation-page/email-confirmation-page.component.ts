@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonComponent } from '../../shared/button/button.component';
-import { UserAdministrationService } from '../administration/components/user-administration/services/user-administration.service';
 import { ResponseTrackerService } from 'src/app/shared/services/response-tracker/response-tracker.service';
+import { AuthenticationService } from 'src/app/shared/services/authentication/authentication.service';
 
 @Component({
   selector: 'nt-email-confirmation-page',
@@ -20,7 +20,7 @@ import { ResponseTrackerService } from 'src/app/shared/services/response-tracker
 export class EmailConfirmationPageComponent {
   activedRouter = inject(ActivatedRoute);
   router = inject(Router);
-  UserAdminService = inject(UserAdministrationService);
+  authService = inject(AuthenticationService);
   ResponeTrackingService = inject(ResponseTrackerService);
   result: WritableSignal<boolean | null> = signal(null);
   isLoading = computed(() => this.ResponeTrackingService.getState().isLoading);
@@ -34,11 +34,11 @@ export class EmailConfirmationPageComponent {
       return this.result.set(false);
     }
     // if operation succed return true otherwise false
-    isEmailConfirmed = this.UserAdminService.TryToConfirmEmail(userId, token);
+    isEmailConfirmed = this.authService.TryToConfirmEmail(userId, token);
     this.result.set(isEmailConfirmed);
     // give 2 seconds to redirect
     setTimeout(() => {
       this.router.navigate(['/administracion/agenda']);
-    }, 2000);
+    }, 1000);
   }
 }
