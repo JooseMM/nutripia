@@ -8,6 +8,6 @@ export interface ValidationErrorObject {
   passwordConfirm: ValidationError[];
   yearOfBirth: ValidationError[];
   phoneNumber: ValidationError[];
-  previousDiagnostics: ValidationError[];
-  goals: ValidationError[];
+  previousDiagnostic: ValidationError[];
+  goal: ValidationError[];
 }

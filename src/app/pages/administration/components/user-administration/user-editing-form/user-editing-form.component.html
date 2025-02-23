@@ -51,19 +51,19 @@
   <nt-custom-input
     label="Diagnosticos Previos"
     type="text"
-    [control]="getFormControl('previousDiagnostics')"
-    id="previousDiagnostics"
+    [control]="getFormControl('previousDiagnostic')"
+    id="previousDiagnostic"
     class="w-full mt-3"
-    [validationErrorObject]="validationErrorObject.previousDiagnostics"
+    [validationErrorObject]="validationErrorObject.previousDiagnostic"
     placeholder="Ejem: Diabetes, Hipertension"
   />
   <nt-custom-input
     label="Metas"
     type="text"
-    [control]="getFormControl('goals')"
-    id="goals"
+    [control]="getFormControl('goal')"
+    id="goal"
     class="w-full mt-3"
-    [validationErrorObject]="validationErrorObject.goals"
+    [validationErrorObject]="validationErrorObject.goal"
     placeholder="Ejem: Perder 6kg de manera controlada"
   />
   <!-- the width and height is fixed to to avoid having layout shift while calling the backend -->

@@ -17,7 +17,11 @@ import { ValidationErrorObject } from 'src/models/IValidationErrorObject';
  * Validators for the Register Input
  */
 export const registerBusinessLogicValidators: RegisterValidatorsArray = {
-  fullName: [Validators.required, Validators.pattern(letterAndSpacesPattern)],
+  fullName: [
+    Validators.required,
+    Validators.pattern(letterAndSpacesPattern),
+    Validators.maxLength(30),
+  ],
   email: [Validators.required, Validators.email],
   rut: [Validators.required, Validators.pattern(chileanRutValidator)],
   yearOfBirth: [
@@ -35,8 +39,14 @@ export const registerBusinessLogicValidators: RegisterValidatorsArray = {
     Validators.minLength(9),
     Validators.maxLength(15),
   ],
-  previousDiagnostics: [Validators.pattern(letterSpaceAndSymbols)],
-  goals: [Validators.pattern(letterSpaceSymbolsAndNumbers)],
+  previousDiagnostic: [
+    Validators.pattern(letterSpaceAndSymbols),
+    Validators.maxLength(30),
+  ],
+  goal: [
+    Validators.pattern(letterSpaceSymbolsAndNumbers),
+    Validators.maxLength(30),
+  ],
 };
 
 /*
@@ -48,6 +58,10 @@ export const validationError: ValidationErrorObject = {
     {
       errorName: 'pattern',
       output: 'El nombre solo debe contener letras y espacios',
+    },
+    {
+      errorName: 'maxlength',
+      output: 'El nombre no puede contener mas de 30 caracteres',
     },
   ],
   email: [
@@ -101,18 +115,26 @@ export const validationError: ValidationErrorObject = {
       output: 'El numero telefonico debe contener al menos 9 digitos',
     },
   ],
-  previousDiagnostics: [
+  previousDiagnostic: [
     {
       errorName: 'pattern',
       output:
         'Los diagnosticos solo pueden contener palabras, espacios y signos de puntuacion',
     },
+    {
+      errorName: 'maxlength',
+      output: 'El diagnostico no puede contener mas de 30 caracteres',
+    },
   ],
-  goals: [
+  goal: [
     {
       errorName: 'pattern',
       output:
         'Las metas solo debe incluir palabras, numeros o signos de puntuacion',
+    },
+    {
+      errorName: 'maxlength',
+      output: 'Las metas no pueden contener mas de 30 caracteres',
     },
   ],
 };

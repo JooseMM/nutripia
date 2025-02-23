@@ -9,7 +9,7 @@
   "
 >
   @if (
-    appointmentsAtCurrentDate.length === 0 &&
+    !appointmentsAtCurrentDate.length &&
     !onEditAppointment() &&
     !isNewAppointment()
   ) {
@@ -33,11 +33,11 @@
     @for (appointment of appointmentsAtCurrentDate(); track $index) {
       <div
         class="w-full max-w-96 mx-auto | lg:hover:cursor-pointer"
-        (click)="selectedAppointmentId.set(appointment.id)"
+        (click)="selectedBoxId.set(appointment.id)"
       >
         <nt-appointment-info-box
           [appointment]="appointment"
-          [isBoxSelected]="selectedAppointmentId() === appointment.id"
+          [isBoxSelected]="selectedBoxId() === appointment.id"
         />
       </div>
     }
@@ -131,7 +131,7 @@
     appointmentsAtCurrentDate.length > 0 ||
     onEditAppointment() ||
     isNewAppointment() ||
-    selectedAppointmentId()
+    selectedBoxId()
   ) {
     <button class="text-charcoal" (click)="reset()">Cancelar</button>
   }

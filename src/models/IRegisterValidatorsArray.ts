@@ -8,6 +8,6 @@ export interface RegisterValidatorsArray {
   passwordConfirm: ValidatorFn[];
   yearOfBirth: ValidatorFn[];
   phoneNumber: ValidatorFn[];
-  previousDiagnostics: ValidatorFn[];
-  goals: ValidatorFn[];
+  previousDiagnostic: ValidatorFn[];
+  goal: ValidatorFn[];
 }

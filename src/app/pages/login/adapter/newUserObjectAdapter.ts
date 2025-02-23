@@ -4,10 +4,10 @@ import User from 'src/models/IUser';
 interface RawFormType {
   email: string;
   fullName: string;
-  goals: string;
+  goal: string;
   passwordGroup: { password: string; passwordConfirm: string };
   phoneNumber: string;
-  previousDiagnostics: string;
+  previousDiagnostic: string;
   rut: string;
   yearOfBirth: number;
 }
@@ -20,7 +20,7 @@ export const newUserObjectAdapter = (rawForm: RawFormType): NewClient => {
     rut: rawForm.rut,
     phoneNumber: rawForm.phoneNumber,
     password: rawForm.passwordGroup.password,
-    previousDiagnostic: rawForm.previousDiagnostics,
-    goals: rawForm.goals,
+    previousDiagnostic: rawForm.previousDiagnostic,
+    goal: rawForm.goal,
   };
 };

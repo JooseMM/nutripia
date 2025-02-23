@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -47,18 +47,19 @@ export class RegisterComponent {
     phoneNumber: new FormControl('', [
       ...registerBusinessLogicValidators.phoneNumber,
     ]),
-    previousDiagnostics: new FormControl('', [
-      ...registerBusinessLogicValidators.previousDiagnostics,
+    previousDiagnostic: new FormControl('', [
+      ...registerBusinessLogicValidators.previousDiagnostic,
     ]),
-    goals: new FormControl('', [
-      ...registerBusinessLogicValidators.previousDiagnostics,
-    ]),
+    goal: new FormControl('', [...registerBusinessLogicValidators.goal]),
   });
   //injects the service
   private authenticationService = inject(AuthenticationService);
   // listen to changes in the api connection state
   validationErrorObject = validationError;
 
+  constructor() {
+    effect(() => console.log(this.form.errors));
+  }
   onSubmit() {
     this.httpResponseIsLoading.set(true);
     const newUserData: NewClient = newUserObjectAdapter(this.form.value);
@@ -73,6 +74,8 @@ export class RegisterComponent {
         },
         error: (rawResponse) => {
           const response = rawResponse.error as ApiResponse;
+          console.log('error: ');
+          console.log(response);
           switch (response.statusCode) {
             case 409: // Conflict status code, the email already exists in db
               // insert the validator error for the control to show
@@ -90,7 +93,6 @@ export class RegisterComponent {
               // TODO: add all other feedback for the api response
               break;
           }
-          console.log(response);
         },
       });
   }

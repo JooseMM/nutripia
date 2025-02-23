@@ -1,17 +1,17 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import {
-  ADMIN_ROLE,
   API_URL,
-  MONTH_NAMES,
   WORK_END_HOUR,
   WORK_START_HOUR,
 } from 'src/app/constants/app-constants';
 import Appointment from 'src/models/IAppointment';
-import mockDates from './mockData';
 import AppointmentDto from 'src/models/IAppointmentDto';
 import { ResponseTrackerService } from '../response-tracker/response-tracker.service';
 import { AuthenticationService } from '../authentication/authentication.service';
+import ApiResponse from 'src/models/IApiResponse';
+import { finalize } from 'rxjs';
+import { appointmentAdapter } from 'src/app/pages/login/adapter/AppointmentAdapter';
 
 @Injectable({
   providedIn: 'root',
@@ -22,12 +22,37 @@ export class AppoitmentService {
   private AuthService = inject(AuthenticationService);
   private ResponseTrackerService = inject(ResponseTrackerService);
   private selectedDate: WritableSignal<Date> = signal(this.getCurrentDate());
-  private appointments = signal(mockDates);
+  private appointmentArray: WritableSignal<Appointment[]> = signal([]);
   private editedAppointment: WritableSignal<Appointment | null> = signal(null);
   private authenticationState = signal(
     this.AuthService.getAuthenticationState(),
   );
 
+  constructor() {
+    this.refreshAppointmentArray();
+  }
+  refreshAppointmentArray() {
+    this.http
+      .get<ApiResponse>(this.URL)
+      .pipe(
+        finalize(() =>
+          this.ResponseTrackerService.setResponseState(false, true),
+        ),
+      )
+      .subscribe({
+        next: (response: ApiResponse) => {
+          if (response.isSuccess) {
+            const appointmentArray: Appointment[] = (
+              response.data as Appointment[]
+            ).map((item) => appointmentAdapter(item));
+            this.appointmentArray.set(appointmentArray);
+          }
+        },
+        error: (response: HttpErrorResponse) => {
+          throw new Error(response.error);
+        },
+      });
+  }
   getEditedAppointment() {
     return this.editedAppointment();
   }
@@ -38,7 +63,7 @@ export class AppoitmentService {
     return this.selectedDate();
   }
   getAppointments(): Appointment[] {
-    return this.appointments();
+    return this.appointmentArray();
   }
   updateSelectedDay(newDay: number) {
     this.selectedDate.update(
@@ -97,48 +122,63 @@ export class AppoitmentService {
     // Date handles hours to wrap around 24, business logic tell us to only have available hours from 9hrs to 20hrs
   }
   saveChanges(isAppointmentOnline: boolean): void {
-    // TODO: add user data to the appointment
-    const newAppointment: AppointmentDto = {
+    let appointmentData: AppointmentDto | Appointment = {
+      date: this.selectedDate().toISOString(),
       isOnline: isAppointmentOnline,
-      date: this.selectedDate(),
-      userId: this.authenticationState().id,
     };
-    if (this.editedAppointment()) {
-      const updatedAppointment: AppointmentDto = {
-        ...this.editedAppointment(),
-        date: this.selectedDate(),
-        userId: this.editedAppointment()?.userId!,
-        isOnline: isAppointmentOnline,
-      };
-      //for testing
-      setTimeout(
-        () =>
-          this.appointments.update((prev) =>
-            prev.map((appointment) => {
-              if (appointment.id === this.editedAppointment()?.id) {
-                appointment = { ...appointment, ...updatedAppointment };
-              }
-              return appointment;
-            }),
-          ),
-        2000,
-      );
-    }
-    // for testing purpose
     this.ResponseTrackerService.setResponseState(true, false);
-    setTimeout(() => {
-      this.ResponseTrackerService.setResponseState(false, true);
-      this.appointments.update((prev: Appointment[]) => [
-        ...prev,
-        {
-          ...newAppointment,
-          id: 'user09',
-          publicId: 'xk02',
-          isCompleted: false,
-          user: null,
-        },
-      ]);
-    }, 2000);
+    if (this.editedAppointment()) {
+      console.log('editing');
+      appointmentData = {
+        ...this.editedAppointment(),
+        date: this.selectedDate().toISOString(),
+        isOnline: isAppointmentOnline,
+        isCompleted: false,
+      } as Appointment;
+      this.http
+        .put<ApiResponse>(this.URL, appointmentData)
+        .pipe(
+          finalize(() =>
+            this.ResponseTrackerService.setResponseState(false, true),
+          ),
+        )
+        .subscribe({
+          next: (response: ApiResponse) => {
+            if (response.isSuccess) {
+              this.appointmentArray.update((oldState: Appointment[]) =>
+                oldState.map((item) => {
+                  if (item.id === response.data) {
+                    item = appointmentAdapter(appointmentData as Appointment);
+                  }
+                  return item;
+                }),
+              );
+            }
+          },
+          error: (response: HttpErrorResponse) => {
+            throw new Error(response.error);
+          },
+        });
+    } else {
+      this.http
+        .post<ApiResponse>(this.URL, appointmentData)
+        .pipe(
+          finalize(() =>
+            this.ResponseTrackerService.setResponseState(false, true),
+          ),
+        )
+        .subscribe({
+          next: (response: ApiResponse) => {
+            if (response.isSuccess) {
+              this.appointmentArray.update((oldState: Appointment[]) => [
+                ...oldState,
+                appointmentAdapter(response.data as Appointment),
+              ]);
+            }
+          },
+          error: (response) => console.log(response),
+        });
+    }
   }
   private getCurrentDate(): Date {
     const now = new Date();
@@ -150,15 +190,6 @@ export class AppoitmentService {
       0,
       0,
       0,
-    );
-  }
-  getAppointmentsByMonth(
-    appointments: Appointment[],
-    monthMatch: number,
-  ): Appointment[] {
-    return appointments.filter(
-      (appointments: Appointment) =>
-        (appointments.date as Date).getMonth() === monthMatch,
     );
   }
 }

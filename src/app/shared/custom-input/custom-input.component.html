@@ -4,9 +4,11 @@
     type() === 'number' ? 'items-center lg:items-start' : 'items-start'
   "
 >
-  <label class="font-medium text-primary-purple mb-2 ml-4 w-fit" for="id()">{{
-    label()
-  }}</label>
+  <label
+    class="font-medium text-primary-purple mb-2 ml-4 w-fit"
+    [for]="'#' + id()"
+    >{{ label() }}</label
+  >
   @if (type() === "number") {
     <div class="flex w-full space-x-4 justify-center | lg:justify-start">
       <nt-button
@@ -20,7 +22,7 @@
       <input
         class="py-2 border w-16 text-primary-purple text-center border-lavender-purple rounded-lg"
         [type]="type()"
-        [id]="id()"
+        [id]="'#' + id()"
         [formControl]="control()"
       />
       <nt-button
@@ -35,9 +37,9 @@
   } @else {
     <input
       class="w-full px-4 py-2 border border-lavender-purple rounded-lg"
-      [attr.for]="id()"
+      [id]="'#' + id()"
       [type]="type()"
-      placeholder="Ejem: Juan Villegas"
+      [placeholder]="placeholder()"
       [formControl]="control()"
       [class.border-red]="isInputInvalid()"
     />

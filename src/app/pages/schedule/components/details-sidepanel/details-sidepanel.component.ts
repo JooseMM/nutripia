@@ -70,22 +70,19 @@ export class DetailsSidepanelComponent {
     const date = this.appointmentService.getSelectedDate();
     return this.getLongDate(date.getDate(), date.getMonth());
   });
-  selectedAppointmentId: WritableSignal<string> = signal('');
+  selectedBoxId: WritableSignal<string> = signal('');
   /*
    * own functions
    */
   constructor() {
     effect(() => {
-      const match = this.appointmentsAtCurrentDate().find(
-        (appointment: Appointment) =>
-          appointment.id === this.selectedAppointmentId(),
+      const appointmentExists = this.appointmentsAtCurrentDate().find(
+        (item) => item.id === this.selectedBoxId(),
       );
-      if (!match) {
-        this.selectedAppointmentId.set('');
-      }
       if (
-        this.responseState().isComplete &&
-        (this.onEditAppointment() || this.isNewAppointment())
+        this.selectedBoxId() &&
+        !appointmentExists &&
+        !this.onEditAppointment()
       ) {
         this.reset();
       }
@@ -111,14 +108,10 @@ export class DetailsSidepanelComponent {
   }
   startEditingAppointment() {
     const appointment = this.appointmentsAtCurrentDate().find(
-      (appointment: Appointment) =>
-        appointment.id === this.selectedAppointmentId(),
+      (appointment: Appointment) => appointment.id === this.selectedBoxId(),
     );
     this.appointmentService.startEditingAppointment(appointment!);
     this.isNewAppointmentOnline.set(appointment!.isOnline);
-  }
-  setIsNewAppointment(isNew: boolean): void {
-    this.isNewAppointment.set(isNew);
   }
   isDateTaken(): boolean {
     const current = this.appointmentService.getSelectedDate().getTime();
@@ -132,27 +125,33 @@ export class DetailsSidepanelComponent {
   }
   reset(): void {
     this.appointmentService.startEditingAppointment(null);
-    this.setIsNewAppointment(false);
-    this.selectedAppointmentId.set('');
+    this.isNewAppointment.set(false);
+    this.selectedBoxId.set('');
     this.responseTrackerService.resetState();
   }
   getMainButtonLabel(): string {
-    if (this.selectedAppointmentId()) {
+    if (this.selectedBoxId()) {
       return this.onEditAppointment() ? 'Actualizar' : 'Modificar';
     } else if (this.isNewAppointment()) {
       return 'Reservar';
     } else {
-      return '¡Reserva tu cita!';
+      return '¡Citas disponibles!';
     }
   }
   getMainButtonOnClickHandler(): void {
-    if (this.onEditAppointment() || this.isNewAppointment()) {
-      return this.saveAppointment();
+    if (this.selectedBoxId()) {
+      if (this.onEditAppointment() !== null) {
+        this.saveAppointment();
+        this.reset();
+      } else {
+        this.startEditingAppointment();
+      }
+    } else if (this.isNewAppointment()) {
+      this.saveAppointment();
+      this.reset();
+    } else {
+      this.isNewAppointment.set(true);
     }
-    if (this.selectedAppointmentId()) {
-      return this.startEditingAppointment();
-    }
-    this.setIsNewAppointment(true);
   }
   shouldDisable() {
     const creatingOrModifying =
@@ -162,10 +161,9 @@ export class DetailsSidepanelComponent {
       this.authenticationService.getAuthenticationState().id;
 
     if (!isCurrentUserAdmin) {
-      if (!creatingOrModifying && this.selectedAppointmentId()) {
+      if (!creatingOrModifying && this.selectedBoxId()) {
         const selectedAppointment = this.appointmentsAtCurrentDate().find(
-          (appointment: Appointment) =>
-            appointment.id === this.selectedAppointmentId(),
+          (appointment: Appointment) => appointment.id === this.selectedBoxId(),
         );
         return currentUserId !== selectedAppointment?.userId;
       }

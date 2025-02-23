@@ -1,13 +1,15 @@
 <section class="flex-col flex w-full h-full | lg:flex-row">
+  @if (userList().length) {
+    <div
+      class="p-8 grid w-full gap-6 auto-rows-min justify-center items-start | md:grid-cols-2 md:w-fit md:mx-auto | lg:mx-0 lg:w-auto lg:gap-4 lg:p-4 lg:grid-cols-1 min-[1820px]:grid-cols-2 | xl:p-8"
+    >
+      @for (user of userList(); track $index) {
+        <nt-user-box [user]="user" class="h-fit w-fit" />
+      }
+    </div>
+  }
   <div
-    class="p-8 grid w-full gap-6 auto-rows-min justify-center items-start | md:grid-cols-2 md:w-fit md:mx-auto | lg:mx-0 lg:w-auto lg:gap-4 lg:p-4 lg:grid-cols-1 min-[1820px]:grid-cols-2 | xl:p-8"
-  >
-    @for (userId of userIdList(); track $index) {
-      <nt-user-box [userId]="userId" class="h-fit w-fit" />
-    }
-  </div>
-  <div
-    class="w-full pb-14 pt-8 border-t border-lavender-gray | lg:w-[380px] lg:p-0 lg:h-full lg:border-l lg:border-l-lavender-gray | min-[1380px]:w-[600px]"
+    class="w-full pb-14 pt-8 border-lavender-gray | lg:w-[380px] lg:p-0 lg:h-full lg:border-l lg:border-l-lavender-gray | min-[1380px]:w-[600px]"
   >
     @if (isEditing()) {
       <nt-user-editing-form class="mx-auto w-full" />

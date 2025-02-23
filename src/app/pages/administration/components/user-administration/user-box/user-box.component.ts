@@ -2,10 +2,8 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
   input,
-  Signal,
   signal,
 } from '@angular/core';
 import { PaymentSwitcherComponent } from '../../payment-switcher/payment-switcher.component';
@@ -20,20 +18,15 @@ import { ButtonComponent } from '../../../../../shared/button/button.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserBoxComponent {
-  userId = input.required<string>();
+  user = input.required<User>();
   userService = inject(UserAdministrationService);
-  user: Signal<User | undefined> = computed(() =>
-    this.userService
-      .getAllUsers()
-      .find((user: User) => user.id === this.userId()),
-  );
   isBoxOpen = signal(false);
 
   toggleExpandableBox() {
     this.isBoxOpen.update((prev) => !prev);
   }
-  startEditing(newUserId: string): void {
-    this.userService.setOnEditingUserId(newUserId);
+  startEditing(): void {
+    this.userService.startEditingUser(this.user());
   }
   getStyles() {
     return {

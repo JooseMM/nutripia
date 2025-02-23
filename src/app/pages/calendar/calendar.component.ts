@@ -32,10 +32,13 @@ export class CalendarComponent {
     this.getDaysInCurrentMonth(
       this.selectedDate().getFullYear(),
       this.selectedDate().getMonth(),
-      this.appointmentService.getAppointmentsByMonth(
-        this.appointmentService.getAppointments(),
-        this.selectedDate().getMonth(),
-      ),
+      this.appointmentService
+        .getAppointments()
+        .filter(
+          (appointments: Appointment) =>
+            (appointments.date as Date).getMonth() ===
+            this.selectedDate().getMonth(),
+        ),
       this.selectedDate().getDate(),
     ),
   );
@@ -48,13 +51,13 @@ export class CalendarComponent {
   getBoxDayClass(index: number, day: DayObject, length: number) {
     if (day.appointments.length > 0 && day.isSelected) {
       // box with appointments and selected
-      return 'bg-primary-purple text-white ring ring-inset ring-3 ring-[#6C6180]';
+      return 'bg-primary-purple text-white ring ring-[3px] ring-inset ring-[#5F5373] ';
     } else if (day.appointments.length > 0) {
       // box with appointments
-      return 'bg-primary-purple text-white ring ring-1 ring-inset ring-soft-charcoal | sm:"ring-none';
+      return 'bg-primary-purple text-white ring ring-1 ring-inset ring-soft-charcoal | sm:border-l sm:border-b sm:border-soft-charcoal sm:ring-0';
     } else if (day.isSelected) {
       // selected box
-      return 'ring ring-inset ring-1 ring-primary-purple sm:ring-soft-charcoal';
+      return 'ring ring-inset ring-1 ring-primary-purple sm:ring-soft-charcoal | lg:ring-[3px]';
     } else if (index === length - 1) {
       // last box have no border
       return 'border-none';
@@ -145,7 +148,7 @@ export class CalendarComponent {
      * in order to not have  a blank space at the end of the calendar in some cases
      * we need to show the next month days in the available boxes left
      *
-     * first we check what's out array length so far
+     * first we check what's our array length so far
      * */
     const combinedArraysLength =
       previousMonthDays.length + selectedMonthDays.length;

@@ -53,7 +53,7 @@
       id="confirmedPassword"
       class="w-full mt-3"
       [validationErrorObject]="validationErrorObject.passwordConfirm"
-      placeholder="Asegurate de escribir la misma contraseña"
+      placeholder="Confirma tu contraseña"
     />
     <nt-custom-input
       label="Año de Nacimiento"
@@ -74,22 +74,22 @@
       placeholder="Ejem: +56 9 3245 3254"
     />
     <nt-custom-input
-      label="Diagnosticos Previos"
+      label="Diagnostico Previo"
       type="text"
-      [control]="getFormControl('previousDiagnostics')"
-      id="previousDiagnostics"
+      [control]="getFormControl('previousDiagnostic')"
+      id="previousDiagnostic"
       class="w-full mt-3"
-      [validationErrorObject]="validationErrorObject.previousDiagnostics"
+      [validationErrorObject]="validationErrorObject.previousDiagnostic"
       placeholder="Ejem: Diabetes, Hipertension"
     />
     <nt-custom-input
-      label="Metas"
+      label="Meta"
       type="text"
-      [control]="getFormControl('goals')"
-      id="goals"
+      [control]="getFormControl('goal')"
+      id="goal"
       class="w-full mt-3"
-      [validationErrorObject]="validationErrorObject.goals"
-      placeholder="Ejem: Perder 6kg de manera controlada"
+      [validationErrorObject]="validationErrorObject.goal"
+      placeholder="Ejem: perder 5kg en una semana"
     />
     <!-- the width and height is fixed to to avoid having layout shift while calling the backend -->
     <nt-button

@@ -6,8 +6,8 @@ export default interface User {
   phoneNumber: string;
   email: string;
   role: 'admin_user' | 'client_user';
-  previousDiagnostics: string;
-  goals: string;
+  previousDiagnostic: string;
+  goal: string;
   hasPaid: boolean;
   markedForChange: boolean;
 }

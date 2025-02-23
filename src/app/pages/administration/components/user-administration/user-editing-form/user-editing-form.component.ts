@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   inject,
+  OnInit,
   Signal,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -23,12 +24,8 @@ import User from 'src/models/IUser';
 })
 export class UserEditingFormComponent {
   userAdminService = inject(UserAdministrationService);
-  userToEdit: Signal<User | undefined> = computed(() =>
-    this.userAdminService
-      .getAllUsers()
-      .find(
-        (user: User) => user.id === this.userAdminService.getOnEditingUserId(),
-      ),
+  userToEdit: Signal<User | null> = computed(() =>
+    this.userAdminService.getUserBeingEdited(),
   );
   form: FormGroup = new FormGroup({
     fullName: new FormControl(this.userToEdit()?.fullName, [
@@ -46,12 +43,11 @@ export class UserEditingFormComponent {
     phoneNumber: new FormControl(this.userToEdit()?.phoneNumber, [
       ...registerBusinessLogicValidators.phoneNumber,
     ]),
-    previousDiagnostics: new FormControl(
-      this.userToEdit()?.previousDiagnostics,
-      [...registerBusinessLogicValidators.previousDiagnostics],
-    ),
-    goals: new FormControl(this.userToEdit()?.goals, [
-      ...registerBusinessLogicValidators.goals,
+    previousDiagnostic: new FormControl(this.userToEdit()?.previousDiagnostic, [
+      ...registerBusinessLogicValidators.previousDiagnostic,
+    ]),
+    goal: new FormControl(this.userToEdit()?.goal, [
+      ...registerBusinessLogicValidators.goal,
     ]),
   });
   validationErrorObject = validationError;
@@ -66,6 +62,6 @@ export class UserEditingFormComponent {
     return false;
   }
   stopEditing() {
-    this.userAdminService.setOnEditingUserId(null);
+    this.userAdminService.startEditingUser(null);
   }
 }

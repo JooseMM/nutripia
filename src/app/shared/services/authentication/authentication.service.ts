@@ -21,7 +21,7 @@ import { ResponseTrackerService } from '../response-tracker/response-tracker.ser
   providedIn: 'root',
 })
 export class AuthenticationService {
-  private apiUrl = ` ${API_URL}/auth/email-confirmation`;
+  private apiUrl = ` ${API_URL}/auth`;
   private http = inject(HttpClient);
   private responseTrackerService = inject(ResponseTrackerService);
   private authenticationState: WritableSignal<AuthenticationState> =
@@ -76,7 +76,7 @@ export class AuthenticationService {
     let isEmailConfirmed = false;
     this.responseTrackerService.setResponseState(true, false);
     this.http
-      .post<ApiResponse>(`${this.apiUrl}`, requestBody)
+      .post<ApiResponse>(`${this.apiUrl}/email-confirmation`, requestBody)
       .pipe(
         finalize(() =>
           this.responseTrackerService.setResponseState(false, true),
@@ -87,6 +87,7 @@ export class AuthenticationService {
           handleSuccessfulUserLogin(response, this.authenticationState.set);
           isEmailConfirmed = true;
         },
+        error: (response: HttpErrorResponse) => console.log(response),
       });
     return isEmailConfirmed;
   }

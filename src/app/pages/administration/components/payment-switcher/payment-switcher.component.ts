@@ -24,7 +24,7 @@ export class PaymentSwitcherComponent {
     () =>
       this.userService
         .getAllUsers()
-        .find((user: User) => user.id === this.userId())!?.hasPaid,
+        .find((user: User) => user.id === this.userId())!.hasPaid,
   );
   toggleHadPaid() {
     this.userService.updateUserPaymentState(this.userId());

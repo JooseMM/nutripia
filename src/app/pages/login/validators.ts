@@ -1,8 +1,3 @@
-import { Validators } from '@angular/forms';
-import {
-  letterAndSpacesPattern,
-  letterSpaceSymbolsAndNumbers,
-} from 'src/app/constants/app-constants';
 import { ValidationError } from 'src/models/IValidationError';
 /*
  * Validation output for the email and password

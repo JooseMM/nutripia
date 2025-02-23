@@ -1,8 +1,7 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import User from 'src/models/IUser';
-import { mockUsers } from './utils';
 import { API_URL, AUTH_TOKEN_NAME } from 'src/app/constants/app-constants';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ResponseTrackerService } from 'src/app/shared/services/response-tracker/response-tracker.service';
 import { finalize } from 'rxjs';
 import ApiResponse from 'src/models/IApiResponse';
@@ -13,21 +12,17 @@ import ApiResponse from 'src/models/IApiResponse';
 export class UserAdministrationService {
   private URL = `${API_URL}/users`;
   private http = inject(HttpClient);
-  private token = localStorage.getItem(AUTH_TOKEN_NAME);
   private usersArray: WritableSignal<User[]> = signal([]);
   // signal holding the current user that its beign edited
-  private onEditingUserId: WritableSignal<string | null> = signal(null);
+  private userBeingEdited: WritableSignal<User | null> = signal(null);
   // response tracking service
   private responseTrackerService = inject(ResponseTrackerService);
 
-  constructor() {
-    this.updateUsersArray();
+  getUserBeingEdited() {
+    return this.userBeingEdited();
   }
-  getOnEditingUserId() {
-    return this.onEditingUserId();
-  }
-  setOnEditingUserId(newUserId: string | null): void {
-    this.onEditingUserId.set(newUserId);
+  startEditingUser(user: User | null): void {
+    this.userBeingEdited.set(user);
   }
   updateUser(newUserData: User): void {
     this.usersArray.update((prev) => {
@@ -38,24 +33,30 @@ export class UserAdministrationService {
         return user;
       });
     });
-    this.setOnEditingUserId(null);
+    this.startEditingUser(null);
   }
-  updateUsersArray(): void {
-    /*
-    if (this.token) {
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${this.token}`,
-      });
-      this.http.get(this.URL, { headers });
+  refreshUserArray(): void {
+    const token = localStorage.getItem(AUTH_TOKEN_NAME);
+    if (!token) {
+      throw new Error(
+        'No posee las credenciales necesarias para realizar esta operacion',
+      );
     }
-    */
-    return this.usersArray.set([...mockUsers]);
+    this.responseTrackerService.setResponseState(true, false);
+
+    this.http
+      .get<ApiResponse>(this.URL)
+      .pipe(
+        finalize(() =>
+          this.responseTrackerService.setResponseState(false, true),
+        ),
+      )
+      .subscribe((response: ApiResponse) => {
+        this.usersArray.set(response.data as User[]);
+      });
   }
   getAllUsers() {
     return this.usersArray();
-  }
-  getAllUsersId(): string[] {
-    return this.getAllUsers().map((user) => user.id);
   }
   updateUserPaymentState(userId: string): void {
     this.usersArray.update((oldState) =>
@@ -69,16 +70,29 @@ export class UserAdministrationService {
     );
   }
   saveChanges(): void {
-    const toChange: User[] = this.usersArray().filter(
+    const userToUpdate: User[] = this.usersArray().filter(
       (user: User) => user.markedForChange,
     );
-    this.usersArray.update((prev) =>
-      prev.map((user: User) => {
-        if (user.markedForChange) {
-          user.markedForChange = false;
+
+    this.responseTrackerService.setResponseState(true, false);
+    this.http
+      .put<ApiResponse>(this.URL, userToUpdate)
+      .pipe(
+        finalize(() =>
+          this.responseTrackerService.setResponseState(false, true),
+        ),
+      )
+      .subscribe((response: ApiResponse) => {
+        if (response.isSuccess) {
+          this.usersArray.update((userList) =>
+            userList.map((user) => {
+              if (user.markedForChange) {
+                user.markedForChange = false;
+              }
+              return user;
+            }),
+          );
         }
-        return user;
-      }),
-    );
+      });
   }
 }

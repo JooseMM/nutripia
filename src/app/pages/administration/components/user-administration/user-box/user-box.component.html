@@ -14,12 +14,14 @@
       <button
         [ngClass]="user()!.hasPaid ? 'bg-[#A499BA]' : 'bg-[#CE8B95]'"
         class="hidden p-4 rounded-full outline-1 outline-white | lg:block lg:hover:outline"
-        (click)="startEditing(user()!.id)"
+        (click)="startEditing()"
       >
         <img src="assets/icons/edit-icon.svg" />
       </button>
     </div>
-    <div class="flex flex-col space-y-2 | lg:flex-row lg:space-x-6">
+    <div
+      class="flex flex-col space-y-2 | lg:flex-row lg:space-x-6 lg:space-y-0 lg:items-start"
+    >
       <ul class="flex flex-col justify-center items-start ml-4 space-y-2">
         <li class="flex flex-row space-x-4 items-center">
           <img src="assets/icons/phone-icon-fill.svg" width="20" height="20" />
@@ -34,18 +36,18 @@
           <span>{{ getUserAge() }} años</span>
         </li>
       </ul>
-      <ul class="flex flex-col items-start ml-4 space-y-2">
+      <ul class="flex flex-col items-start ml-4 space-y-2 max-w-[260px]">
         <li class="flex flex-row space-x-4 items-end">
           <img src="assets/icons/pill-icon.svg" width="20" height="20" />
-          <span>{{ user()!.previousDiagnostics || "Ninguno" }}</span>
+          <span>{{ user()!.previousDiagnostic || "Ninguno" }}</span>
         </li>
         <li class="flex flex-row space-x-4 items-end">
           <img src="assets/icons/dollar-icon.svg" width="20" height="20" />
           <span>{{ user()!.hasPaid ? "Pago al dia" : "Pago con demora" }}</span>
         </li>
-        <li class="flex flex-row space-x-4 items-center | lg:items-end">
+        <li class="flex flex-row space-x-4 items-center">
           <img src="assets/icons/award-icon.svg" width="20" height="20" />
-          <span>{{ user()!.goals }}</span>
+          <span>{{ user()!.goal }}</span>
         </li>
       </ul>
     </div>
@@ -54,7 +56,7 @@
       [isPrimary]="false"
       [rounded]="false"
       class="w-full mt-2 | lg:hidden"
-      (click)="startEditing(user()!.id)"
+      (click)="startEditing()"
     />
   } @else {
     <ul class="flex w-full items-center justify-between">
@@ -71,7 +73,7 @@
         </div>
       </li>
       <li>
-        <nt-payment-switcher [userId]="userId()" />
+        <nt-payment-switcher [userId]="user().id" />
       </li>
     </ul>
   }
