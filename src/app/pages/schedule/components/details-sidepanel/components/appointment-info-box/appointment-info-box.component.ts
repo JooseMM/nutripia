@@ -49,8 +49,10 @@ export class AppointmentInfoBoxComponent {
     const date = this.appointment()?.date as Date;
     return `${date.getDate()} de ${MONTH_NAMES[date.getMonth()]}`;
   }
-  isAppointmentOwner() {
-    return this.appointment()?.userId === this.currentUser().id;
+  isAppointmentOwnerOrAdmin() {
+    const userRole = this.currentUser();
+    const userIsOwner = this.appointment()?.userId === this.currentUser().id;
+    return userRole || userIsOwner;
   }
   isUserAdmin() {
     return this.currentUser().role === ADMIN_ROLE;

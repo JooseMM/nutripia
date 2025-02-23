@@ -41,7 +41,7 @@
         <img src="assets/icons/skinny-arrow-left-icon.svg" class="mx-4" />
         <span>{{ time() }}</span>
       } @else {
-        @if (isAppointmentOwner()) {
+        @if (isAppointmentOwnerOrAdmin()) {
           <svg
             width="20"
             height="20"
