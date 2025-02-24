@@ -46,3 +46,10 @@ export const MONTH_NAMES = [
 ];
 export const WORK_START_HOUR = 8;
 export const WORK_END_HOUR = 19;
+
+export function getHoursToString(date: Date): string {
+  return date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}

@@ -1,4 +1,7 @@
 export default interface AppointmentDto {
+  id: string;
+  isCompleted: boolean;
   isOnline: boolean;
-  date: Date | string | string;
+  date: string;
+  userId: string;
 }

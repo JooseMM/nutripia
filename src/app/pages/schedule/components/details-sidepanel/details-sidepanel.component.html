@@ -1,33 +1,38 @@
-<div
-  class="text-center px-6 space-y-4 | lg:space-y-8 lg:px-0 lg:block lg:mt-20"
->
-  <h3
-    class="text-primary-purple font-medium mt-4 | lg:m-0"
-    [ngClass]="appointmentsAtCurrentDate().length > 0 ? 'text-xl ' : 'text-2xl'"
+<div class="text-center px-6 | lg:px-0 lg:block lg:mt-20">
+  <h3 class="text-primary-purple mt-4 text-2xl | lg:m-0">Lista de Reservas</h3>
+  <div
+    class="mt-4 | lg:min-h-72"
+    [ngClass]="appointmentArray().length ? 'space-y-4' : ''"
   >
-    Lista de Reservas
-  </h3>
-  @for (appointment of appointmentsAtCurrentDate(); track $index) {
-    <div
-      class="w-full max-w-96 mx-auto | lg:hover:cursor-pointer"
-      (click)="selectedBoxId.set(appointment.id)"
-    >
-      <nt-appointment-info-box
-        [appointment]="appointment"
-        [isBoxSelected]="selectedBoxId() === appointment.id"
-      />
-    </div>
-  } @empty {
-    <img
-      src="assets/icons/free-dates-icon.svg"
-      height="120"
-      width="120"
-      class="block m-0 mx-auto"
-    />
-  }
+    @for (appointment of appointmentArray(); track $index) {
+      <div
+        class="w-full max-w-96 mx-auto rounded-lg outline outline-1 outline-soft-charcoal py-4 px-6 flex items-center | lg:hover:cursor-pointer"
+        [ngClass]="
+          isBeingSelected(appointment.id)
+            ? 'bg-primary-purple text-white fill-white'
+            : 'bg-white text-soft-charcoal fill-soft-charcoal'
+        "
+        (click)="selectedBox.set(appointment.id)"
+      >
+        <nt-appointment-info-box
+          class="flex justify-between w-full"
+          [id]="appointment.id"
+        />
+      </div>
+    } @empty {
+      <div class="min-h-28 flex justify-center items-center">
+        <img
+          src="assets/icons/free-dates-icon.svg"
+          height="120"
+          width="120"
+          class="block my-10"
+        />
+      </div>
+    }
+  </div>
 </div>
 <!-- Hour selection -->
-@if (onEditAppointment() || isNewAppointment()) {
+@if (isCreatingOrModifiying(appointmentArray())) {
   <div class="space-y-3 mt-10 flex flex-col items-center">
     <h3 class="text-lg text-primary-purple tracking-wide">
       Seleccione una hora
@@ -41,7 +46,7 @@
       </button>
       <span
         class="py-2 px-6 text-lg text-primary-purple border border-charcoal rounded-md"
-        >{{ getSelectedDateTime() }}</span
+        >{{ selectedDate() }}</span
       >
       <button
         (click)="updateHourBy(+1)"
@@ -64,7 +69,7 @@
         <span class="border border-primary-purple rounded-full p-1 flex">
           <span
             [ngClass]="
-              isNewAppointmentOnline()
+              isOnline()
                 ? 'p-2.5 bg-white rounded-full'
                 : 'p-2.5 bg-primary-purple rounded-full'
             "
@@ -79,7 +84,7 @@
         <span class="border border-primary-purple rounded-full p-1 flex">
           <span
             [ngClass]="
-              isNewAppointmentOnline()
+              isOnline()
                 ? 'p-2.5 bg-primary-purple rounded-full'
                 : 'p-2.5 bg-white rounded-full'
             "
@@ -95,12 +100,18 @@
 <div class="flex space-x-6 items-center justify-center mt-8 mb-10 | lg:my-5">
   <nt-button
     [isPrimary]="true"
-    [label]="getMainButtonLabel()"
-    (click)="getMainButtonOnClickHandler()"
+    [label]="getMainButtonLabel(appointmentArray(), selectedBox())"
+    (click)="onClickHandler(appointmentArray(), selectedBox())"
     [isLoading]="responseState().isLoading"
-    [isDisabled]="shouldDisable()"
+    [isDisabled]="
+      isUserNotAllowToModify(
+        selectedBox(),
+        appointmentArray(),
+        currentUserInfo()
+      )
+    "
   />
-  @if (onEditAppointment() || isNewAppointment()) {
+  @if (isCreatingOrModifiying(appointmentArray()) || selectedBox()) {
     <button class="text-charcoal" (click)="reset()">Cancelar</button>
   }
 </div>

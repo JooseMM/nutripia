@@ -1,17 +1,24 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import {
+  effect,
+  inject,
+  Injectable,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import {
   API_URL,
   WORK_END_HOUR,
   WORK_START_HOUR,
 } from 'src/app/constants/app-constants';
 import Appointment from 'src/models/IAppointment';
-import AppointmentDto from 'src/models/IAppointmentDto';
+import NewAppointment from 'src/models/INewAppointment';
 import { ResponseTrackerService } from '../response-tracker/response-tracker.service';
 import { AuthenticationService } from '../authentication/authentication.service';
 import ApiResponse from 'src/models/IApiResponse';
 import { finalize } from 'rxjs';
 import { appointmentAdapter } from 'src/app/pages/login/adapter/AppointmentAdapter';
+import AppointmentDto from 'src/models/IAppointmentDto';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +30,6 @@ export class AppoitmentService {
   private ResponseTrackerService = inject(ResponseTrackerService);
   private selectedDate: WritableSignal<Date> = signal(this.getCurrentDate());
   private appointmentArray: WritableSignal<Appointment[]> = signal([]);
-  private editedAppointment: WritableSignal<Appointment | null> = signal(null);
   private authenticationState = signal(
     this.AuthService.getAuthenticationState(),
   );
@@ -43,7 +49,7 @@ export class AppoitmentService {
         next: (response: ApiResponse) => {
           if (response.isSuccess) {
             const appointmentArray: Appointment[] = (
-              response.data as Appointment[]
+              response.data as AppointmentDto[]
             ).map((item) => appointmentAdapter(item));
             this.appointmentArray.set(appointmentArray);
           }
@@ -53,11 +59,27 @@ export class AppoitmentService {
         },
       });
   }
-  getEditedAppointment() {
-    return this.editedAppointment();
-  }
-  startEditingAppointment(appointment: Appointment | null): void {
-    this.editedAppointment.set(appointment);
+  createOrModify(id: string): void {
+    if (id) {
+      this.appointmentArray.update((oldState) =>
+        oldState.map((appointment) => {
+          if (appointment.id === id) {
+            appointment.isBeingEdited = true;
+          }
+          return appointment;
+        }),
+      );
+    } else {
+      const newAppointment: Appointment = {
+        id: '',
+        isBeingEdited: true,
+        isOnline: false,
+        isCompleted: false,
+        date: this.selectedDate(),
+        userId: this.authenticationState().id,
+      };
+      this.appointmentArray.update((oldState) => [...oldState, newAppointment]);
+    }
   }
   getSelectedDate(): Date {
     return this.selectedDate();
@@ -121,11 +143,8 @@ export class AppoitmentService {
     );
     // Date handles hours to wrap around 24, business logic tell us to only have available hours from 9hrs to 20hrs
   }
-  saveChanges(isAppointmentOnline: boolean): void {
-    let appointmentData: AppointmentDto | Appointment = {
-      date: this.selectedDate().toISOString(),
-      isOnline: isAppointmentOnline,
-    };
+  saveChanges(): void {
+    /*
     this.ResponseTrackerService.setResponseState(true, false);
     if (this.editedAppointment()) {
       console.log('editing');
@@ -179,6 +198,8 @@ export class AppoitmentService {
           error: (response) => console.log(response),
         });
     }
+    */
+    // mark all is beingEdited to false;
   }
   private getCurrentDate(): Date {
     const now = new Date();

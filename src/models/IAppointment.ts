@@ -1,7 +1,8 @@
 export default interface Appointment {
   id: string;
+  isBeingEdited: boolean;
   isCompleted: boolean;
   isOnline: boolean;
-  date: Date | string;
+  date: Date;
   userId: string;
 }
