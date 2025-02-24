@@ -130,12 +130,14 @@ export class DetailsSidepanelComponent {
     this.responseTrackerService.resetState();
   }
   getMainButtonLabel(): string {
-    if (this.selectedBoxId()) {
-      return this.onEditAppointment() ? 'Actualizar' : 'Modificar';
-    } else if (this.isNewAppointment()) {
+    if (this.isNewAppointment()) {
       return 'Reservar';
+    } else if (this.selectedBoxId()) {
+      return 'Modificar';
+    } else if (this.onEditAppointment()) {
+      return 'Actualizar';
     } else {
-      return '¡Citas disponibles!';
+      return 'Crear Cita';
     }
   }
   getMainButtonOnClickHandler(): void {

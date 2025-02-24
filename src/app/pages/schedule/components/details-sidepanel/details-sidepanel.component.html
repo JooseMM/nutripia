@@ -1,56 +1,29 @@
 <div
-  class="text-center px-6 space-y-4 | lg:space-y-3 lg:px-0 lg:block"
-  [ngClass]="
-    appointmentsAtCurrentDate().length > 0 ||
-    onEditAppointment() ||
-    isNewAppointment()
-      ? 'mt-10'
-      : 'mt-0 | lg:mt-36'
-  "
+  class="text-center px-6 space-y-4 | lg:space-y-8 lg:px-0 lg:block lg:mt-20"
 >
-  @if (
-    !appointmentsAtCurrentDate.length &&
-    !onEditAppointment() &&
-    !isNewAppointment()
-  ) {
-    @if (appointmentsAtCurrentDate().length > 0) {
-      <h3
-        class="text-primary-purple font-medium my-4 lg:my-2"
-        [ngClass]="
-          appointmentsAtCurrentDate().length > 0 ? 'text-xl ' : 'text-2xl'
-        "
-      >
-        Lista de Reservas
-      </h3>
-    } @else {
-      <img
-        src="assets/icons/free-dates-icon.svg"
-        class="hidden w-full max-w-60 mx-auto | lg:block"
-      />
-    }
-  }
-  @if (!onEditAppointment() && !isNewAppointment()) {
-    @for (appointment of appointmentsAtCurrentDate(); track $index) {
-      <div
-        class="w-full max-w-96 mx-auto | lg:hover:cursor-pointer"
-        (click)="selectedBoxId.set(appointment.id)"
-      >
-        <nt-appointment-info-box
-          [appointment]="appointment"
-          [isBoxSelected]="selectedBoxId() === appointment.id"
-        />
-      </div>
-    }
-  } @else {
-    <div class="w-full max-w-96 mx-auto">
+  <h3
+    class="text-primary-purple font-medium mt-4 | lg:m-0"
+    [ngClass]="appointmentsAtCurrentDate().length > 0 ? 'text-xl ' : 'text-2xl'"
+  >
+    Lista de Reservas
+  </h3>
+  @for (appointment of appointmentsAtCurrentDate(); track $index) {
+    <div
+      class="w-full max-w-96 mx-auto | lg:hover:cursor-pointer"
+      (click)="selectedBoxId.set(appointment.id)"
+    >
       <nt-appointment-info-box
-        [longDate]="getLongSelectedDate()"
-        [time]="getSelectedDateTime()"
-        [appointment]="onEditAppointment() ?? null"
-        [isBoxSelected]="true"
-        [isOnline]="isNewAppointmentOnline()"
+        [appointment]="appointment"
+        [isBoxSelected]="selectedBoxId() === appointment.id"
       />
     </div>
+  } @empty {
+    <img
+      src="assets/icons/free-dates-icon.svg"
+      height="120"
+      width="120"
+      class="block m-0 mx-auto"
+    />
   }
 </div>
 <!-- Hour selection -->
@@ -119,7 +92,7 @@
 }
 
 <!-- buttons -->
-<div class="flex space-x-6 items-center justify-center mt-8 mb-10">
+<div class="flex space-x-6 items-center justify-center mt-8 mb-10 | lg:my-5">
   <nt-button
     [isPrimary]="true"
     [label]="getMainButtonLabel()"
@@ -127,12 +100,7 @@
     [isLoading]="responseState().isLoading"
     [isDisabled]="shouldDisable()"
   />
-  @if (
-    appointmentsAtCurrentDate.length > 0 ||
-    onEditAppointment() ||
-    isNewAppointment() ||
-    selectedBoxId()
-  ) {
+  @if (onEditAppointment() || isNewAppointment()) {
     <button class="text-charcoal" (click)="reset()">Cancelar</button>
   }
 </div>
