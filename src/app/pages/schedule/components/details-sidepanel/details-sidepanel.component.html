@@ -1,9 +1,6 @@
 <div class="text-center px-6 | lg:px-0 lg:block lg:mt-20">
   <h3 class="text-primary-purple mt-4 text-2xl | lg:m-0">Lista de Reservas</h3>
-  <div
-    class="mt-4 | lg:min-h-72"
-    [ngClass]="appointmentArray().length ? 'space-y-4' : ''"
-  >
+  <div class="mt-4" [ngClass]="appointmentArray().length ? 'space-y-4' : ''">
     @for (appointment of appointmentArray(); track $index) {
       <div
         class="w-full max-w-96 mx-auto rounded-lg outline outline-1 outline-soft-charcoal py-4 px-6 flex items-center | lg:hover:cursor-pointer"
@@ -15,8 +12,8 @@
         (click)="selectedBox.set(appointment.id)"
       >
         <nt-appointment-info-box
-          class="flex justify-between w-full"
-          [id]="appointment.id"
+          class="flex justify-between w-full items-center"
+          [appointment]="appointment"
         />
       </div>
     } @empty {
@@ -46,7 +43,7 @@
       </button>
       <span
         class="py-2 px-6 text-lg text-primary-purple border border-charcoal rounded-md"
-        >{{ selectedDate() }}</span
+        >{{ getTime(selectedDate()) }}</span
       >
       <button
         (click)="updateHourBy(+1)"

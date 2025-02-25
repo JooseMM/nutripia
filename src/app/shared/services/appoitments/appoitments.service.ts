@@ -61,6 +61,10 @@ export class AppoitmentService {
   }
   createOrModify(id: string): void {
     if (id) {
+      const target = this.appointmentArray().find((item) => item.id === id);
+      if (!target) {
+        throw new Error('not found appointment');
+      }
       this.appointmentArray.update((oldState) =>
         oldState.map((appointment) => {
           if (appointment.id === id) {
@@ -81,7 +85,12 @@ export class AppoitmentService {
       this.appointmentArray.update((oldState) => [...oldState, newAppointment]);
     }
   }
-  cancelAppointmentModification(): void {
+  removeNotFinished(): void {
+    this.appointmentArray.update((oldState) =>
+      oldState.filter((item) => !item.isBeingEdited),
+    );
+  }
+  cancelModification() {
     this.appointmentArray.update((oldState) =>
       oldState.map((item) => {
         if (item.isBeingEdited) {
@@ -153,63 +162,78 @@ export class AppoitmentService {
     );
     // Date handles hours to wrap around 24, business logic tell us to only have available hours from 9hrs to 20hrs
   }
+  isSelectedDateAvailable() {
+    const appointmentBank = this.appointmentArray();
+    const date = this.selectedDate();
+    const found = appointmentBank.find(
+      (item) => item.date.getHours() === date.getHours(),
+    );
+    if (!found) {
+      return true;
+    }
+    return false;
+  }
   saveChanges(): void {
-    /*
     this.ResponseTrackerService.setResponseState(true, false);
-    if (this.editedAppointment()) {
-      console.log('editing');
-      appointmentData = {
-        ...this.editedAppointment(),
-        date: this.selectedDate().toISOString(),
-        isOnline: isAppointmentOnline,
-        isCompleted: false,
-      } as Appointment;
+    const toSaveAppointment = this.appointmentArray().find(
+      (item) => item.isBeingEdited,
+    );
+    if (!toSaveAppointment) {
+      throw new Error('no appointment to save');
+    }
+
+    toSaveAppointment.date = this.selectedDate();
+
+    if (toSaveAppointment.id) {
       this.http
-        .put<ApiResponse>(this.URL, appointmentData)
+        .put<ApiResponse>(this.URL, toSaveAppointment)
         .pipe(
           finalize(() =>
             this.ResponseTrackerService.setResponseState(false, true),
           ),
         )
         .subscribe({
-          next: (response: ApiResponse) => {
-            if (response.isSuccess) {
-              this.appointmentArray.update((oldState: Appointment[]) =>
-                oldState.map((item) => {
-                  if (item.id === response.data) {
-                    item = appointmentAdapter(appointmentData as Appointment);
-                  }
-                  return item;
-                }),
-              );
+          next: (res: ApiResponse) => {
+            if (!res.isSuccess) {
+              throw new Error(res.error);
             }
+            this.appointmentArray.update((oldState) =>
+              oldState.map((item) => {
+                if (item.isBeingEdited) {
+                  item.isBeingEdited = false;
+                }
+                return item;
+              }),
+            );
           },
-          error: (response: HttpErrorResponse) => {
-            throw new Error(response.error);
-          },
+          error: () => {},
         });
     } else {
       this.http
-        .post<ApiResponse>(this.URL, appointmentData)
+        .post<ApiResponse>(this.URL, toSaveAppointment)
         .pipe(
           finalize(() =>
             this.ResponseTrackerService.setResponseState(false, true),
           ),
         )
         .subscribe({
-          next: (response: ApiResponse) => {
-            if (response.isSuccess) {
-              this.appointmentArray.update((oldState: Appointment[]) => [
-                ...oldState,
-                appointmentAdapter(response.data as Appointment),
-              ]);
+          next: (res: ApiResponse) => {
+            if (!res.isSuccess) {
+              throw new Error(res.error);
             }
+
+            this.appointmentArray.update((oldState) =>
+              oldState.map((item) => {
+                if (item.id === '') {
+                  item.id = res.data as string;
+                  item.isBeingEdited = false;
+                }
+                return item;
+              }),
+            );
           },
-          error: (response) => console.log(response),
         });
     }
-    */
-    // mark all is beingEdited to false;
   }
   private getCurrentDate(): Date {
     const now = new Date();

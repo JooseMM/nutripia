@@ -36,20 +36,21 @@ export class DetailsSidepanelComponent {
   authenticationService = inject(AuthenticationService);
   appointmentService = inject(AppoitmentService);
   responseTrackerService = inject(ResponseTrackerService);
-  appointmentArray: Signal<Appointment[]> = computed(() =>
-    this.appointmentService
-      .getAppointments()
-      .filter((appointment: Appointment) => {
-        const date = appointment.date;
-        const selectedDate = this.appointmentService.getSelectedDate();
-        return (
-          date.getMonth() === selectedDate.getMonth() &&
-          date.getDate() === selectedDate.getDate()
-        );
-      }),
-  );
-  selectedDate: Signal<string> = computed(() =>
-    this.getTime(this.appointmentService.getSelectedDate()),
+  appointmentArray: Signal<Appointment[]> = computed(() => {
+    const bank = this.appointmentService.getAppointments();
+    const found: Appointment | undefined = bank.find(
+      (item) => item.isBeingEdited,
+    );
+
+    if (found !== undefined) {
+      return [found];
+    }
+    return this.filterAppointmentByDay(bank, this.selectedDate()).sort(
+      (a, b) => a.date.getTime() - b.date.getTime(),
+    );
+  });
+  selectedDate: Signal<Date> = computed(() =>
+    this.appointmentService.getSelectedDate(),
   );
   currentUserInfo: Signal<AuthenticationState> = computed(() =>
     this.authenticationService.getAuthenticationState(),
@@ -70,6 +71,14 @@ export class DetailsSidepanelComponent {
       }
     });
   }
+  filterAppointmentByDay(
+    appointmentBank: Appointment[],
+    date: Date,
+  ): Appointment[] {
+    return appointmentBank.filter((item) => {
+      return item.date.getDate() === date.getDate();
+    });
+  }
   getTime(date: Date): string {
     return getHoursToString(date);
   }
@@ -79,20 +88,19 @@ export class DetailsSidepanelComponent {
   setAppointmentIsOnline(isOnline: boolean) {
     this.isOnline.set(isOnline);
   }
-  isDateTaken(): boolean {
-    const current = this.appointmentService.getSelectedDate().getTime();
-    let match = false;
-    this.appointmentArray().forEach((appointment: Appointment) => {
-      if ((appointment.date as Date).getTime() === current) {
-        match = true;
-      }
-    });
-    return match;
-  }
   cancelAction(): void {
     this.selectedBox.set('');
     this.responseTrackerService.resetState();
-    this.appointmentService.cancelAppointmentModification();
+    const isUserCreating =
+      this.appointmentArray.length === 1 &&
+      this.appointmentArray()[0].isBeingEdited &&
+      this.appointmentArray()[0].id === '';
+
+    if (isUserCreating) {
+      this.appointmentService.removeNotFinished();
+    } else {
+      this.appointmentService.cancelModification();
+    }
   }
   isCreatingOrModifiying(appointmentArray: Appointment[]): boolean {
     const found = appointmentArray.find((item) => item.isBeingEdited);
@@ -101,9 +109,10 @@ export class DetailsSidepanelComponent {
   isUserOwnerOrAdmin(
     currentUserInfo: AuthenticationState,
     appointmentArray: Appointment[],
+    selectedAppointmendBoxId: string,
   ): boolean {
     const appointment = appointmentArray.find(
-      (item) => item.id === currentUserInfo.id && item.isBeingEdited,
+      (item) => item.id === selectedAppointmendBoxId,
     );
     if (appointment?.userId === currentUserInfo.id) {
       return true;
@@ -119,9 +128,21 @@ export class DetailsSidepanelComponent {
     currentUserInfo: AuthenticationState,
   ) {
     if (selectedAppointmendBoxId) {
-      return !this.isUserOwnerOrAdmin(currentUserInfo, appointmentArray);
+      const isUserEditing =
+        appointmentArray.length === 1 && appointmentArray[0].isBeingEdited;
+
+      if (isUserEditing) {
+        // if the user is editing an appointment
+        return !this.appointmentService.isSelectedDateAvailable();
+      }
+      return !this.isUserOwnerOrAdmin(
+        currentUserInfo,
+        appointmentArray,
+        selectedAppointmendBoxId,
+      );
+    } else {
+      return false;
     }
-    return false;
   }
   getMainButtonLabel(
     appointmentArray: Appointment[],
