@@ -89,9 +89,10 @@ export class DetailsSidepanelComponent {
     });
     return match;
   }
-  reset(): void {
+  cancelAction(): void {
     this.selectedBox.set('');
     this.responseTrackerService.resetState();
+    this.appointmentService.cancelAppointmentModification();
   }
   isCreatingOrModifiying(appointmentArray: Appointment[]): boolean {
     const found = appointmentArray.find((item) => item.isBeingEdited);

@@ -81,6 +81,16 @@ export class AppoitmentService {
       this.appointmentArray.update((oldState) => [...oldState, newAppointment]);
     }
   }
+  cancelAppointmentModification(): void {
+    this.appointmentArray.update((oldState) =>
+      oldState.map((item) => {
+        if (item.isBeingEdited) {
+          item.isBeingEdited = false;
+        }
+        return item;
+      }),
+    );
+  }
   getSelectedDate(): Date {
     return this.selectedDate();
   }
