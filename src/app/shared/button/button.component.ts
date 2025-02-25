@@ -1,10 +1,11 @@
 import { NgClass } from '@angular/common';
 import { Component, input, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 type stateOptions = 'loading' | 'idle';
 @Component({
   selector: 'nt-button',
-  imports: [NgClass],
+  imports: [NgClass, RouterLink],
   templateUrl: './button.component.html',
 })
 export class ButtonComponent implements OnInit {

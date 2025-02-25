@@ -1,6 +1,6 @@
 <!-- using href to determine if it's a button or an anchor tag -->
 @if (href() !== "") {
-  <a [ngClass]="isPrimary() ? primary : alternative" [href]="href()">
+  <a [ngClass]="isPrimary() ? primary : alternative" [routerLink]="href()">
     {{ label() }}
   </a>
 } @else {

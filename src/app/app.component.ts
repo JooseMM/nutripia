@@ -66,11 +66,12 @@ export class AppComponent {
     this.toggleMenu();
     this.routerEventSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((_navigationEnd) =>
-        setTimeout(() => {
-          this.scrollApi.scrollToAnchor(anchor);
-        }, 450),
-      );
+      .subscribe((_navigationEnd) => {
+        anchor &&
+          setTimeout(() => {
+            this.scrollApi.scrollToAnchor(anchor);
+          }, 450);
+      });
     this.router.navigate(['/']);
   }
   logout() {
