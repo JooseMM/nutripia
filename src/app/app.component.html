@@ -18,10 +18,9 @@
       >
         <li>
           <a
-            class="lg:hover:text-charcoal"
-            routerLink="/inicio"
+            class="lg:hover:text-charcoal lg:hover:cursor-pointer"
             routerLinkActive="text-charcoal"
-            (click)="toggleMenu()"
+            (click)="scrollTo('/', '')"
             ariaCurrentWhenActive="page"
             >Inicio</a
           >
@@ -29,7 +28,7 @@
         <li>
           <a
             class="lg:hover:text-charcoal lg:hover:cursor-pointer"
-            (click)="scrollTo('whyUs')"
+            (click)="scrollTo('/', 'whyUs')"
             ariaCurrentWhenActive="page"
             >Beneficios</a
           >
@@ -37,7 +36,7 @@
         <li>
           <a
             class="lg:hover:text-charcoal lg:hover:cursor-pointer"
-            (click)="scrollTo('prices')"
+            (click)="scrollTo('/', 'prices')"
             ariaCurrentWhenActive="page"
             >Planes</a
           >
@@ -45,7 +44,7 @@
         <li>
           <a
             class="lg:hover:text-charcoal lg:hover:cursor-pointer"
-            (click)="scrollTo('about')"
+            (click)="scrollTo('/', 'about')"
             ariaCurrentWhenActive="page"
             >Sobre Mi</a
           >

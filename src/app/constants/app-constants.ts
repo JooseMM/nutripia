@@ -1,3 +1,6 @@
+import { ViewportScroller } from '@angular/common';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subscription, filter } from 'rxjs';
 import AuthenticationState from 'src/models/IAuthenticationState';
 
 export const API_URL = 'http://localhost:5158/api';
@@ -52,4 +55,25 @@ export function getHoursToString(date: Date): string {
     hour: '2-digit',
     minute: '2-digit',
   });
+}
+
+export function navigateAndScrollTo(
+  url: string,
+  anchor: string,
+  subscription: Subscription,
+  router: Router,
+  scrollApi: ViewportScroller,
+) {
+  subscription = router.events
+    .pipe(filter((event) => event instanceof NavigationEnd))
+    .subscribe((_navigationEnd) => {
+      setTimeout(() => {
+        if (!anchor) {
+          scrollApi.scrollToPosition([0, 0]);
+        } else {
+          scrollApi.scrollToAnchor(anchor);
+        }
+      }, 300);
+    });
+  router.navigate([url]);
 }

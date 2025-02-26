@@ -1,9 +1,7 @@
-import PricingPlanOptions from 'src/models/IPricingPlanOption';
-
-export const environment = {
+export const pricingInfo = {
   pricingPlanOptionsArray: [
     {
-      description: 'Unica consulta',
+      description: 'Minimo',
       price: 20000,
       months: 1,
       benefits: [

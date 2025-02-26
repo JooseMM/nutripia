@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   inject,
+  OnDestroy,
   OnInit,
   Signal,
 } from '@angular/core';
@@ -23,6 +24,7 @@ import { AuthenticationService } from './shared/services/authentication/authenti
 import {
   ADMIN_ROLE,
   CLIENT_ROLE,
+  navigateAndScrollTo,
   NOT_AUTHENTICATED,
 } from './constants/app-constants';
 import { filter, Subscription } from 'rxjs';
@@ -40,7 +42,7 @@ import { filter, Subscription } from 'rxjs';
   providers: [{ provide: LOCALE_ID, useValue: 'es-CL' }],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   cdr = inject(ChangeDetectorRef);
   router = inject(Router);
   scrollApi = inject(ViewportScroller);
@@ -62,21 +64,21 @@ export class AppComponent {
   protected toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
-  scrollTo(anchor: string) {
+  scrollTo(url: string, anchor: string) {
     this.toggleMenu();
-    this.routerEventSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((_navigationEnd) => {
-        anchor &&
-          setTimeout(() => {
-            this.scrollApi.scrollToAnchor(anchor);
-          }, 450);
-      });
-    this.router.navigate(['/']);
+    navigateAndScrollTo(
+      url,
+      anchor,
+      this.routerEventSubscription,
+      this.router,
+      this.scrollApi,
+    );
   }
   logout() {
     this.authenticationService.logout();
     this.toggleMenu();
-    this.router.navigate(['/']);
+  }
+  ngOnDestroy(): void {
+    this.routerEventSubscription.unsubscribe();
   }
 }

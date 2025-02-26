@@ -16,6 +16,7 @@ import {
 import AuthenticationState from 'src/models/IAuthenticationState';
 import NewClient from 'src/models/INewClient';
 import { ResponseTrackerService } from '../response-tracker/response-tracker.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,7 @@ import { ResponseTrackerService } from '../response-tracker/response-tracker.ser
 export class AuthenticationService {
   private apiUrl = ` ${API_URL}/auth`;
   private http = inject(HttpClient);
+  private router = inject(Router);
   private responseTrackerService = inject(ResponseTrackerService);
   private authenticationState: WritableSignal<AuthenticationState> =
     signal(checkExistingToken());
@@ -65,6 +67,7 @@ export class AuthenticationService {
   logout() {
     localStorage.removeItem(AUTH_TOKEN_NAME);
     this.authenticationState.set({ ...undefinedAuthenticationState });
+    this.router.navigate(['/']);
   }
 
   TryToConfirmEmail(userId: string, token: string): boolean {
