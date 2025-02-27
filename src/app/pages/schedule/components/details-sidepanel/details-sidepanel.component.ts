@@ -51,9 +51,11 @@ export class DetailsSidepanelComponent {
     if (found !== undefined) {
       return [found];
     }
-    return this.filterAppointmentByDay(bank, this.selectedDate()).sort(
-      (a, b) => a.date.getTime() - b.date.getTime(),
-    );
+    return this.filterAppointmentByDay(
+      bank,
+      this.selectedDate(),
+      this.currentUserInfo(),
+    ).sort((a, b) => a.date.getTime() - b.date.getTime());
   });
   selectedDate: Signal<Date> = computed(() =>
     this.appointmentService.getSelectedDate(),
@@ -80,9 +82,14 @@ export class DetailsSidepanelComponent {
   filterAppointmentByDay(
     appointmentBank: Appointment[],
     date: Date,
+    currentUserInfo: AuthenticationState,
   ): Appointment[] {
     return appointmentBank.filter((item) => {
-      return item.date.getDate() === date.getDate();
+      if (this.isUserAdmin(currentUserInfo)) {
+        return item.date.getDate() === date.getDate();
+      } else {
+        return item.date.getDate() === date.getDate() && !item.isCompleted;
+      }
     });
   }
   getTime(date: Date): string {
@@ -172,6 +179,9 @@ export class DetailsSidepanelComponent {
         selectedAppointmendBoxId,
       );
     } else {
+      if (this.isCreatingOrModifiying(this.appointmentArray())) {
+        return !this.appointmentService.isSelectedDateAvailable();
+      }
       return false;
     }
   }

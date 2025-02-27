@@ -104,23 +104,42 @@
       <span class="opacity-80">{{ getHours(appointment().date) }}</span>
     </div>
     <!-- available icon -->
-    @if (isDateAvailable()) {
-      <svg
-        class="fill-inherit"
-        width="20"
-        height="20"
-        viewBox="0 0 40 40"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
-          d="M20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.0457 40 20 40C8.95431 40 0 31.0457 0 20C0 8.95431 8.95431 0 20 0ZM20 5C11.7157 5 5 11.7157 5 20C5 28.2843 11.7157 35 20 35C28.2843 35 35 28.2843 35 20C35 11.7157 28.2843 5 20 5ZM22.5 10L22.4999 17.5H30V22.5L22.4999 22.4999L22.5 30H17.5V22.4999L10 22.5V17.5H17.5V10H22.5Z"
-          fill="inherit"
-        />
-      </svg>
-      <span>Hora disponible</span>
-    }
+    <div class="flex space-x-2 h-full -translate-y-[-10px]">
+      @if (isDateAvailable()) {
+        <svg
+          class="fill-inherit"
+          width="20"
+          height="20"
+          viewBox="0 0 40 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.0457 40 20 40C8.95431 40 0 31.0457 0 20C0 8.95431 8.95431 0 20 0ZM20 5C11.7157 5 5 11.7157 5 20C5 28.2843 11.7157 35 20 35C28.2843 35 35 28.2843 35 20C35 11.7157 28.2843 5 20 5ZM22.5 10L22.4999 17.5H30V22.5L22.4999 22.4999L22.5 30H17.5V22.4999L10 22.5V17.5H17.5V10H22.5Z"
+            fill="inherit"
+          />
+        </svg>
+        <span>Hora disponible</span>
+      } @else {
+        <svg
+          class="fill-inherit"
+          width="20"
+          height="20"
+          viewBox="0 0 46 60"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M8 22.5V15C8 6.71572 14.7157 0 23 0C31.2841 0 38 6.71572 38 15V22.5H45.5V60H0.5V22.5H8ZM15.5 15C15.5 10.8579 18.8579 7.5 23 7.5C27.1421 7.5 30.5 10.8579 30.5 15V22.5H15.5V15ZM19.25 48.75V33.75H26.75V48.75H19.25Z"
+            fill="inherit"
+          />
+        </svg>
+        <span>Hora no disponible</span>
+      }
+    </div>
   }
 }

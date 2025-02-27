@@ -183,12 +183,15 @@ export class AppoitmentService {
     const date = this.selectedDate();
     const found = appointmentBank.find(
       (item) =>
+        item.date.getDate() === date.getDate() &&
         item.date.getHours() === date.getHours() &&
-        item.date.getDate() === date.getDate(),
+        !item.isCompleted &&
+        !item.isBeingEdited,
     );
     if (!found) {
       return true;
     }
+    console.log(found);
     return false;
   }
   saveChanges(): void {
