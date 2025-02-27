@@ -12,7 +12,6 @@ import {
   WORK_START_HOUR,
 } from 'src/app/constants/app-constants';
 import Appointment from 'src/models/IAppointment';
-import NewAppointment from 'src/models/INewAppointment';
 import { ResponseTrackerService } from '../response-tracker/response-tracker.service';
 import { AuthenticationService } from '../authentication/authentication.service';
 import ApiResponse from 'src/models/IApiResponse';
@@ -36,6 +35,7 @@ export class AppoitmentService {
 
   constructor() {
     this.refreshAppointmentArray();
+    effect(() => console.log(this.appointmentArray()));
   }
   toggleCompletedState(id: string): void {
     this.appointmentArray.update((bank) =>
@@ -136,7 +136,8 @@ export class AppoitmentService {
   }
   updateMonth(updateBy: number): void {
     const newMonth = this.selectedDate().getMonth() + updateBy;
-    const isNewMonthValid = newMonth > -1 && newMonth < 12;
+    const currentMonth = new Date().getMonth();
+    const isNewMonthValid = newMonth >= currentMonth && newMonth < 12;
     /*
      * Dont update is the operation is not valid
      */

@@ -95,10 +95,8 @@ export class DetailsSidepanelComponent {
     this.isOnline.set(isOnline);
   }
   cancelAction(): void {
-    this.selectedBox.set('');
-    this.responseTrackerService.resetState();
     const isUserCreating =
-      this.appointmentArray.length === 1 &&
+      this.appointmentArray().length === 1 &&
       this.appointmentArray()[0].isBeingEdited &&
       this.appointmentArray()[0].id === '';
 
@@ -107,6 +105,8 @@ export class DetailsSidepanelComponent {
     } else {
       this.appointmentService.cancelModification();
     }
+    this.selectedBox.set('');
+    this.responseTrackerService.resetState();
   }
   isCreatingOrModifiying(appointmentArray: Appointment[]): boolean {
     const found = appointmentArray.find((item) => item.isBeingEdited);
