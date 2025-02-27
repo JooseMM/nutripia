@@ -22,10 +22,16 @@ import { AppointmentInfoBoxComponent } from './components/appointment-info-box/a
 import Appointment from 'src/models/IAppointment';
 import ResponseState from 'src/models/IApiCallState';
 import AuthenticationState from 'src/models/IAuthenticationState';
+import { SidePanelButtonsComponent } from './components/side-panel-buttons/side-panel-buttons.component';
 
 @Component({
   selector: 'nt-details-sidepanel',
-  imports: [NgClass, ButtonComponent, AppointmentInfoBoxComponent],
+  imports: [
+    NgClass,
+    ButtonComponent,
+    AppointmentInfoBoxComponent,
+    SidePanelButtonsComponent,
+  ],
   templateUrl: './details-sidepanel.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -106,21 +112,42 @@ export class DetailsSidepanelComponent {
     const found = appointmentArray.find((item) => item.isBeingEdited);
     return found !== undefined; // if found is not null return true otherwise false
   }
-  isUserOwnerOrAdmin(
+  isUserAdmin(userInfo: AuthenticationState) {
+    if (!userInfo) {
+      throw new Error('user not authenticated');
+    }
+    console.log(userInfo.role === ADMIN_ROLE);
+    return userInfo.role === ADMIN_ROLE;
+  }
+  isUserOwner(
     currentUserInfo: AuthenticationState,
     appointmentArray: Appointment[],
     selectedAppointmendBoxId: string,
   ): boolean {
-    const appointment = appointmentArray.find(
-      (item) => item.id === selectedAppointmendBoxId,
+    const appointment = this.findAppointmentById(
+      appointmentArray,
+      selectedAppointmendBoxId,
     );
-    if (appointment?.userId === currentUserInfo.id) {
-      return true;
-    } else if (currentUserInfo.role === ADMIN_ROLE) {
-      return true;
-    } else {
-      return false;
+    return appointment?.userId === currentUserInfo.id;
+  }
+  findAppointmentById(array: Appointment[], matchId: string): Appointment {
+    const foundAppointment = array.find(
+      (appointment) => appointment.id === matchId,
+    );
+    if (!foundAppointment) {
+      throw new Error('not found appointment');
     }
+    return foundAppointment;
+  }
+  isAppointmentCompleted(
+    selectedAppointmentId: string,
+    appointmentArray: Appointment[],
+  ) {
+    const appointment = this.findAppointmentById(
+      appointmentArray,
+      selectedAppointmentId,
+    );
+    return appointment.isCompleted;
   }
   isUserNotAllowToModify(
     selectedAppointmendBoxId: string,
@@ -130,12 +157,16 @@ export class DetailsSidepanelComponent {
     if (selectedAppointmendBoxId) {
       const isUserEditing =
         appointmentArray.length === 1 && appointmentArray[0].isBeingEdited;
-
+      if (
+        this.isAppointmentCompleted(selectedAppointmendBoxId, appointmentArray)
+      ) {
+        return true;
+      }
       if (isUserEditing) {
         // if the user is editing an appointment
         return !this.appointmentService.isSelectedDateAvailable();
       }
-      return !this.isUserOwnerOrAdmin(
+      return !this.isUserOwner(
         currentUserInfo,
         appointmentArray,
         selectedAppointmendBoxId,
@@ -160,7 +191,7 @@ export class DetailsSidepanelComponent {
   }
   onClickHandler(appointmentArray: Appointment[], selectedBoxId: string): void {
     const isCreatingOrModifiying =
-      this.isCreatingOrModifiying(appointmentArray) && true;
+      !!this.isCreatingOrModifiying(appointmentArray);
     if (isCreatingOrModifiying) {
       this.appointmentService.saveChanges();
     } else {
@@ -169,5 +200,20 @@ export class DetailsSidepanelComponent {
   }
   isBeingSelected(id: string): boolean {
     return this.selectedBox() === id;
+  }
+  selectNewOrNull(newId: string, oldId: string) {
+    this.selectedBox.set(newId === oldId ? '' : newId);
+  }
+  toggleCompletedState(id: string) {
+    if (!id) {
+      throw new Error('id is null or undefined');
+    }
+    this.appointmentService.toggleCompletedState(id);
+  }
+  deleteOnById(id: string) {
+    if (!id) {
+      throw new Error('id is null or undefined');
+    }
+    this.appointmentService.deleteOnById(id);
   }
 }

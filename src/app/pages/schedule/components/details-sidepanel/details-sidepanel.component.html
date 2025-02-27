@@ -6,10 +6,10 @@
         class="w-full max-w-96 mx-auto rounded-lg outline outline-1 outline-soft-charcoal py-4 px-6 flex items-center | lg:hover:cursor-pointer"
         [ngClass]="
           isBeingSelected(appointment.id)
-            ? 'bg-primary-purple text-white fill-white'
-            : 'bg-white text-soft-charcoal fill-soft-charcoal'
+            ? 'bg-primary-purple text-white fill-white stroke-white'
+            : 'bg-white text-soft-charcoal fill-soft-charcoal stroke-soft-charcoal'
         "
-        (click)="selectedBox.set(appointment.id)"
+        (click)="selectNewOrNull(appointment.id, selectedBox())"
       >
         <nt-appointment-info-box
           class="flex justify-between w-full items-center"
@@ -93,22 +93,58 @@
   </div>
 }
 
-<!-- buttons -->
 <div class="flex space-x-6 items-center justify-center mt-8 mb-10 | lg:my-5">
-  <nt-button
-    [isPrimary]="true"
-    [label]="getMainButtonLabel(appointmentArray(), selectedBox())"
-    (click)="onClickHandler(appointmentArray(), selectedBox())"
-    [isLoading]="responseState().isLoading"
-    [isDisabled]="
-      isUserNotAllowToModify(
-        selectedBox(),
-        appointmentArray(),
-        currentUserInfo()
-      )
-    "
-  />
-  @if (isCreatingOrModifiying(appointmentArray()) || selectedBox()) {
-    <button class="text-charcoal" (click)="cancelAction()">Cancelar</button>
+  @if (isUserAdmin(currentUserInfo())) {
+    @if (selectedBox()) {
+      @if (isCreatingOrModifiying(appointmentArray())) {
+        <!-- buttons -->
+        <nt-button
+          [isPrimary]="true"
+          label="Actualizar"
+          (click)="appointmentService.saveChanges()"
+          [isLoading]="responseState().isLoading"
+          [isDisabled]="!appointmentService.isSelectedDateAvailable()"
+        />
+        <button class="text-charcoal" (click)="cancelAction()">Cancelar</button>
+      } @else {
+        <nt-side-panel-buttons
+          [type]="
+            isAppointmentCompleted(selectedBox(), appointmentArray())
+              ? 'not-completed'
+              : 'completed'
+          "
+          [appointment]="findAppointmentById(appointmentArray(), selectedBox())"
+          (click)="toggleCompletedState(selectedBox())"
+        />
+        <nt-side-panel-buttons
+          type="modify"
+          [appointment]="findAppointmentById(appointmentArray(), selectedBox())"
+          (click)="appointmentService.createOrModify(selectedBox())"
+        />
+        <nt-side-panel-buttons
+          type="delete"
+          [appointment]="findAppointmentById(appointmentArray(), selectedBox())"
+          (click)="deleteOnById(selectedBox())"
+        />
+      }
+    }
+  } @else {
+    <!-- buttons -->
+    <nt-button
+      [isPrimary]="true"
+      [label]="getMainButtonLabel(appointmentArray(), selectedBox())"
+      (click)="onClickHandler(appointmentArray(), selectedBox())"
+      [isLoading]="responseState().isLoading"
+      [isDisabled]="
+        isUserNotAllowToModify(
+          selectedBox(),
+          appointmentArray(),
+          currentUserInfo()
+        )
+      "
+    />
+    @if (isCreatingOrModifiying(appointmentArray()) || selectedBox()) {
+      <button class="text-charcoal" (click)="cancelAction()">Cancelar</button>
+    }
   }
 </div>

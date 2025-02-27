@@ -37,6 +37,21 @@ export class AppoitmentService {
   constructor() {
     this.refreshAppointmentArray();
   }
+  toggleCompletedState(id: string): void {
+    this.appointmentArray.update((bank) =>
+      bank.map((item) => {
+        if (item.id === id) {
+          item.isCompleted = !item.isCompleted;
+        }
+        return item;
+      }),
+    );
+  }
+  deleteOnById(id: string) {
+    this.appointmentArray.update((bank) =>
+      bank.filter((item) => item.id !== id),
+    );
+  }
   refreshAppointmentArray() {
     this.http
       .get<ApiResponse>(this.URL)
@@ -166,7 +181,9 @@ export class AppoitmentService {
     const appointmentBank = this.appointmentArray();
     const date = this.selectedDate();
     const found = appointmentBank.find(
-      (item) => item.date.getHours() === date.getHours(),
+      (item) =>
+        item.date.getHours() === date.getHours() &&
+        item.date.getDate() === date.getDate(),
     );
     if (!found) {
       return true;
