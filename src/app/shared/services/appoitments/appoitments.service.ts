@@ -182,11 +182,11 @@ export class AppoitmentService {
     const selectedDate = this.selectedDate();
     const currentDate = new Date();
 
-    const isDateInThePastOrRightNow =
+    const isDateInThePastOrTooSoon =
       currentDate.getDate() >= selectedDate.getDate() &&
       currentDate.getHours() + 4 > selectedDate.getHours(); // current hour + 4 = nearest allow hour to reserve
 
-    if (isDateInThePastOrRightNow) {
+    if (isDateInThePastOrTooSoon) {
       return false; // clients cant make an appointment to the past or in less than 4 hours
     }
 
