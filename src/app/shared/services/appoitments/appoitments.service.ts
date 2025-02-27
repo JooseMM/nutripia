@@ -35,7 +35,6 @@ export class AppoitmentService {
 
   constructor() {
     this.refreshAppointmentArray();
-    effect(() => console.log(this.appointmentArray()));
   }
   toggleCompletedState(id: string): void {
     this.appointmentArray.update((bank) =>
@@ -180,19 +179,25 @@ export class AppoitmentService {
   }
   isSelectedDateAvailable() {
     const appointmentBank = this.appointmentArray();
-    const date = this.selectedDate();
+    const selectedDate = this.selectedDate();
+    const currentDate = new Date();
+
+    const isDateInThePastOrRightNow =
+      currentDate.getDate() >= selectedDate.getDate() &&
+      currentDate.getHours() + 4 > selectedDate.getHours(); // current hour + 4 = nearest allow hour to reserve
+
+    if (isDateInThePastOrRightNow) {
+      return false; // clients cant make an appointment to the past or in less than 4 hours
+    }
+
     const found = appointmentBank.find(
       (item) =>
-        item.date.getDate() === date.getDate() &&
-        item.date.getHours() === date.getHours() &&
+        item.date.getDate() === selectedDate.getDate() &&
+        item.date.getHours() === selectedDate.getHours() &&
         !item.isCompleted &&
         !item.isBeingEdited,
     );
-    if (!found) {
-      return true;
-    }
-    console.log(found);
-    return false;
+    return !found ? true : false;
   }
   saveChanges(): void {
     this.ResponseTrackerService.setResponseState(true, false);

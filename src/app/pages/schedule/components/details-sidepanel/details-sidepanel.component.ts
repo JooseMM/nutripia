@@ -123,7 +123,6 @@ export class DetailsSidepanelComponent {
     if (!userInfo) {
       throw new Error('user not authenticated');
     }
-    console.log(userInfo.role === ADMIN_ROLE);
     return userInfo.role === ADMIN_ROLE;
   }
   isUserOwner(
@@ -160,6 +159,7 @@ export class DetailsSidepanelComponent {
     selectedAppointmendBoxId: string,
     appointmentArray: Appointment[],
     currentUserInfo: AuthenticationState,
+    selectedDate: Date,
   ) {
     if (selectedAppointmendBoxId) {
       const isUserEditing =
@@ -170,7 +170,6 @@ export class DetailsSidepanelComponent {
         return true;
       }
       if (isUserEditing) {
-        // if the user is editing an appointment
         return !this.appointmentService.isSelectedDateAvailable();
       }
       return !this.isUserOwner(
@@ -179,7 +178,13 @@ export class DetailsSidepanelComponent {
         selectedAppointmendBoxId,
       );
     } else {
-      if (this.isCreatingOrModifiying(this.appointmentArray())) {
+      const currentDate = new Date();
+      const isDateOnFuture =
+        currentDate.getMonth() <= selectedDate.getMonth() &&
+        currentDate.getDate() <= selectedDate.getDate();
+      if (!isDateOnFuture) {
+        return true;
+      } else if (this.isCreatingOrModifiying(this.appointmentArray())) {
         return !this.appointmentService.isSelectedDateAvailable();
       }
       return false;

@@ -90,7 +90,7 @@ export class AuthenticationService {
           handleSuccessfulUserLogin(response, this.authenticationState.set);
           isEmailConfirmed = true;
         },
-        error: (response: HttpErrorResponse) => console.log(response),
+        error: (response: HttpErrorResponse) => console.error(response),
       });
     return isEmailConfirmed;
   }
