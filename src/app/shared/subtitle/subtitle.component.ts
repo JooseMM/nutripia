@@ -6,12 +6,7 @@ import { Component, input, OnInit } from '@angular/core';
   imports: [NgClass],
   templateUrl: './subtitle.component.html',
 })
-export class SubtitleComponent implements OnInit {
+export class SubtitleComponent {
   title = input.required<string>();
   class = input<string>();
-  customClasses = '';
-
-  ngOnInit(): void {
-    this.customClasses = `flex space-x-6 items-center ${this.class()}`;
-  }
 }
