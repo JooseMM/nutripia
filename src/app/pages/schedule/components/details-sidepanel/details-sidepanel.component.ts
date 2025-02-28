@@ -178,11 +178,15 @@ export class DetailsSidepanelComponent {
         selectedAppointmendBoxId,
       );
     } else {
-      const currentDate = new Date();
-      const isDateOnFuture =
-        currentDate.getMonth() <= selectedDate.getMonth() &&
-        currentDate.getDate() <= selectedDate.getDate();
-      if (!isDateOnFuture) {
+      const isSelectedDateInThePast =
+        this.appointmentService.isSelectedDateInThePast(selectedDate);
+      const didUserReachLimit = this.appointmentService.didUserReachLimit(
+        currentUserInfo,
+        selectedDate,
+      );
+      if (didUserReachLimit) {
+        return true;
+      } else if (isSelectedDateInThePast) {
         return true;
       } else if (this.isCreatingOrModifiying(this.appointmentArray())) {
         return !this.appointmentService.isSelectedDateAvailable();

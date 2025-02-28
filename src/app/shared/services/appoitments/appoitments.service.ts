@@ -18,6 +18,7 @@ import ApiResponse from 'src/models/IApiResponse';
 import { finalize } from 'rxjs';
 import { appointmentAdapter } from 'src/app/pages/login/adapter/AppointmentAdapter';
 import AppointmentDto from 'src/models/IAppointmentDto';
+import AuthenticationState from 'src/models/IAuthenticationState';
 
 @Injectable({
   providedIn: 'root',
@@ -177,17 +178,38 @@ export class AppoitmentService {
     );
     // Date handles hours to wrap around 24, business logic tell us to only have available hours from 9hrs to 20hrs
   }
-  isSelectedDateAvailable() {
-    const appointmentBank = this.appointmentArray();
-    const selectedDate = this.selectedDate();
+  isSelectedDateInThePast(selectedDate: Date): boolean {
     const currentDate = new Date();
 
-    const isDateInThePastOrTooSoon =
-      currentDate.getDate() >= selectedDate.getDate() &&
+    const isMonthInThePast = currentDate.getMonth() > selectedDate.getMonth(); // si el mes es mayor o igual al seleccionado ?
+
+    if (isMonthInThePast) {
+      return true; // clients cant make an appointment to the past or in less than 4 hours
+    }
+
+    const isDayInThePast = currentDate.getDate() > selectedDate.getDate();
+
+    if (currentDate.getMonth() === selectedDate.getMonth() && isDayInThePast) {
+      return true;
+    }
+
+    const isHoursInThePastOrTooSoon =
       currentDate.getHours() + 4 > selectedDate.getHours(); // current hour + 4 = nearest allow hour to reserve
 
-    if (isDateInThePastOrTooSoon) {
-      return false; // clients cant make an appointment to the past or in less than 4 hours
+    if (
+      currentDate.getDate() === selectedDate.getDate() &&
+      isHoursInThePastOrTooSoon
+    ) {
+      return true;
+    }
+    return false;
+  }
+  isSelectedDateAvailable(): boolean {
+    const appointmentBank = this.appointmentArray();
+    const selectedDate = this.selectedDate();
+
+    if (this.isSelectedDateInThePast(this.selectedDate())) {
+      return false;
     }
 
     const found = appointmentBank.find(
@@ -197,7 +219,23 @@ export class AppoitmentService {
         !item.isCompleted &&
         !item.isBeingEdited,
     );
+    console.log(!!found);
     return !found ? true : false;
+  }
+  didUserReachLimit(
+    currentUser: AuthenticationState,
+    selectedDate: Date,
+  ): boolean {
+    let counter = 0;
+    this.appointmentArray().forEach((item) => {
+      const userMatch = item.userId === currentUser.id;
+      const monthMatch = item.date.getMonth() === selectedDate.getMonth();
+      if (userMatch && monthMatch) {
+        counter += 1;
+      }
+    });
+
+    return counter >= 2 ? true : false;
   }
   saveChanges(): void {
     this.ResponseTrackerService.setResponseState(true, false);
