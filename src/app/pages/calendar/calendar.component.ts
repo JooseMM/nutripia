@@ -32,14 +32,8 @@ export class CalendarComponent {
     this.getDaysInCurrentMonth(
       this.selectedDate().getFullYear(),
       this.selectedDate().getMonth(),
-      this.appointmentService
-        .getAppointments()
-        .filter(
-          (appointments: Appointment) =>
-            (appointments.date as Date).getMonth() ===
-            this.selectedDate().getMonth(),
-        ),
-      this.selectedDate().getDate(),
+      this.appointmentService.getAppointmentAtSelectedMonth(),
+      this.selectedDate(),
     ),
   );
   getMonthName(): string {
@@ -82,7 +76,7 @@ export class CalendarComponent {
     year: number,
     month: number,
     appointments: Appointment[],
-    selectedDay: number,
+    currentDate: Date,
   ): DayObject[] {
     /*
      * getting info from external api will be needed
@@ -129,11 +123,11 @@ export class CalendarComponent {
         const numberDay = index + 1;
         const currentAppointments = appointments.filter(
           (appointments: Appointment) => {
-            return (appointments.date as Date).getDate() === index + 1;
+            return appointments.date.getDate() === index + 1;
           },
         );
         return {
-          isSelected: selectedDay === numberDay,
+          isSelected: currentDate.getDate() === numberDay,
           numberDay: numberDay,
           appointments: currentAppointments,
           isDisabled: currentAppointments.length >= 8,

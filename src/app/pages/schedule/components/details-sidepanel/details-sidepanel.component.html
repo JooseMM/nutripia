@@ -103,7 +103,7 @@
           label="Actualizar"
           (click)="appointmentService.saveChanges()"
           [isLoading]="responseState().isLoading"
-          [isDisabled]="!appointmentService.isSelectedDateAvailable()"
+          [isDisabled]="!appointmentService.isDateAndTimeNotTaken()"
         />
         <button class="text-charcoal" (click)="cancelAction()">Cancelar</button>
       } @else {

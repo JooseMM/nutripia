@@ -4,4 +4,5 @@ export default interface AppointmentDto {
   isOnline: boolean;
   date: string;
   userId: string;
+  ownerName: string;
 }

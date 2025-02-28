@@ -5,5 +5,10 @@ export const appointmentAdapter = (
   appointment: AppointmentDto,
 ): Appointment => {
   const adaptedDate = new Date(appointment.date);
-  return { ...appointment, date: adaptedDate, isBeingEdited: false };
+  return {
+    ...appointment,
+    date: adaptedDate,
+    isBeingEdited: false,
+    ownerName: appointment.ownerName,
+  };
 };

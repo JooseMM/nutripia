@@ -43,11 +43,10 @@ export class DetailsSidepanelComponent {
   appointmentService = inject(AppoitmentService);
   responseTrackerService = inject(ResponseTrackerService);
   appointmentArray: Signal<Appointment[]> = computed(() => {
-    const bank = this.appointmentService.getAppointments();
+    const bank = this.appointmentService.getAppointmentAtSelectedMonth();
     const found: Appointment | undefined = bank.find(
       (item) => item.isBeingEdited,
     );
-
     if (found !== undefined) {
       return [found];
     }
@@ -170,7 +169,10 @@ export class DetailsSidepanelComponent {
         return true;
       }
       if (isUserEditing) {
-        return !this.appointmentService.isSelectedDateAvailable();
+        return (
+          !this.appointmentService.isDateAndTimeNotTaken() ||
+          !this.appointmentService.isHourValid()
+        );
       }
       return !this.isUserOwner(
         currentUserInfo,
@@ -184,12 +186,15 @@ export class DetailsSidepanelComponent {
         currentUserInfo,
         selectedDate,
       );
-      if (didUserReachLimit) {
+      const isSelectedHourNotValid = !this.appointmentService.isHourValid();
+      if (isSelectedDateInThePast) {
+        console.log('is day in the past');
         return true;
-      } else if (isSelectedDateInThePast) {
+      } else if (didUserReachLimit) {
+        console.log('limit hit');
         return true;
       } else if (this.isCreatingOrModifiying(this.appointmentArray())) {
-        return !this.appointmentService.isSelectedDateAvailable();
+        return !this.appointmentService.isDateAndTimeNotTaken();
       }
       return false;
     }

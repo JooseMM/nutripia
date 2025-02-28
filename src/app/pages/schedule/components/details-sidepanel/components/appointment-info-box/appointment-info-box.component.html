@@ -1,10 +1,18 @@
 @if (!appointment().isBeingEdited) {
-  <div class="flex flex-col w-full p-0 items-start">
-    <span class="text-lg font-bold h-6 opacity-95">{{
-      getDate(appointment().date)
-    }}</span>
+  <div class="flex flex-col w-full p-0 items-start space-y-1">
+    <div class="text-lg font-bold h-6 opacity-95 flex w-full justify-between">
+      <span>
+        @if (isUserAdmin()) {
+          {{ getOwnerName(appointment()) }}
+        } @else {
+          {{ getDate(appointment().date) }}
+        }
+      </span>
+      @if (isUserAdmin()) {
+        <span>{{ getDate(appointment().date) }}</span>
+      }
+    </div>
     <div class="flex w-full justify-between space-y-0">
-      <span class="opacity-80 w-fit">{{ getHours(appointment().date) }}</span>
       <!-- calendar icon svg -->
       <div class="flex space-x-2">
         @if (isUserAllowToSee(authService.getAuthenticationState())) {
@@ -62,6 +70,7 @@
           <span>Hora no disponible</span>
         }
       </div>
+      <span class="opacity-80 w-fit">{{ getHours(appointment().date) }}</span>
     </div>
   </div>
 } @else {

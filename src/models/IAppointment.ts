@@ -5,4 +5,5 @@ export default interface Appointment {
   isOnline: boolean;
   date: Date;
   userId: string;
+  ownerName?: string;
 }

@@ -59,12 +59,10 @@ export class AppoitmentService {
         ),
       )
       .subscribe({
-        next: (response: ApiResponse) => {
-          if (response.statusCode === 204) {
-            this.appointmentArray.update((bank) =>
-              bank.filter((appointment) => appointment.id !== id),
-            );
-          }
+        next: () => {
+          this.appointmentArray.update((bank) =>
+            bank.filter((appointment) => appointment.id !== id),
+          );
         },
         error: (error) => {
           console.error(error);
@@ -140,6 +138,13 @@ export class AppoitmentService {
   getAppointments(): Appointment[] {
     return this.appointmentArray();
   }
+  getAppointmentAtSelectedMonth() {
+    return this.appointmentArray().filter(
+      (appointments) =>
+        appointments.date.getMonth() === this.selectedDate().getMonth() &&
+        appointments.date.getFullYear() === this.selectedDate().getFullYear(),
+    ); // appointments at current month
+  }
   updateSelectedDay(newDay: number) {
     this.selectedDate.update(
       (prev) =>
@@ -199,46 +204,54 @@ export class AppoitmentService {
   }
   isSelectedDateInThePast(selectedDate: Date): boolean {
     const currentDate = new Date();
-
     const isMonthInThePast = currentDate.getMonth() > selectedDate.getMonth(); // si el mes es mayor o igual al seleccionado ?
-
-    if (isMonthInThePast) {
-      return true; // clients cant make an appointment to the past or in less than 4 hours
-    }
-
     const isDayInThePast = currentDate.getDate() > selectedDate.getDate();
+    const isYearInThePastOrTooSoon =
+      currentDate.getFullYear() > selectedDate.getFullYear();
+    const isCurrentMonth = currentDate.getMonth() === selectedDate.getMonth();
 
-    if (currentDate.getMonth() === selectedDate.getMonth() && isDayInThePast) {
+    if (isYearInThePastOrTooSoon) {
+      console.log('past year');
       return true;
-    }
-
-    const isHoursInThePastOrTooSoon =
-      currentDate.getHours() + 4 > selectedDate.getHours(); // current hour + 4 = nearest allow hour to reserve
-
-    if (
-      currentDate.getDate() === selectedDate.getDate() &&
-      isHoursInThePastOrTooSoon
-    ) {
+    } else if (isMonthInThePast) {
+      console.log('past month');
+      return true;
+    } else if (isDayInThePast && isCurrentMonth) {
+      console.log('past day');
       return true;
     }
     return false;
   }
-  isSelectedDateAvailable(): boolean {
+  isHourValid(): boolean {
+    const currentDate = new Date();
+    const isHourInThePast =
+      currentDate.getHours() > this.selectedDate().getHours();
+    const isTooSoon =
+      currentDate.getHours() + 4 > this.selectedDate().getHours();
+
+    if (isHourInThePast) {
+      return false;
+    } else if (isTooSoon) {
+      return false;
+    }
+    return true;
+  }
+  isDateAndTimeNotTaken(): boolean {
     const appointmentBank = this.appointmentArray();
     const selectedDate = this.selectedDate();
 
     if (this.isSelectedDateInThePast(this.selectedDate())) {
       return false;
     }
-
     const found = appointmentBank.find(
       (item) =>
+        item.date.getFullYear() === selectedDate.getFullYear() &&
+        item.date.getMonth() === selectedDate.getMonth() &&
         item.date.getDate() === selectedDate.getDate() &&
         item.date.getHours() === selectedDate.getHours() &&
         !item.isCompleted &&
         !item.isBeingEdited,
     );
-    console.log(!!found);
     return !found ? true : false;
   }
   didUserReachLimit(
@@ -249,11 +262,13 @@ export class AppoitmentService {
     this.appointmentArray().forEach((item) => {
       const userMatch = item.userId === currentUser.id;
       const monthMatch = item.date.getMonth() === selectedDate.getMonth();
-      if (userMatch && monthMatch) {
+      const yearMatch = item.date.getFullYear() === selectedDate.getFullYear();
+      const excludeCurrentCreation = item.id !== '' && !item.isBeingEdited; // to not count the one being currently created or modified
+
+      if (userMatch && monthMatch && yearMatch && excludeCurrentCreation) {
         counter += 1;
       }
     });
-
     return counter >= 2 ? true : false;
   }
   saveChanges(): void {
@@ -307,6 +322,7 @@ export class AppoitmentService {
 
             this.appointmentArray.update((oldState) =>
               oldState.map((item) => {
+                console.log(item.userId);
                 if (item.id === '') {
                   item.id = res.data as string;
                   item.isBeingEdited = false;

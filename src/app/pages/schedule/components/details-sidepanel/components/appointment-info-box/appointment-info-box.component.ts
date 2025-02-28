@@ -43,6 +43,9 @@ export class AppointmentInfoBoxComponent {
       }
     });
   }
+  getOwnerName(appointment: Appointment): string {
+    return appointment.ownerName!;
+  }
   getDate(date: Date): string {
     return `${date.getDate()} de ${MONTH_NAMES[date.getMonth()]}`;
   }
@@ -56,13 +59,17 @@ export class AppointmentInfoBoxComponent {
   isUserAllowToSee(userInfo: AuthenticationState): boolean {
     if (this.appointment().userId === userInfo.id) {
       return true;
-    } else if (userInfo.role === ADMIN_ROLE) {
+    } else if (this.isUserAdmin()) {
       return true;
     } else {
       return false;
     }
   }
   isDateAvailable(): boolean {
-    return this.appointmentService.isSelectedDateAvailable();
+    return this.appointmentService.isDateAndTimeNotTaken();
+  }
+  isUserAdmin() {
+    const userInfo = this.authService.getAuthenticationState();
+    return userInfo.role === ADMIN_ROLE;
   }
 }
