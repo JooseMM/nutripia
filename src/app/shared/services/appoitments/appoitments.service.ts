@@ -48,9 +48,28 @@ export class AppoitmentService {
     );
   }
   deleteOnById(id: string) {
-    this.appointmentArray.update((bank) =>
-      bank.filter((item) => item.id !== id),
-    );
+    if (!id) {
+      throw new Error('id not provided, unable to delete');
+    }
+    this.http
+      .delete<ApiResponse>(`${this.URL}/${id}`)
+      .pipe(
+        finalize(() =>
+          this.ResponseTrackerService.setResponseState(false, true),
+        ),
+      )
+      .subscribe({
+        next: (response: ApiResponse) => {
+          if (response.statusCode === 204) {
+            this.appointmentArray.update((bank) =>
+              bank.filter((appointment) => appointment.id !== id),
+            );
+          }
+        },
+        error: (error) => {
+          console.error(error);
+        },
+      });
   }
   refreshAppointmentArray() {
     this.http
