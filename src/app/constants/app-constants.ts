@@ -60,20 +60,16 @@ export function getHoursToString(date: Date): string {
 export function navigateAndScrollTo(
   url: string,
   anchor: string,
-  subscription: Subscription,
   router: Router,
   scrollApi: ViewportScroller,
 ) {
-  subscription = router.events
-    .pipe(filter((event) => event instanceof NavigationEnd))
-    .subscribe((_navigationEnd) => {
-      setTimeout(() => {
-        if (!anchor) {
-          scrollApi.scrollToPosition([0, 0]);
-        } else {
-          scrollApi.scrollToAnchor(anchor);
-        }
-      }, 300);
-    });
-  router.navigate([url]);
+  router.navigate([url]).then((ok) => {
+    if (ok) {
+      if (!anchor) {
+        scrollApi.scrollToPosition([0, 0]);
+      } else {
+        scrollApi.scrollToAnchor(anchor);
+      }
+    }
+  });
 }

@@ -42,7 +42,7 @@ import { filter, Subscription } from 'rxjs';
   providers: [{ provide: LOCALE_ID, useValue: 'es-CL' }],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent {
   cdr = inject(ChangeDetectorRef);
   router = inject(Router);
   scrollApi = inject(ViewportScroller);
@@ -53,7 +53,6 @@ export class AppComponent implements OnDestroy {
   ADMIN_ROLE = ADMIN_ROLE;
   CLIENT_ROLE = CLIENT_ROLE;
   NOT_AUTHENTICATED = NOT_AUTHENTICATED;
-  routerEventSubscription: Subscription = new Subscription();
   currentUserRole: Signal<string> = computed(
     () => this.authenticationService.getAuthenticationState().role,
   );
@@ -66,19 +65,10 @@ export class AppComponent implements OnDestroy {
   }
   scrollTo(url: string, anchor: string) {
     this.toggleMenu();
-    navigateAndScrollTo(
-      url,
-      anchor,
-      this.routerEventSubscription,
-      this.router,
-      this.scrollApi,
-    );
+    navigateAndScrollTo(url, anchor, this.router, this.scrollApi);
   }
   logout() {
     this.authenticationService.logout();
     this.toggleMenu();
-  }
-  ngOnDestroy(): void {
-    this.routerEventSubscription.unsubscribe();
   }
 }

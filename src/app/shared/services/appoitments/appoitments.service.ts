@@ -33,6 +33,7 @@ export class AppoitmentService {
   private authenticationState = signal(
     this.AuthService.getAuthenticationState(),
   );
+  private scrollTrigger = signal(false);
 
   constructor() {
     this.refreshAppointmentArray();
@@ -46,6 +47,12 @@ export class AppoitmentService {
         return item;
       }),
     );
+  }
+  toggleScrollTrigger() {
+    this.scrollTrigger.update((state) => !state);
+  }
+  getScrollTrigger(): boolean {
+    return this.scrollTrigger();
   }
   deleteOnById(id: string) {
     if (!id) {
@@ -157,6 +164,7 @@ export class AppoitmentService {
           0,
         ),
     );
+    this.toggleScrollTrigger();
   }
   updateMonth(updateBy: number): void {
     const newMonth = this.selectedDate().getMonth() + updateBy;

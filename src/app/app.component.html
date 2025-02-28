@@ -151,16 +151,15 @@
       class="flex flex-col space-y-8 items-center text-xl | lg:items-start lg:space-y-4"
     >
       <li>
-        <a routerLink="/inicio">Inicio</a>
+        <a (click)="scrollTo('/', '')" routerLink="/inicio">Inicio</a>
       </li>
       <li>
-        <a routerLink="/beneficios">Beneficio</a>
+        <a (click)="scrollTo('/', 'whyUs')" routerLink="/beneficios"
+          >Beneficio</a
+        >
       </li>
       <li>
-        <a routerLink="/planes">Planes</a>
-      </li>
-      <li>
-        <a routerLink="/agenda">Agendar</a>
+        <a (click)="scrollTo('/', 'prices')" routerLink="/planes">Planes</a>
       </li>
     </ul>
   </div>

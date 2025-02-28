@@ -14,10 +14,9 @@ import { Subscription } from 'rxjs';
   imports: [NgClass, CurrencyPipe, ButtonComponent],
   templateUrl: './price-box.component.html',
 })
-export class PriceBoxComponent implements OnInit, OnDestroy {
+export class PriceBoxComponent implements OnInit {
   router = inject(Router);
   scrollApi = inject(ViewportScroller);
-  subscription = new Subscription();
   pricingPlanId = input.required<PricingType>();
   currentPricingPlan: PricingPlanOptions =
     pricingInfo.pricingPlanOptionsArray[0];
@@ -26,16 +25,7 @@ export class PriceBoxComponent implements OnInit, OnDestroy {
   priceBaseStyleHeader = 'text-4xl font-bold';
 
   navigateAndScrollTo(url: string) {
-    navigateAndScrollTo(
-      url,
-      '',
-      this.subscription,
-      this.router,
-      this.scrollApi,
-    );
-  }
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    navigateAndScrollTo(url, '', this.router, this.scrollApi);
   }
   ngOnInit(): void {
     if (this.pricingPlanId() > 0)
