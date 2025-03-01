@@ -37,7 +37,7 @@ export function handleSuccessfulUserLogin(
 ) {
   const data = response.data as AuthResponse;
   const parseToken = jwtDecodeToken(data.token);
-  setAuthenticationState(parseToken);
+  setAuthenticationState({ ...parseToken });
   localStorage.setItem(AUTH_TOKEN_NAME, data.token);
 }
 export function handleFailedUserLogin(

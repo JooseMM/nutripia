@@ -29,7 +29,7 @@
   </div>
 </div>
 <!-- Hour selection -->
-@if (isCreatingOrModifiying(appointmentArray())) {
+@if (appointmentService.isCreatingOrModifiying()) {
   <div class="space-y-3 mt-10 flex flex-col items-center">
     <h3 class="text-lg text-primary-purple tracking-wide">
       Seleccione una hora
@@ -66,7 +66,7 @@
         <span class="border border-primary-purple rounded-full p-1 flex">
           <span
             [ngClass]="
-              isOnline()
+              isAppointmentOnline()
                 ? 'p-2.5 bg-white rounded-full'
                 : 'p-2.5 bg-primary-purple rounded-full'
             "
@@ -81,7 +81,7 @@
         <span class="border border-primary-purple rounded-full p-1 flex">
           <span
             [ngClass]="
-              isOnline()
+              isAppointmentOnline()
                 ? 'p-2.5 bg-primary-purple rounded-full'
                 : 'p-2.5 bg-white rounded-full'
             "
@@ -96,34 +96,34 @@
 <div class="flex space-x-6 items-center justify-center mt-8 mb-10 | lg:my-5">
   @if (isUserAdmin(currentUserInfo())) {
     @if (selectedBox()) {
-      @if (isCreatingOrModifiying(appointmentArray())) {
+      @if (appointmentService.isCreatingOrModifiying()) {
         <!-- buttons -->
         <nt-button
           [isPrimary]="true"
           label="Actualizar"
           (click)="appointmentService.saveChanges()"
           [isLoading]="responseState().isLoading"
-          [isDisabled]="!appointmentService.isDateAndTimeNotTaken()"
+          [isDisabled]="!isDateAvailable()"
         />
         <button class="text-charcoal" (click)="cancelAction()">Cancelar</button>
       } @else {
         <nt-side-panel-buttons
           [type]="
-            isAppointmentCompleted(selectedBox(), appointmentArray())
+            isAppointmentCompleted(selectedBox())
               ? 'not-completed'
               : 'completed'
           "
-          [appointment]="findAppointmentById(appointmentArray(), selectedBox())"
+          [appointment]="appointmentService.getAppointmentById(selectedBox())"
           (click)="toggleCompletedState(selectedBox())"
         />
         <nt-side-panel-buttons
           type="modify"
-          [appointment]="findAppointmentById(appointmentArray(), selectedBox())"
+          [appointment]="appointmentService.getAppointmentById(selectedBox())"
           (click)="appointmentService.createOrModify(selectedBox())"
         />
         <nt-side-panel-buttons
           type="delete"
-          [appointment]="findAppointmentById(appointmentArray(), selectedBox())"
+          [appointment]="appointmentService.getAppointmentById(selectedBox())"
           (click)="deleteOnById(selectedBox())"
         />
       }
@@ -132,19 +132,12 @@
     <!-- buttons -->
     <nt-button
       [isPrimary]="true"
-      [label]="getMainButtonLabel(appointmentArray(), selectedBox())"
-      (click)="onClickHandler(appointmentArray(), selectedBox())"
+      [label]="getMainButtonLabel(selectedBox())"
+      (click)="onClickHandler(selectedBox())"
       [isLoading]="responseState().isLoading"
-      [isDisabled]="
-        isUserNotAllowToModify(
-          selectedBox(),
-          appointmentArray(),
-          currentUserInfo(),
-          selectedDate()
-        )
-      "
+      [isDisabled]="isUserNotAllowToModify(selectedBox(), currentUserInfo())"
     />
-    @if (isCreatingOrModifiying(appointmentArray()) || selectedBox()) {
+    @if (appointmentService.isCreatingOrModifiying() || selectedBox()) {
       <button class="text-charcoal" (click)="cancelAction()">Cancelar</button>
     }
   }

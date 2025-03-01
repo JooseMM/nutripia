@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ButtonComponent } from '../../../../shared/button/button.component';
 import { DecorativeIconComponent } from 'src/app/shared/decorative-icon/decorative-icon.component';
 import { Router } from '@angular/router';

@@ -38,27 +38,23 @@ import { SidePanelButtonsComponent } from './components/side-panel-buttons/side-
 export class DetailsSidepanelComponent {
   ADMIN_ROLE = ADMIN_ROLE;
   CLIENT_ROLE = CLIENT_ROLE;
-  isOnline: WritableSignal<boolean> = signal(false);
   authenticationService = inject(AuthenticationService);
   appointmentService = inject(AppoitmentService);
   responseTrackerService = inject(ResponseTrackerService);
-  appointmentArray: Signal<Appointment[]> = computed(() => {
-    const bank = this.appointmentService.getAppointmentAtSelectedMonth();
-    const found: Appointment | undefined = bank.find(
-      (item) => item.isBeingEdited,
-    );
-    if (found !== undefined) {
-      return [found];
-    }
-    return this.filterAppointmentByDay(
-      bank,
-      this.selectedDate(),
-      this.currentUserInfo(),
-    ).sort((a, b) => a.date.getTime() - b.date.getTime());
-  });
   selectedDate: Signal<Date> = computed(() =>
     this.appointmentService.getSelectedDate(),
   );
+  appointmentArray: Signal<Appointment[]> = computed(() => {
+    if (this.appointmentService.isCreatingOrModifiying()) {
+      return this.appointmentService.getAppointmentBeingModify();
+    }
+    const date = this.selectedDate();
+    return this.appointmentService.getAppointmentByDate(
+      date.getDate(),
+      date.getMonth(),
+      date.getFullYear(),
+    );
+  });
   currentUserInfo: Signal<AuthenticationState> = computed(() =>
     this.authenticationService.getAuthenticationState(),
   );
@@ -71,25 +67,18 @@ export class DetailsSidepanelComponent {
    */
   constructor() {
     effect(() => {
-      const currentDate = this.selectedDate();
-      const isModifiying = this.isCreatingOrModifiying(this.appointmentArray());
-      if (currentDate) {
-        this.selectedBox.update((oldState) => (isModifiying ? oldState : ''));
+      if (this.appointmentService.getShouldStopEditing()) {
+        this.cancelAction();
+        this.appointmentService.toggleShouldStopEditing();
       }
     });
   }
-  filterAppointmentByDay(
-    appointmentBank: Appointment[],
-    date: Date,
-    currentUserInfo: AuthenticationState,
-  ): Appointment[] {
-    return appointmentBank.filter((item) => {
-      if (this.isUserAdmin(currentUserInfo)) {
-        return item.date.getDate() === date.getDate();
-      } else {
-        return item.date.getDate() === date.getDate() && !item.isCompleted;
-      }
-    });
+  isAppointmentOnline(): boolean {
+    const appointment = this.appointmentService.getAppointmentBeingModify();
+    return appointment[0].isOnline;
+  }
+  setAppointmentMode(isOnline: boolean): void {
+    this.appointmentService.setAppointmentMode(isOnline);
   }
   getTime(date: Date): string {
     return getHoursToString(date);
@@ -98,7 +87,7 @@ export class DetailsSidepanelComponent {
     this.appointmentService.updateHour(number);
   }
   setAppointmentIsOnline(isOnline: boolean) {
-    this.isOnline.set(isOnline);
+    this.appointmentService.setAppointmentMode(isOnline);
   }
   cancelAction(): void {
     const isUserCreating =
@@ -114,10 +103,6 @@ export class DetailsSidepanelComponent {
     this.selectedBox.set('');
     this.responseTrackerService.resetState();
   }
-  isCreatingOrModifiying(appointmentArray: Appointment[]): boolean {
-    const found = appointmentArray.find((item) => item.isBeingEdited);
-    return found !== undefined; // if found is not null return true otherwise false
-  }
   isUserAdmin(userInfo: AuthenticationState) {
     if (!userInfo) {
       throw new Error('user not authenticated');
@@ -126,85 +111,69 @@ export class DetailsSidepanelComponent {
   }
   isUserOwner(
     currentUserInfo: AuthenticationState,
-    appointmentArray: Appointment[],
     selectedAppointmendBoxId: string,
   ): boolean {
-    const appointment = this.findAppointmentById(
-      appointmentArray,
+    const appointment = this.appointmentService.getAppointmentById(
       selectedAppointmendBoxId,
     );
     return appointment?.userId === currentUserInfo.id;
   }
-  findAppointmentById(array: Appointment[], matchId: string): Appointment {
-    const foundAppointment = array.find(
-      (appointment) => appointment.id === matchId,
-    );
-    if (!foundAppointment) {
-      throw new Error('not found appointment');
-    }
-    return foundAppointment;
-  }
-  isAppointmentCompleted(
-    selectedAppointmentId: string,
-    appointmentArray: Appointment[],
-  ) {
-    const appointment = this.findAppointmentById(
-      appointmentArray,
+  isAppointmentCompleted(selectedAppointmentId: string) {
+    const appointment = this.appointmentService.getAppointmentById(
       selectedAppointmentId,
     );
     return appointment.isCompleted;
   }
+  isDateAvailable(): boolean {
+    if (this.appointmentService.didUserReachLimit()) {
+      return false;
+    } else if (this.appointmentService.isSelectedDateInThePast()) {
+      console.log('is past');
+      return false;
+    } else if (!this.appointmentService.isDateAndTimeNotTaken()) {
+      console.log('is taken');
+      return false;
+    } else {
+      return true;
+    }
+  }
   isUserNotAllowToModify(
     selectedAppointmendBoxId: string,
-    appointmentArray: Appointment[],
     currentUserInfo: AuthenticationState,
-    selectedDate: Date,
   ) {
-    if (selectedAppointmendBoxId) {
-      const isUserEditing =
-        appointmentArray.length === 1 && appointmentArray[0].isBeingEdited;
-      if (
-        this.isAppointmentCompleted(selectedAppointmendBoxId, appointmentArray)
-      ) {
+    const isCreatingOrModifiying =
+      this.appointmentService.isCreatingOrModifiying();
+    if (selectedAppointmendBoxId && !isCreatingOrModifiying) {
+      if (this.isAppointmentCompleted(selectedAppointmendBoxId)) {
         return true;
+      } else {
+        return !this.isUserOwner(currentUserInfo, selectedAppointmendBoxId);
       }
-      if (isUserEditing) {
-        return (
-          !this.appointmentService.isDateAndTimeNotTaken() ||
-          !this.appointmentService.isHourValid()
-        );
+    }
+    if (isCreatingOrModifiying) {
+      if (this.appointmentService.didUserReachLimit()) {
+        return true;
+      } else if (this.appointmentService.isSelectedDateInThePast()) {
+        return true;
+      } else if (!this.appointmentService.isDateAndTimeNotTaken()) {
+        return true;
+      } else {
+        return false;
       }
-      return !this.isUserOwner(
-        currentUserInfo,
-        appointmentArray,
-        selectedAppointmendBoxId,
-      );
     } else {
-      const isSelectedDateInThePast =
-        this.appointmentService.isSelectedDateInThePast(selectedDate);
-      const didUserReachLimit = this.appointmentService.didUserReachLimit(
-        currentUserInfo,
-        selectedDate,
-      );
-      const isSelectedHourNotValid = !this.appointmentService.isHourValid();
-      if (isSelectedDateInThePast) {
-        console.log('is day in the past');
+      const isDateValid = !this.appointmentService.isSelectedDateInThePast();
+      const didUserReachLimit = this.appointmentService.didUserReachLimit();
+      if (!isDateValid) {
         return true;
       } else if (didUserReachLimit) {
-        console.log('limit hit');
         return true;
-      } else if (this.isCreatingOrModifiying(this.appointmentArray())) {
-        return !this.appointmentService.isDateAndTimeNotTaken();
       }
       return false;
     }
   }
-  getMainButtonLabel(
-    appointmentArray: Appointment[],
-    selectedBoxId: string,
-  ): string {
+  getMainButtonLabel(selectedBoxId: string): string {
     const isCreatingOrModifiying =
-      this.isCreatingOrModifiying(appointmentArray) && true;
+      this.appointmentService.isCreatingOrModifiying() && true;
     if (isCreatingOrModifiying && !selectedBoxId) {
       return 'Guardar Cita';
     } else if (!isCreatingOrModifiying && selectedBoxId) {
@@ -213,9 +182,9 @@ export class DetailsSidepanelComponent {
       return 'Crear Cita';
     }
   }
-  onClickHandler(appointmentArray: Appointment[], selectedBoxId: string): void {
+  onClickHandler(selectedBoxId: string): void {
     const isCreatingOrModifiying =
-      !!this.isCreatingOrModifiying(appointmentArray);
+      !!this.appointmentService.isCreatingOrModifiying();
     if (isCreatingOrModifiying) {
       this.appointmentService.saveChanges();
     } else {
@@ -239,5 +208,6 @@ export class DetailsSidepanelComponent {
       throw new Error('id is null or undefined');
     }
     this.appointmentService.deleteOnById(id);
+    this.cancelAction();
   }
 }

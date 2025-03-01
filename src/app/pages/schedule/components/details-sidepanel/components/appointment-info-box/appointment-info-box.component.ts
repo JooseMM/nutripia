@@ -29,6 +29,7 @@ export class AppointmentInfoBoxComponent {
   authService = inject(AuthenticationService);
   appointmentService = inject(AppoitmentService);
   changeDetectionRef = inject(ChangeDetectorRef);
+  selectedDate = computed(() => this.appointmentService.getSelectedDate());
   newDate: Signal<Date> = computed(() =>
     this.appointmentService.getSelectedDate(),
   );

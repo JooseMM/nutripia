@@ -79,8 +79,6 @@ export class CalendarComponent {
     currentDate: Date,
   ): DayObject[] {
     /*
-     * getting info from external api will be needed
-     *
      * the 0 in Date objects represent the last day
      * of the previous month, this returns the amount of days.
      * months in js start at 0, so saying the 0 day in month 1
@@ -117,15 +115,13 @@ export class CalendarComponent {
      * create and return an array with the same length as
      * the days of the selected month that hold an DayObject
      * */
+
     const selectedMonthDays = Array.from(
       { length: lastDayOfSelectedDays },
       (_, index) => {
         const numberDay = index + 1;
-        const currentAppointments = appointments.filter(
-          (appointments: Appointment) => {
-            return appointments.date.getDate() === index + 1;
-          },
-        );
+        const currentAppointments =
+          this.appointmentService.getAppointmentByDate(numberDay, month, year);
         return {
           isSelected: currentDate.getDate() === numberDay,
           numberDay: numberDay,

@@ -1,11 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {
-  effect,
-  inject,
-  Injectable,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import {
   API_URL,
   WORK_END_HOUR,
@@ -18,7 +12,6 @@ import ApiResponse from 'src/models/IApiResponse';
 import { finalize } from 'rxjs';
 import { appointmentAdapter } from 'src/app/pages/login/adapter/AppointmentAdapter';
 import AppointmentDto from 'src/models/IAppointmentDto';
-import AuthenticationState from 'src/models/IAuthenticationState';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +27,7 @@ export class AppoitmentService {
     this.AuthService.getAuthenticationState(),
   );
   private scrollTrigger = signal(false);
+  private shouldStopEditing = signal(false);
 
   constructor() {
     this.refreshAppointmentArray();
@@ -76,6 +70,16 @@ export class AppoitmentService {
         },
       });
   }
+  setAppointmentMode(isOnline: boolean): void {
+    this.appointmentArray.update((arr) =>
+      arr.map((appointment) => {
+        if (appointment.isBeingEdited) {
+          appointment.isOnline = isOnline;
+        }
+        return appointment;
+      }),
+    );
+  }
   refreshAppointmentArray() {
     this.http
       .get<ApiResponse>(this.URL)
@@ -98,7 +102,21 @@ export class AppoitmentService {
         },
       });
   }
+  isCreatingOrModifiying(): boolean {
+    const found = this.appointmentArray().find((item) => item.isBeingEdited);
+    return found !== undefined; // if found is not null return true otherwise false
+  }
   createOrModify(id: string): void {
+    const current = new Date();
+    const targetTime = new Date(
+      current.getFullYear(),
+      current.getMonth(),
+      current.getDate(),
+      this.getAValidHour(),
+      0,
+      0,
+      0,
+    );
     if (id) {
       const target = this.appointmentArray().find((item) => item.id === id);
       if (!target) {
@@ -118,7 +136,7 @@ export class AppoitmentService {
         isBeingEdited: true,
         isOnline: false,
         isCompleted: false,
-        date: this.selectedDate(),
+        date: targetTime,
         userId: this.authenticationState().id,
       };
       this.appointmentArray.update((oldState) => [...oldState, newAppointment]);
@@ -139,18 +157,52 @@ export class AppoitmentService {
       }),
     );
   }
+  getAppointmentById(idToMatch: string): Appointment {
+    const match = this.appointmentArray().find(
+      (appointment) => appointment.id === idToMatch,
+    );
+    if (!match) {
+      throw new Error('not found');
+    }
+    return match;
+  }
+  getShouldStopEditing(): boolean {
+    return this.shouldStopEditing();
+  }
+  toggleShouldStopEditing(): void {
+    this.shouldStopEditing.update((state) => !state);
+  }
   getSelectedDate(): Date {
     return this.selectedDate();
   }
   getAppointments(): Appointment[] {
     return this.appointmentArray();
   }
-  getAppointmentAtSelectedMonth() {
+  getAppointmentBeingModify(): Appointment[] {
     return this.appointmentArray().filter(
-      (appointments) =>
-        appointments.date.getMonth() === this.selectedDate().getMonth() &&
-        appointments.date.getFullYear() === this.selectedDate().getFullYear(),
-    ); // appointments at current month
+      (appointment) => appointment.isBeingEdited,
+    );
+  }
+  getAppointmentByDate(
+    day: number,
+    month: number,
+    year: number,
+  ): Appointment[] {
+    return this.appointmentArray().filter(
+      (appointment) =>
+        appointment.date.getFullYear() === year &&
+        appointment.date.getMonth() === month &&
+        appointment.date.getDate() === day,
+    );
+  }
+  getAppointmentAtSelectedMonth() {
+    return this.appointmentArray()
+      .filter(
+        (appointments) =>
+          appointments.date.getMonth() === this.selectedDate().getMonth() &&
+          appointments.date.getFullYear() === this.selectedDate().getFullYear(),
+      )
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
   }
   updateSelectedDay(newDay: number) {
     this.selectedDate.update(
@@ -159,12 +211,15 @@ export class AppoitmentService {
           prev.getFullYear(),
           prev.getMonth(),
           newDay,
-          WORK_START_HOUR,
+          this.getAValidHour(),
           0,
           0,
         ),
     );
     this.toggleScrollTrigger();
+    if (!this.isCreatingOrModifiying()) {
+      this.toggleShouldStopEditing();
+    }
   }
   updateMonth(updateBy: number): void {
     const newMonth = this.selectedDate().getMonth() + updateBy;
@@ -182,7 +237,7 @@ export class AppoitmentService {
         currentDate.getFullYear(),
         newMonth,
         currentDate.getDate(),
-        currentDate.getHours(),
+        this.getAValidHour(),
         0,
         0,
       ),
@@ -210,62 +265,25 @@ export class AppoitmentService {
     );
     // Date handles hours to wrap around 24, business logic tell us to only have available hours from 9hrs to 20hrs
   }
-  isSelectedDateInThePast(selectedDate: Date): boolean {
+  isSelectedDateInThePast(): boolean {
+    const selected = this.selectedDate();
     const currentDate = new Date();
-    const isMonthInThePast = currentDate.getMonth() > selectedDate.getMonth(); // si el mes es mayor o igual al seleccionado ?
-    const isDayInThePast = currentDate.getDate() > selectedDate.getDate();
-    const isYearInThePastOrTooSoon =
-      currentDate.getFullYear() > selectedDate.getFullYear();
-    const isCurrentMonth = currentDate.getMonth() === selectedDate.getMonth();
-
-    if (isYearInThePastOrTooSoon) {
-      console.log('past year');
-      return true;
-    } else if (isMonthInThePast) {
-      console.log('past month');
-      return true;
-    } else if (isDayInThePast && isCurrentMonth) {
-      console.log('past day');
-      return true;
-    }
-    return false;
+    return currentDate.getTime() > selected.getTime();
   }
-  isHourValid(): boolean {
-    const currentDate = new Date();
-    const isHourInThePast =
-      currentDate.getHours() > this.selectedDate().getHours();
-    const isTooSoon =
-      currentDate.getHours() + 4 > this.selectedDate().getHours();
 
-    if (isHourInThePast) {
-      return false;
-    } else if (isTooSoon) {
-      return false;
-    }
-    return true;
-  }
   isDateAndTimeNotTaken(): boolean {
-    const appointmentBank = this.appointmentArray();
     const selectedDate = this.selectedDate();
-
-    if (this.isSelectedDateInThePast(this.selectedDate())) {
-      return false;
-    }
-    const found = appointmentBank.find(
+    const found = this.appointmentArray().find(
       (item) =>
-        item.date.getFullYear() === selectedDate.getFullYear() &&
-        item.date.getMonth() === selectedDate.getMonth() &&
-        item.date.getDate() === selectedDate.getDate() &&
-        item.date.getHours() === selectedDate.getHours() &&
+        item.date.getTime() === selectedDate.getTime() &&
         !item.isCompleted &&
         !item.isBeingEdited,
     );
     return !found ? true : false;
   }
-  didUserReachLimit(
-    currentUser: AuthenticationState,
-    selectedDate: Date,
-  ): boolean {
+  didUserReachLimit(): boolean {
+    const selectedDate = this.selectedDate();
+    const currentUser = this.authenticationState();
     let counter = 0;
     this.appointmentArray().forEach((item) => {
       const userMatch = item.userId === currentUser.id;
@@ -312,7 +330,9 @@ export class AppoitmentService {
               }),
             );
           },
-          error: () => {},
+          error: (error) => {
+            console.log(error);
+          },
         });
     } else {
       this.http
@@ -330,28 +350,34 @@ export class AppoitmentService {
 
             this.appointmentArray.update((oldState) =>
               oldState.map((item) => {
-                console.log(item.userId);
-                if (item.id === '') {
-                  item.id = res.data as string;
-                  item.isBeingEdited = false;
+                if (item.isBeingEdited) {
+                  item = appointmentAdapter(res.data as AppointmentDto);
                 }
                 return item;
               }),
             );
           },
+          error: (error) => console.log(error),
         });
     }
   }
   private getCurrentDate(): Date {
     const now = new Date();
+
     return new Date(
       now.getFullYear(),
       now.getMonth(),
       now.getDate(),
-      WORK_START_HOUR,
+      this.getAValidHour(),
       0,
       0,
       0,
     );
+  }
+  getAValidHour(): number {
+    const now = new Date();
+    const invalidHour =
+      now.getHours() > WORK_END_HOUR || now.getHours() < WORK_START_HOUR;
+    return invalidHour ? WORK_START_HOUR : now.getHours();
   }
 }
