@@ -4,7 +4,7 @@ import { Subscription, filter } from 'rxjs';
 import AuthenticationState from 'src/models/IAuthenticationState';
 
 export const API_URL =
-  'https://nutripia-api-e5aec4dudbdnb9a2.brazilsouth-01.azurewebsites.net/api';
+  'https://nutripia-api-free-e2creyffhqcadacs.brazilsouth-01.azurewebsites.net/api';
 export const ADMIN_ROLE = 'admin_user';
 export const CLIENT_ROLE = 'client_user';
 export const NOT_AUTHENTICATED = '';
